@@ -1,4 +1,2 @@
 Primer codigo de prueba
-Realizar los combios necesarios
-Una vez realizado
-volver a realizar un segundo cambio con commit
+Beta con su proyecto de convivencia escolar
