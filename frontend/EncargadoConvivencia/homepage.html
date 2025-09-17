@@ -1,21 +1,88 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Encargado de Convivencia Escolar - Página Principal</title>
-        <link rel="stylesheet" href="Homepage.css">
-    </head>
+<html lang="es">
+<head>
+    <title>Convivencia Escolar</title>
+    <link rel="stylesheet" href="homepagestyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="logo-and-nav">
+            <div class="logo">
+                <img src="ImagesForEncargadoConvivencia/virgenbkn.png" class="logo-image" alt="Logo">
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+            </nav>
+        </div>
+        <div class="action-hamburger">
+            <button class="hamburger-menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
 
-    <body>
-        <h1>Bienvenido al Sistema de Convivencia Escolar</h1>
-        <main>
-            <section>
-                <h2>Opciones Disponibles</h2>
-                <ul>
-                    <li>poto</li>
-                    <li>poto</li>
-                    <li>poto</li>
-                </ul>
-            </section>
-        </main>
-    </body>
+    <main class="main-content" id="main-content">
+        <h1 class="greeting">Hola, Usuario!</h1>
+        <button class="abrir-protocolo" id="abrir-protocolo-btn">Abrir protocolo</button>
+    </main>
+
+    <!--barra superior y 15 botones-->
+    <section id="protocolo-section">
+        <div class="botones-grid">
+            <button class="boton-protocolo">Protocolo 1</button>
+            <button class="boton-protocolo">Protocolo 2</button>
+            <button class="boton-protocolo">Protocolo 3</button>
+            <button class="boton-protocolo">Protocolo 4</button>
+            <button class="boton-protocolo">Protocolo 5</button>
+            <button class="boton-protocolo">Protocolo 6</button>
+            <button class="boton-protocolo">Protocolo 7</button>
+            <button class="boton-protocolo">Protocolo 8</button>
+            <button class="boton-protocolo">Protocolo 9</button>
+            <button class="boton-protocolo">Protocolo 10</button>
+            <button class="boton-protocolo">Protocolo 11</button>
+            <button class="boton-protocolo">Protocolo 12</button>
+            <button class="boton-protocolo">Protocolo 13</button>
+            <button class="boton-protocolo">Protocolo 14</button>
+            <button class="boton-protocolo">Protocolo 15</button>
+        </div>
+    </section>
+
+    <table class="protocol-table" id="protocol-table">
+        <thead>
+            <tr>
+                <th>Nombres implicados</th>
+                <th>Curso(s)</th>
+                <th>Protocolo activado</th>
+                <th>Estado</th>
+                <th>Persona a cargo</th>
+                <th>Fecha de apertura</th>
+                <th>Fecha límite</th>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Pedro sánchez - Carlos Urdaneta</td>
+                <td>7°A - 8°B</td>
+                <td>2. Violencia entre miembros de la C.E</td>
+                <td>Completado</td>
+                <td>Encargado 1</td>
+                <td>03/03/2025</td>
+                <td>18/03/2025</td>
+                <td>P1</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+    document.getElementById('abrir-protocolo-btn').addEventListener('click', function() {
+        document.getElementById('main-content').style.display = 'none';
+        document.getElementById('protocol-table').style.display = 'none';
+        document.getElementById('protocolo-section').style.display = 'block';
+    });
+    </script>
+</body>
 </html>
