@@ -75,7 +75,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 24px 10px 19px; /* Ajusta el padding según necesites */
+    padding: 8px 24px 0px 19px; /* Ajusta el padding según necesites */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color : rgb(51, 177, 231);
 }
@@ -99,11 +99,15 @@ body {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.25);
 }
 
+/*TABLAAAAS*/
+
 .protocol-table {
-    width: 100%;
+    width: 90%;
+    margin-left: 5%;
     border-collapse: collapse; /* Elimina el espacio entre los bordes de las celdas */
     margin-top: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .protocol-table th,
@@ -115,14 +119,10 @@ body {
 }
 
 .protocol-table thead tr {
-    background: linear-gradient(90deg, #aff5f3, #838bf1); /* Fondo degradado como la barra superior */
+    background: linear-gradient(90deg, #96dddb, #838bf1); /* Fondo degradado como la barra superior */
     color: white; /* Color del texto del encabezado */
     font-weight: bold;
-}
-
-/* Opcional: Estilo para las filas impares para mejorar la legibilidad */
-.protocol-table tbody tr:nth-child(odd) {
-    background-color: #f7f9fc;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Opcional: Estilo al pasar el cursor sobre las filas */
