@@ -3,7 +3,7 @@
 <head>
     <title>Convivencia Escolar</title>
     <link rel="stylesheet" href="homepagestyle.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!--Iconos de Font Awesome-->
 </head>
 <body>
     <header class="top-bar">
@@ -31,22 +31,26 @@
 
     <!--barra superior y 15 botones-->
     <section id="protocolo-section">
+        <div class="protocolo-header">
+            <h2 class="protocolo-titulo">Selecciona el Protocolo a Iniciar</h2>
+            <button class="boton-volver" id="volver-btn">&larr; Volver</button>
+        </div>
         <div class="botones-grid">
-            <button class="boton-protocolo">Protocolo 1</button>
-            <button class="boton-protocolo">Protocolo 2</button>
-            <button class="boton-protocolo">Protocolo 3</button>
-            <button class="boton-protocolo">Protocolo 4</button>
-            <button class="boton-protocolo">Protocolo 5</button>
-            <button class="boton-protocolo">Protocolo 6</button>
-            <button class="boton-protocolo">Protocolo 7</button>
-            <button class="boton-protocolo">Protocolo 8</button>
-            <button class="boton-protocolo">Protocolo 9</button>
-            <button class="boton-protocolo">Protocolo 10</button>
-            <button class="boton-protocolo">Protocolo 11</button>
-            <button class="boton-protocolo">Protocolo 12</button>
-            <button class="boton-protocolo">Protocolo 13</button>
-            <button class="boton-protocolo">Protocolo 14</button>
-            <button class="boton-protocolo">Protocolo 15</button>
+            <button class="boton-protocolo"><i class="fa-solid fa-user-shield"></i><span>1. Acoso Escolar</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-wine-bottle"></i><span>2. Drogas y Alcohol</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-hands-holding-child"></i><span>3. Agresión o Connotación Sexual</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-gavel"></i><span>4. Vulneración de derechos</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-users-slash"></i><span>5. Discriminación arbitraria</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-person-burst"></i><span>6. Violencia física o psicológica</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-heart-pulse"></i><span>7. Riesgo suicida</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-briefcase-medical"></i><span>8. Casos de salud</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-gun"></i><span>9. Armas blancas y de fuego</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-user-injured"></i><span>10. Autolesión</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-child-reaching"></i><span>11. Estudiantes Madres/Padres</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-venus-mars"></i><span>12. Identidad de género</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-bus-simple"></i><span>13. Salidas pedagógicas</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-brain"></i><span>14. Desregulación emocional</span></button>
+            <button class="boton-protocolo"><i class="fa-solid fa-handshake-angle"></i><span>15. Gestión de conflictos</span></button>
         </div>
     </section>
 
@@ -84,5 +88,8 @@
         document.getElementById('protocolo-section').style.display = 'block';
     });
     </script>
+
+        <script src="script.js"></script>
+
 </body>
 </html>
