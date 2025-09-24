@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Login Page</title>
+        <link rel="stylesheet" href="{% static 'Validaciones/css/Login.css' %}">
+        <script src="{% static 'Validaciones/js/Logica_Login.js' %}" defer></script>
+    </head>
+    <body>
+        <div class="container">
+            <img src="{% static 'Validaciones/img/logocolegioarzobispado2.png' %}" class="logo">
+
+            <div class="botones">
+                <button class="btn" id="btn-convivencia">Encargado de convivencia escolar</button>
+                <button class="btn" id="btn-abogados">Abogados</button>
+                <button class="btn" id="btn-director">Director</button>
+            </div>
+            {% if messages %}  <!--mensajes de error y alerta, segun corresponda-->
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="msg {{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <div id="formularioContainer" class="FormInicioSesion oculto">
+                <h2>Inicio de Sesión</h2>
+
+                <form id="loginForm" class="form-vertical" method="POST" action="{% url 'Login' %}"> <!--que es esto?-->
+                    {% csrf_token %}
+                    <input type="Text" id="Rut" name="username" required placeholder="RUT" inputmode="numeric">
+                    <input type="password" id="password" name="password" required placeholder="Contraseña">
+                    <button type="submit">Iniciar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
