@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formulario 4 - Informe Concluyente</title>
+  <link rel="stylesheet" href="{% static 'css/Form1styles.css'%}">
+</head>
+<body>
+<div class="form-container">
+  <h1>Formulario 4: Informe Concluyente</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="section-header">Protocolo y Fecha de Informe</div>
+    {{ form.protocolo.label_tag }} {{ form.protocolo }} {{ form.protocolo.errors }}
+    {{ form.fecha_informe.label_tag }} {{ form.fecha_informe }} {{ form.fecha_informe.errors }}
+
+    <div class="section-header">Datos del Encargado del Protocolo</div>
+    {{ form.nombre_encargado.label_tag }} {{ form.nombre_encargado }} {{ form.nombre_encargado.errors }}
+    {{ form.run_encargado.label_tag }} {{ form.run_encargado }} {{ form.run_encargado.errors }}
+    {{ form.cargo_encargado.label_tag }} {{ form.cargo_encargado }} {{ form.cargo_encargado.errors }}
+    {{ form.correo_encargado.label_tag }} {{ form.correo_encargado }} {{ form.correo_encargado.errors }}
+
+    <div class="section-header">Datos de Involucrados</div>
+    {{ form.iniciales.label_tag }} {{ form.iniciales }} {{ form.iniciales.errors }}
+    {{ form.curso_involucrado.label_tag }} {{ form.curso_involucrado }} {{ form.curso_involucrado.errors }}
+    {{ form.tipo_involucrado.label_tag }} {{ form.tipo_involucrado }} {{ form.tipo_involucrado.errors }}
+
+    <div class="section-header">Acciones Realizadas</div>
+    {{ form.tipo_accion.label_tag }} {{ form.tipo_accion }} {{ form.tipo_accion.errors }}
+    {{ form.fecha_accion.label_tag }} {{ form.fecha_accion }} {{ form.fecha_accion.errors }}
+    {{ form.descripcion_accion.label_tag }} {{ form.descripcion_accion }} {{ form.descripcion_accion.errors }}
+
+    <div class="section-header">Conclusiones y Fundamentos</div>
+    {{ form.conclusiones.label_tag }} {{ form.conclusiones }} {{ form.conclusiones.errors }}
+
+    <div class="section-header">Sanción (si aplica)</div>
+    {{ form.sancion.label_tag }} {{ form.sancion }} {{ form.sancion.errors }}
+    {{ form.fecha_inicio_sancion.label_tag }} {{ form.fecha_inicio_sancion }} {{ form.fecha_inicio_sancion.errors }}
+    {{ form.fecha_termino_sancion.label_tag }} {{ form.fecha_termino_sancion }} {{ form.fecha_termino_sancion.errors }}
+    {{ form.descripcion_sancion.label_tag }} {{ form.descripcion_sancion }} {{ form.descripcion_sancion.errors }}
+
+    <div class="section-header">Medidas (si aplica)</div>
+    {{ form.medida.label_tag }} {{ form.medida }} {{ form.medida.errors }}
+    {{ form.fecha_inicio_medida.label_tag }} {{ form.fecha_inicio_medida }} {{ form.fecha_inicio_medida.errors }}
+    {{ form.fecha_termino_medida.label_tag }} {{ form.fecha_termino_medida }} {{ form.fecha_termino_medida.errors }}
+    {{ form.descripcion_medida.label_tag }} {{ form.descripcion_medida }} {{ form.descripcion_medida.errors }}
+
+    <div class="section-header">Entrega del Informe – Afectado</div>
+    {{ form.medio_citacion_afectado.label_tag }} {{ form.medio_citacion_afectado }} {{ form.medio_citacion_afectado.errors }}
+    {{ form.fecha_citacion_afectado.label_tag }} {{ form.fecha_citacion_afectado }} {{ form.fecha_citacion_afectado.errors }}
+    {{ form.lugar_entrevista_afectado.label_tag }} {{ form.lugar_entrevista_afectado }} {{ form.lugar_entrevista_afectado.errors }}
+    {{ form.hora_entrevista_afectado.label_tag }} {{ form.hora_entrevista_afectado }} {{ form.hora_entrevista_afectado.errors }}
+    {{ form.firma_reclamante.label_tag }} {{ form.firma_reclamante }} {{ form.firma_reclamante.errors }}
+
+    <div class="section-header">Envío por Carta Certificada<

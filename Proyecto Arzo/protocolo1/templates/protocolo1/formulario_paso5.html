@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formulario 5 - Apelación</title>
+  <link rel="stylesheet" href="{% static 'css/Form1styles.css'%}">
+</head>
+<body>
+<div class="form-container">
+  <h1>Formulario 5: Apelación</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="section-header">Identificación</div>
+    {{ form.protocolo.label_tag }} {{ form.protocolo }} {{ form.protocolo.errors }}
+    {{ form.fecha_recepcion.label_tag }} {{ form.fecha_recepcion }} {{ form.fecha_recepcion.errors }}
+
+    <div class="section-header">Datos del Apelante</div>
+    {{ form.nombre_apelante.label_tag }} {{ form.nombre_apelante }} {{ form.nombre_apelante.errors }}
+    {{ form.run_apelante.label_tag }} {{ form.run_apelante }} {{ form.run_apelante.errors }}
+    {{ form.curso_o_cargo.label_tag }} {{ form.curso_o_cargo }} {{ form.curso_o_cargo.errors }}
+    {{ form.domicilio.label_tag }} {{ form.domicilio }} {{ form.domicilio.errors }}
+    {{ form.correo.label_tag }} {{ form.correo }} {{ form.correo.errors }}
+
+    <div class="section-header">Texto de la Apelación</div>
+    {{ form.texto_apelacion.label_tag }} {{ form.texto_apelacion }} {{ form.texto_apelacion.errors }}
+
+    <button type="submit">Enviar Apelación</button>
+  </form>
+</div>
+</body>
+</html>

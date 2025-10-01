@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formulario 7 - Encuesta “A mí me sucede que…”</title>
+  <link rel="stylesheet" href="{% static 'css/Form1styles.css'%}">
+</head>
+<body>
+<div class="form-container">
+  <h1>Formulario 7: “A mí me sucede que…”</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="section-header">Identificación (opcional)</div>
+    {{ form.estudiante_iniciales.label_tag }} {{ form.estudiante_iniciales }} {{ form.estudiante_iniciales.errors }}
+    {{ form.curso.label_tag }} {{ form.curso }} {{ form.curso.errors }}
+
+    <div class="section-header">Frecuencia de situaciones</div>
+    {{ form.sobrenombres.label_tag }} {{ form.sobrenombres }} {{ form.sobrenombres.errors }}
+    {{ form.burlas.label_tag }} {{ form.burlas }} {{ form.burlas.errors }}
+    {{ form.agresion_fisica.label_tag }} {{ form.agresion_fisica }} {{ form.agresion_fisica.errors }}
+    {{ form.amenazas.label_tag }} {{ form.amenazas }} {{ form.amenazas.errors }}
+    {{ form.presion_dinero.label_tag }} {{ form.presion_dinero }} {{ form.presion_dinero.errors }}
+    {{ form.presion_hacer_cosas.label_tag }} {{ form.presion_hacer_cosas }} {{ form.presion_hacer_cosas.errors }}
+    {{ form.garabatos.label_tag }} {{ form.garabatos }} {{ form.garabatos.errors }}
+    {{ form.esconden_cosas.label_tag }} {{ form.esconden_cosas }} {{ form.esconden_cosas.errors }}
+    {{ form.danan_cosas.label_tag }} {{ form.danan_cosas }} {{ form.danan_cosas.errors }}
+    {{ form.mentiras.label_tag }} {{ form.mentiras }} {{ form.mentiras.errors }}
+    {{ form.no_me_dejan_jugar.label_tag }} {{ form.no_me_dejan_jugar }} {{ form.no_me_dejan_jugar.errors }}
+    {{ form.no_me_dejan_estudiar.label_tag }} {{ form.no_me_dejan_estudiar }} {{ form.no_me_dejan_estudiar.errors }}
+    {{ form.no_me_dejan_opinar.label_tag }} {{ form.no_me_dejan_opinar }} {{ form.no_me_dejan_opinar.errors }}
+    {{ form.miedo_venir.label_tag }} {{ form.miedo_venir }} {{ form.miedo_venir.errors }}
+    {{ form.tristeza.label_tag }} {{ form.tristeza }} {{ form.tristeza.errors }}
+    {{ form.soledad.label_tag }} {{ form.soledad }} {{ form.soledad.errors }}
+    {{ form.molestia_sexual.label_tag }} {{ form.molestia_sexual }} {{ form.molestia_sexual.errors }}
+
+    <div class="section-header">Comentario adicional</div>
+    {{ form.comentario_adicional.label_tag }} {{ form.comentario_adicional }} {{ form.comentario_adicional.errors }}
+
+    <button type="submit">Enviar Encuesta</button>
+  </form>
+</div>
+</body>
+</html>
