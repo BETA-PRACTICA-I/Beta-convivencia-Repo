@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Denuncia</title>
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css'%}">
+    <script>     
+    function mostrarCamposAdicionales() {
+            const rol = document.getElementById("id_rol").value;
+            document.getElementById("campo_curso").style.display = (rol === "Estudiante" || rol === "Apoderado") ? "block" : "none";
+            document.getElementById("campo_asignatura").style.display = (rol === "Profesor de Asignatura") ? "block" : "none";
+            document.getElementById("campo_otro").style.display = (rol === "Otro") ? "block" : "none";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const rolSelect = document.getElementById("id_rol");
+            if (rolSelect) {
+                rolSelect.addEventListener("change", mostrarCamposAdicionales);
+                mostrarCamposAdicionales();
+            }
+        }); 
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Formulario de Denuncia</h1>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="section-header">Datos del Denunciante</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.nombre_denunciante.label_tag }} {{ form.nombre_denunciante }}
+                </div>
+                <div class="form-group">
+                    {{ form.run_denunciante.label_tag }} {{ form.run_denunciante }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.telefono_denunciante.label_tag }} {{ form.telefono_denunciante }}
+                </div>
+                <div class="form-group">
+                    {{ form.domicilio_denunciante.label_tag }} {{ form.domicilio_denunciante }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.correo_denunciante.label_tag }} {{ form.correo_denunciante }}
+                </div>
+            </div>
+
+            <div class="section-header">Datos del Estudiante</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.nombre_estudiante.label_tag }} {{ form.nombre_estudiante }}
+                </div>
+                <div class="form-group">
+                    {{ form.curso_estudiante.label_tag }} {{ form.curso_estudiante }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.run_estudiante.label_tag }} {{ form.run_estudiante }}
+                </div>
+                <div class="form-group">
+                    {{ form.domicilio_estudiante.label_tag }} {{ form.domicilio_estudiante }}
+                </div>
+            </div>
+
+            <div class="section-header">Datos del Denunciado</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.nombre_denunciado.label_tag }} {{ form.nombre_denunciado }}
+                </div>
+                <div class="form-group">
+                    {{ form.curso_denunciado.label_tag }} {{ form.curso_denunciado }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.rol.label_tag }} {{ form.rol }}
+                </div>
+            </div>
+
+            <div id="campo_curso" class="form-row" style="display:none;">
+                <div class="form-group">
+                    {{ form.curso_denunciado_extra.label_tag }} {{ form.curso_denunciado_extra }}
+                </div>
+            </div>
+            <div id="campo_asignatura" class="form-row" style="display:none;">
+                <div class="form-group">
+                    {{ form.asignatura.label_tag }} {{ form.asignatura }}
+                </div>
+            </div>
+            <div id="campo_otro" class="form-row" style="display:none;">
+                <div class="form-group">
+                    {{ form.otro_rol.label_tag }} {{ form.otro_rol }}
+                </div>
+            </div>
+
+            <div class="section-header">Antecedentes</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.fecha_hora.label_tag }} {{ form.fecha_hora }}
+                </div>
+                <div class="form-group">
+                    {{ form.lugar.label_tag }} {{ form.lugar }}
+                </div>
+            </div>
+
+            <div class="section-header">Testigos</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.testigos.label_tag }} {{ form.testigos }}
+                </div>
+            </div>
+
+            <div class="section-header">Descripción de la Situación</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.descripcion.label_tag }} {{ form.descripcion }}
+                </div>
+            </div>
+
+            <button type="submit">Siguiente</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ficha de Entrevista</title>
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Ficha de Entrevista</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="section-header">Datos de la Entrevista</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.numero_entrevista.label_tag }} {{ form.numero_entrevista }}
+                </div>
+                <div class="form-group">
+                    {{ form.fecha.label_tag }} {{ form.fecha }}
+                </div>
+            </div>
+
+            <div class="section-header">Datos del Entrevistado</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.nombre_entrevistado.label_tag }} {{ form.nombre_entrevistado }}
+                </div>
+                <div class="form-group">
+                    {{ form.run_entrevistado.label_tag }} {{ form.run_entrevistado }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.telefono_entrevistado.label_tag }} {{ form.telefono_entrevistado }}
+                </div>
+                <div class="form-group">
+                    {{ form.domicilio_entrevistado.label_tag }} {{ form.domicilio_entrevistado }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.correo_entrevistado.label_tag }} {{ form.correo_entrevistado }}
+                </div>
+            </div>
+
+            <div class="section-header">Contenido de la Entrevista</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.contenido_entrevista.label_tag }} {{ form.contenido_entrevista }}
+                </div>
+            </div>
+
+            <div class="section-header">Firmas</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.firma_entrevistado.label_tag }} {{ form.firma_entrevistado }}
+                </div>
+                <div class="form-group">
+                    {{ form.firma_entrevistador.label_tag }} {{ form.firma_entrevistador }}
+                </div>
+            </div>
+
+            <button type="submit">Siguiente</button>
+        </form>
+    </div>
+</body>
+</html>
+

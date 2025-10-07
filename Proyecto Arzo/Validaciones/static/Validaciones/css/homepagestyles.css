@@ -1,0 +1,230 @@
+body {
+    margin: 0;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 2rem;
+    background: linear-gradient(90deg, #aff5f3, #838bf1);
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo-and-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.logo {
+    position: fixed;
+    top: 11px; /* ajusta según tu padding */
+    left: 22px; /* ajusta según tu padding */
+    z-index: 1000;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    width: auto;
+    height: auto;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-image {
+    width: 69px;   /* ajusta el tamaño según prefieras */
+    height: auto;
+    display: block;
+}
+
+.nav-menu {
+    margin-left: 89px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+}
+
+.nav-item {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 15px;
+    transition: background-color 0.3s;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.action-hamburger {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* DE A PARTIR DE AHORA ES TODO LO QUE ESTÁ FUERA DE LA TOP BAR */
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 24px 0px 19px; /* Ajusta el padding según necesites */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color : rgb(51, 177, 231);
+}
+
+.abrir-protocolo {
+    background: linear-gradient(90deg, #99dfdc, #838bf1);
+    border: none;
+    padding: 0.85rem 1.5rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+
+}
+
+.abrir-protocolo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.25);
+}
+
+/*TABLAAAAS*/
+
+.protocol-table {
+    width: 90%;
+    margin-left: 5%;
+    border-collapse: collapse; /* Elimina el espacio entre los bordes de las celdas */
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.protocol-table th,
+.protocol-table td {
+    padding: 12px 15px; /* Espaciado interno de las celdas */
+    text-align: left; /* Alinea el texto a la izquierda */
+    border: 1px solid #ddd; /* Borde sutil para las celdas */
+    font-size: 0.9rem;
+}
+
+.protocol-table thead tr {
+    background: linear-gradient(90deg, #96dddb, #838bf1); /* Fondo degradado como la barra superior */
+    color: white; /* Color del texto del encabezado */
+    font-weight: bold;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Opcional: Estilo al pasar el cursor sobre las filas */
+.protocol-table tbody tr:hover {
+    background-color: #eef3f7;
+    cursor: pointer;
+}
+
+
+.hamburger-menu {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* abrir protocolo */
+
+#protocolo-section {
+    display: none; /* invisible al inicio */
+    padding: 2rem;
+    background-color: #f8f9fa; /* fondo suave */
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.protocolo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto 2rem auto;
+}
+
+.protocolo-titulo {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2rem;
+    color: #333;
+    /* color igual al "Hola Usuario!" */
+    color: rgb(51, 177, 231);
+}
+
+.boton-volver {
+    background: #e3e7f1;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    color: #333;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.boton-volver:hover {
+    background: #c9d6f3;
+    transform: translateX(-5px);
+}
+
+.botones-grid {
+    display: grid;
+    /* grilla que se adapta a resoluciones distintas */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem; /* espacio entre botones */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.boton-protocolo {
+    background: #ffffff; /* fondo blanco */
+    border: 1px solid #e0e0e0; /* borde del boton */
+    border-radius: 12px; /* bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    cursor: pointer;
+    padding: 1.5rem;
+    font-size: 0.95rem; /* tamaño de fuente */
+    text-align: center;
+    color: #333;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    
+    /* flexbox para alinear icono y texto */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.boton-protocolo i {
+    font-size: 2.5rem; /* iconos más grandes */
+    /* degradado limdo */
+    background: linear-gradient(90deg, #aff5f3, #838bf1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.boton-protocolo:hover {
+    transform: translateY(-5px); /* efecto de levantar la tarjeta */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-color: #838bf1; /* color del borde */
+}
