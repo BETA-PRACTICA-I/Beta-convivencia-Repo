@@ -23,7 +23,6 @@ urlpatterns = [
     path('formulario/', views.formulario_paso1, name='formulario_paso1'),
     path('formulario2/', views.formulario_paso2, name='formulario_paso2'),
     path('formulario3/', views.formulario_paso3, name='formulario_paso3'),
-    #path('formulario3/', views.formulario_paso3, name='formulario_paso3'),
     path('formulario4/', views.formulario_paso4, name='formulario_paso4'),
     path('formulario5/', views.formulario_paso5, name='formulario_paso5'),
     path('formulario6/', views.formulario_paso6, name='formulario_paso6'),

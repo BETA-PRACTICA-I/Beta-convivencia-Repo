@@ -29,7 +29,7 @@ class FichaEntrevistaForm(forms.ModelForm):
         model = FichaEntrevista
         fields = '__all__'
         widgets = {
-            'fecha': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'fecha_hora': forms.TextInput(attrs={'type': 'datetime-local'}),
             'contenido_entrevista': forms.Textarea(attrs={'rows':5}),
         }
 

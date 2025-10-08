@@ -22,7 +22,7 @@ def formulario_paso2(request):
         form = FichaEntrevistaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('protocolo1:formulario_paso4')  # o siguiente paso
+            return redirect('protocolo1:formulario_paso3')  # o siguiente paso
     else:
         form = FichaEntrevistaForm()
     return render(request, 'protocolo1/formulario_paso2.html', {'form': form})
