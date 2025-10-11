@@ -63,66 +63,43 @@ class FichaEntrevista(models.Model):
 
 
 # ============ FORMULARIO 3: Cierre/Acta de Investigación ============
-class DerivacionForm(forms.Form):
-    tipo_derivacion = forms.MultipleChoiceField(
-        choices=DERIVACION_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        label="Seleccione las derivaciones"
+class Derivacion(models.Model):
+    derivaciones = models.CharField(
+        max_length=100,
+        help_text="Separar con coma si hay más de una. Ejemplo: constatar_lesiones,denuncia_delito"
     )
 
-    # Campos para las 3 primeras opciones
-    fecha = forms.DateField(
-        required=False,
-        widget=forms.DateInput(attrs={'type': 'date'}),
-        label="Fecha"
-    )
-    institucion = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Institución"
-    )
-    funcionario_responsable = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Funcionario Responsable"
-    )
-    firma_funcionario = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Firma del Funcionario Responsable"
-    )
-    respaldo = forms.FileField(
-        required=False,
-        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,image/*'}),
-        label="Adjuntar documentación de respaldo"
-    )
+    # Datos para las 3 primeras opciones
+    fecha_lesiones = models.DateField(null=True, blank=True)
+    institucion_lesiones = models.CharField(max_length=100, blank=True)
+    funcionario_lesiones = models.CharField(max_length=100, blank=True)
+    firma_lesiones = models.CharField(max_length=100, blank=True)
+    respaldo_lesiones = models.FileField(upload_to='derivaciones/', null=True, blank=True)
 
-    # Campos para "Otras"
-    tipo_medida = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Tipo de medida"
-    )
-    descripcion = forms.CharField(
-        required=False,
-        widget=forms.Textarea(attrs={'rows': 3}),
-        label="Descripción"
-    )
-    funcionario_responsable_otras = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Funcionario Responsable (Otras)"
-    )
-    firma_funcionario_otras = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Firma del Funcionario Responsable (Otras)"
-    )
-    respaldo_otras = forms.FileField(
-        required=False,
-        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,image/*'}),
-        label="Adjuntar documentación de respaldo (Otras)"
-    )
+    fecha_delito = models.DateField(null=True, blank=True)
+    institucion_delito = models.CharField(max_length=100, blank=True)
+    funcionario_delito = models.CharField(max_length=100, blank=True)
+    firma_delito = models.CharField(max_length=100, blank=True)
+    respaldo_delito = models.FileField(upload_to='derivaciones/', null=True, blank=True)
+
+    fecha_tribunal = models.DateField(null=True, blank=True)
+    institucion_tribunal = models.CharField(max_length=100, blank=True)
+    funcionario_tribunal = models.CharField(max_length=100, blank=True)
+    firma_tribunal = models.CharField(max_length=100, blank=True)
+    respaldo_tribunal = models.FileField(upload_to='derivaciones/', null=True, blank=True)
+
+    # Datos para "Otras"
+    tipo_medida_otras = models.CharField(max_length=100, blank=True)
+    descripcion_otras = models.TextField(blank=True)
+    funcionario_otras = models.CharField(max_length=100, blank=True)
+    firma_otras = models.CharField(max_length=100, blank=True)
+    respaldo_otras = models.FileField(upload_to='derivaciones/', null=True, blank=True)
+
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Derivaciones: {self.derivaciones} ({self.fecha_creacion.date()})"
+    
 
 # ============ FORMULARIO 4: Informe Concluyente ============
 class InformeConcluyente(models.Model):
