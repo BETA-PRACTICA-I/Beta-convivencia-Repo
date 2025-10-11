@@ -64,12 +64,7 @@ class FichaEntrevista(models.Model):
 
 # ============ FORMULARIO 3: Cierre/Acta de Investigación ============
 class Derivacion(models.Model):
-    derivaciones = models.CharField(
-        max_length=100,
-        help_text="Separar con coma si hay más de una. Ejemplo: constatar_lesiones,denuncia_delito"
-    )
-
-    # Datos para las 3 primeras opciones
+    derivaciones = models.CharField(max_length=100,)
     fecha_lesiones = models.DateField(null=True, blank=True)
     institucion_lesiones = models.CharField(max_length=100, blank=True)
     funcionario_lesiones = models.CharField(max_length=100, blank=True)
@@ -96,10 +91,6 @@ class Derivacion(models.Model):
     respaldo_otras = models.FileField(upload_to='derivaciones/', null=True, blank=True)
 
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Derivaciones: {self.derivaciones} ({self.fecha_creacion.date()})"
-    
 
 # ============ FORMULARIO 4: Informe Concluyente ============
 class InformeConcluyente(models.Model):
