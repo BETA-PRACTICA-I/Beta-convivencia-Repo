@@ -1,0 +1,206 @@
+/* Paleta de Colores (Referencia Rápida - NO ES CÓDIGO CSS)
+   Azul Primario (Marca/Botón): rgb(30, 81, 160)
+   Azul Secundario (Detalles): rgb(62, 126, 193)
+   Azul Claro (Énfasis): rgb(51, 177, 231)
+   Fondo Neutro (Bordes/Campos): rgb(242, 243, 245)
+*/
+
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Fuente formal */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+/* Fondo y centrado - DISEÑO FORMAL SIN DEGRADADO */
+body {
+    background-color: rgb(242, 243, 245); /* Usando el fondo neutro como color de página */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centrar el formulario verticalmente */
+    min-height: 100vh;
+    padding: 60px 20px;
+}
+
+
+/* Contenedor del formulario - Enfocando en la formalidad */
+.form-container {
+    background: #fff;
+    width: 100%;
+    max-width: 900px;
+    padding: 40px 50px;
+    border-radius: 10px; /* Borde radio */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Sombra elegante */
+    animation: fadeInUp 0.7s ease; /* Animación de entrada para el contenedor */
+}
+
+
+/* Nueva regla para la animación de entrada */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+
+/* Nuevo estilo para el contenedor de títulos */
+.Form-Tittle {
+    display: flex; /* Habilita Flexbox */
+    justify-content: space-between; /* Mueve h1 a la izquierda y h2 a la derecha */
+    align-items: flex-end; /* Alinea los textos por su base */
+    margin-bottom: 30px; /* Mantiene la separación con el contenido del formulario */
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgb(242, 243, 245); /* Mantenemos el separador sutil */
+}
+
+
+h1 {
+    /* Eliminamos el 'text-align: center;' y el 'border-bottom' */
+    text-align: left; /* Aseguramos que esté a la izquierda */
+    margin: 0; /* Quitamos márgenes residuales */
+    color: rgb(30, 81, 160); /* Azul Primario */
+    font-size: 28px;
+    font-weight: 700;
+}
+
+
+/* Nuevo estilo para el h2 dentro de Form-Tittle */
+.Form-Tittle h2 {
+    color: #666; /* Un gris más suave y formal para el subtítulo */
+    font-size: 16px; /* Hacemos el subtítulo un poco más pequeño */
+    font-weight: 400; /* Lo hacemos menos pesado que el h1 */
+    margin: 0;
+    padding: 0;
+}
+
+
+
+
+/* Sección de Encabezados */
+.section-header {
+    /* Fondo sutil: 10% de opacidad del Azul Secundario */
+    background-color: rgba(62, 126, 193, 0.1);
+    color: rgb(30, 81, 160); /* Azul Primario */
+    font-weight: 700;
+    padding: 12px 15px;
+    margin: 35px 0 20px 0;
+    border-radius: 5px;
+    font-size: 18px;
+    border-left: 5px solid rgb(62, 126, 193); /* Borde de énfasis con Azul Secundario */
+}
+
+
+/* Etiquetas */
+label {
+    display: block;
+    margin-top: 20px;
+    font-weight: 600;
+    color: #444;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+
+/* Campos de entrada, Select y Textarea */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 0 0 15px 0;
+    border: 1px solid rgb(242, 243, 245); /* Borde con Fondo Neutro */
+    border-radius: 5px;
+    font-size: 15px;
+    background-color: rgb(242, 243, 245); /* Fondo muy claro con Fondo Neutro */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+/* Estilo de Foco (Interacción) */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: rgb(62, 126, 193); /* Borde Azul Secundario al hacer foco */
+    box-shadow: 0 0 0 3px rgba(30, 81, 160, 0.1); /* Sombra de foco con Azul Primario (10% opacidad) */
+    outline: none;
+    background-color: #fff;
+}
+
+/* Botón de Enviar/Siguiente */
+button[type="submit"] {
+    display: block;
+    margin: 40px auto 10px auto;
+    background-color: rgb(30, 81, 160); /* Azul Primario */
+    color: white;
+    font-weight: 700;
+    border: none;
+    padding: 14px 40px;
+    font-size: 17px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+button[type="submit"]:hover {
+    background-color: rgb(62, 126, 193); /* Azul Secundario en hover */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(30, 81, 160, 0.2);
+}
+
+
+/* Estilos para campos condicionales (detalles visuales para secciones dinámicas) */
+#campo_curso, #campo_asignatura, #campo_otro {
+    border-left: 3px solid rgb(51, 177, 231); /* Borde con Azul Claro */
+    padding-left: 15px;
+    margin-top: 10px;
+    padding-top: 5px;
+}
+
+
+/* Estilos de errores */
+.errorlist {
+    color: red;
+    list-style: none;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background-color: rgba(255, 0, 0, 0.05);
+}
+
+input, select, textarea {
+    box-shadow: 0 2px 8px rgba(62, 126, 193, 0.07);
+}
+
+/* Fila de inputs: dos columnas */
+.form-row {
+    display: flex;
+    gap: 30px; /* Espacio entre los inputs */
+    margin-bottom: 10px;
+}
+
+/* Cada input ocupa la mitad */
+.form-group {
+    flex: 1;
+    min-width: 0; /* Evita overflow */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Responsive: en móviles, los inputs vuelven a columna */
+@media (max-width: 700px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+

@@ -1,0 +1,283 @@
+body {
+    position: relative;
+    margin: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: url("../img/fondocatedral3.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 1;
+    transition: opacity 0.7s;
+}
+
+body.fondo-opaco::before {
+    opacity: 0.4;
+}
+
+/* Fondo con opacidad controlable */
+
+
+.logo {
+    width: 185px;
+    height: auto;
+    filter: drop-shadow(0px 4px 8px rgba(255, 255, 255, 0.8));
+    margin-bottom: 18px;
+}
+
+.botones {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espacio entre los botones */
+    
+}
+
+.btn {
+    width: 300px;
+    height: 60px;
+    border: 2px solid #fff;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.6);
+    color: rgb(30, 81, 160);
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(24, 8, 68, 0.62);
+}
+
+.btn:hover {
+    transform: scale(1.04);
+    transition: transform 0.2s;
+}
+
+.container {
+    width: 100vw;
+    max-width: 1200px;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17%;
+    box-sizing: border-box;
+}
+
+.visible {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Animación para ocultar/mostrar elementos */
+.fade-in {
+    opacity: 0;
+    transform: scale(0.95);
+    animation: fadeInAnim 0.4s forwards;
+}
+
+@keyframes fadeInAnim {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.fade-out {
+    opacity: 1;
+    transform: scale(1);
+    animation: fadeOutAnim 0.4s forwards;
+}
+
+@keyframes fadeOutAnim {
+    to {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+}
+
+/* INTENTO DE HACER UN FORM BONITO TIERNO CHISTOSO */
+
+.FormInicioSesion {
+    position: absolute;
+    top: 20%;
+    left: 34%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: rgb(30, 81, 160);
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 350px;
+    z-index: 10; /* Asegura que esté por encima de otros elementos */
+}   
+
+.form-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.form-vertical input {
+    padding: 12px 14px;
+    border: 1.5px solid #1e51a0;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 6px rgba(30, 81, 160, 0.08);
+    background: #f7faff;
+}
+
+.form-vertical input:focus {
+    border-color: rgb(30, 81, 160);
+    box-shadow: 0 0 0 2px rgba(30, 81, 160, 0.3);
+}
+
+.form-vertical button[type="submit"] {
+    padding: 12px 0;
+    background: rgb(30, 81, 160);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(30, 81, 160, 0.13);
+    transition: filter 0.2s, transform 0.2s;
+}
+
+.form-vertical button[type="submit"]:hover {
+    filter: brightness(1.2);
+    transform: scale(1.04);
+}
+.messages {
+    list-style: none;
+    margin: 16px 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+}
+
+/* Tarjeta base */
+.messages .msg {
+    position: relative;
+    padding: 12px 14px 12px 44px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    background: #f7f7f8;
+    color: #1f2328;
+    animation: slideIn .25s ease-out;
+}
+
+/* Icono por defecto */
+.messages .msg::before {
+    content: "ℹ";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 700;
+    opacity: .9;
+}
+
+/* Success */
+.messages .msg.success {
+    background: #eefcf3;
+    border-color: #bbefd1;
+    color: #0f5132;
+}
+.messages .msg.success::before { content: "✓"; }
+
+/* Error */
+.messages .msg.error,
+.messages .msg.danger {
+    background: #fdecec;
+    border-color: #f6b7b7;
+    color: #842029;
+}
+.messages .msg.error::before,
+.messages .msg.danger::before { content: "✕"; }
+
+/* Warning */
+.messages .msg.warning {
+    background: #fff7e6;
+    border-color: #ffe0a3;
+    color: #7a4d00;
+}
+.messages .msg.warning::before { content: "⚠"; }
+
+/* Info */
+.messages .msg.info,
+.messages .msg.notice {
+    background: #eaf5ff;
+    border-color: #bddcff;
+    color: #0b4a6f;
+}
+.messages .msg.info::before,
+.messages .msg.notice::before { content: "ℹ"; }
+
+/* Debug */
+.messages .msg.debug {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #334155;
+}
+.messages .msg.debug::before { content: "…"; }
+
+/* Botón cerrar (opcional si lo agregas en el template) */
+.messages .msg .close {
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    padding: 4px 8px;
+    border: 0;
+    background: transparent;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: .65;
+}
+.messages .msg .close:hover { opacity: 1; }
+
+/* Animación */
+@keyframes slideIn {
+    from { transform: translateY(-6px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Modo oscuro (si usas preferencia del SO) */
+@media (prefers-color-scheme: dark) {
+    .messages .msg {
+    background: #111827;
+    color: #e5e7eb;
+    box-shadow: 0 6px 18px rgba(0,0,0,.25);
+    }
+    .messages .msg.success { background:#062d1f; border-color:#14532d; color:#b7f7d2; }
+    .messages .msg.error   { background:#2a0f12; border-color:#7f1d1d; color:#fecaca; }
+    .messages .msg.warning { background:#2b1f06; border-color:#b45309; color:#fde68a; }
+    .messages .msg.info    { background:#0b2536; border-color:#1e40af; color:#bfdbfe; }
+    .messages .msg.debug   { background:#0f172a; border-color:#334155; color:#cbd5e1; }
+}
+
+/* Esto debe estar al final */
+.oculto {
+    display: none !important;
+}
