@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import (FormularioDenunciaForm, FichaEntrevistaForm, ActaInvestigacionForm,
+from .forms import (FormularioDenunciaForm, FichaEntrevistaForm, DerivacionForm,
     InformeConcluyenteForm, ApelacionForm, ResolucionApelacionForm, EncuestaBullyingForm)
 from django.contrib.auth.decorators import login_required
 
@@ -22,14 +22,14 @@ def formulario_paso2(request):
         form = FichaEntrevistaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('protocolo1:formulario_paso3')  # o siguiente paso
+            return redirect('protocolo1:formulario_paso4')  # o siguiente paso
     else:
         form = FichaEntrevistaForm()
     return render(request, 'protocolo1/formulario_paso2.html', {'form': form})
 
 @login_required(login_url='Validaciones:login') 
 def formulario_paso3(request):
-    form = ActaInvestigacionForm(request.POST or None)
+    form = DerivacionForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         form.save()
         return redirect('protocolo1:formulario_paso4')
@@ -70,6 +70,4 @@ def formulario_paso7(request):
 # (Opcional) vista de Ã©xito simple
 def formulario_exito(request):
     return render(request, 'protocolo1/exito.html')
-
-
 

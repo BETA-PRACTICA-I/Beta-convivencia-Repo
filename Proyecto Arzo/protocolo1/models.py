@@ -63,17 +63,66 @@ class FichaEntrevista(models.Model):
 
 
 # ============ FORMULARIO 3: Cierre/Acta de Investigación ============
-class ActaInvestigacion(models.Model):
-    protocolo = models.CharField(max_length=100, default='PENDIENTE')
-    fecha_apertura = models.DateField(default=timezone.now)
-    responsable = models.CharField(max_length=120, default='')
-    acciones_realizadas = models.TextField(default='')
-    conclusiones = models.TextField(default='')
-    tipificacion = models.CharField(max_length=150, default='')
-    recomendaciones = models.TextField(default='')
-    fecha_cierre = models.DateField(default=timezone.now)
-    informado_a_direccion = models.BooleanField(default=False)
-    informado_a_apoderados = models.BooleanField(default=False)
+class DerivacionForm(forms.Form):
+    tipo_derivacion = forms.MultipleChoiceField(
+        choices=DERIVACION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        label="Seleccione las derivaciones"
+    )
+
+    # Campos para las 3 primeras opciones
+    fecha = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        label="Fecha"
+    )
+    institucion = forms.CharField(
+        required=False,
+        widget=forms.TextInput(),
+        label="Institución"
+    )
+    funcionario_responsable = forms.CharField(
+        required=False,
+        widget=forms.TextInput(),
+        label="Funcionario Responsable"
+    )
+    firma_funcionario = forms.CharField(
+        required=False,
+        widget=forms.TextInput(),
+        label="Firma del Funcionario Responsable"
+    )
+    respaldo = forms.FileField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,image/*'}),
+        label="Adjuntar documentación de respaldo"
+    )
+
+    # Campos para "Otras"
+    tipo_medida = forms.CharField(
+        required=False,
+        widget=forms.TextInput(),
+        label="Tipo de medida"
+    )
+    descripcion = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 3}),
+        label="Descripción"
+    )
+    funcionario_responsable_otras = forms.CharField(
+        required=False,
+        widget=forms.TextInput(),
+        label="Funcionario Responsable (Otras)"
+    )
+    firma_funcionario_otras = forms.CharField(
+        required=False,
+        widget=forms.TextInput(),
+        label="Firma del Funcionario Responsable (Otras)"
+    )
+    respaldo_otras = forms.FileField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,image/*'}),
+        label="Adjuntar documentación de respaldo (Otras)"
+    )
 
 # ============ FORMULARIO 4: Informe Concluyente ============
 class InformeConcluyente(models.Model):

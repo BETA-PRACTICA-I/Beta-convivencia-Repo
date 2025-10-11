@@ -1,5 +1,5 @@
 from django import forms
-from .models import (FormularioDenuncia, FichaEntrevista, ActaInvestigacion,
+from .models import (FormularioDenuncia, FichaEntrevista, Derivacion,
     InformeConcluyente, Apelacion, ResolucionApelacion, EncuestaBullying)
 
 DERIVACION_CHOICES = [
@@ -33,9 +33,9 @@ class FichaEntrevistaForm(forms.ModelForm):
             'contenido_entrevista': forms.Textarea(attrs={'rows':5}),
         }
 
-class ActaInvestigacionForm(forms.ModelForm):
+class DerivacionForm(forms.ModelForm):
     class Meta:
-        model = ActaInvestigacion
+        model = Derivacion
         fields = '__all__'
         widgets = {
             'fecha_apertura': forms.DateInput(attrs={'type': 'date'}),
