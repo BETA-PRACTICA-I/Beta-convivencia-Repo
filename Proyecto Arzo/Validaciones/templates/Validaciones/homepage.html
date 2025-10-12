@@ -3,15 +3,10 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-
     <title>Convivencia Escolar</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" href="{% static 'Validaciones/css/homepagestyles.css'%}">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <script src="{% static 'Validaciones/js/Script.js' %}" defer></script>
 
 </head>
@@ -83,7 +78,20 @@
                 <td>Pedro sánchez - Carlos Tevez</td>
                 <td>7°A - 8°B</td>
                 <td>2. Violencia entre miembros de la C.E</td>
-                <td>Completado</td>
+                
+                <td class="estado-cell">
+                    <div class="estado-dropdown">
+                        <button class="estado-btn">
+                            <span class="estado-texto">Completado</span>
+                            <span class="icono-desplegable">▾</span>
+                        </button>
+                        <div class="estado-opciones">
+                            <a href="#" data-value="Resuelto">Resuelto</a>
+                            <a href="#" data-value="Pendiente">Pendiente</a>
+                            <a href="#" data-value="Vencido">Vencido</a>
+                        </div>
+                    </div>
+                </td>
                 <td>Encargado 1</td>
                 <td>03/03/2025</td>
                 <td>18/03/2025</td>
@@ -91,5 +99,69 @@
             </tr>
         </tbody>
     </table>
+
+
+
+
+
+
+    <script>
+    // Espera a que todo el contenido de la página se cargue
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Selecciona todos los botones de estado en la tabla
+        const botonesEstado = document.querySelectorAll('.estado-btn');
+
+        botonesEstado.forEach(boton => {
+            boton.addEventListener('click', function(event) {
+                // Detiene la propagación para que no se activen otros eventos del <tr> o <td>
+                event.stopPropagation(); 
+                
+                // Encuentra el menú de opciones correspondiente a este botón
+                const opciones = this.nextElementSibling;
+                
+                // Muestra u oculta el menú
+                opciones.classList.toggle('mostrar');
+            });
+        });
+
+        // Selecciona todas las opciones dentro de los menús desplegables
+        const linksOpciones = document.querySelectorAll('.estado-opciones a');
+
+        linksOpciones.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault(); // Evita que el link recargue la página
+                event.stopPropagation();
+
+                const nuevoEstado = this.dataset.value; // Obtiene el valor (Ej: "Resuelto")
+                const menu = this.parentElement; // El div .estado-opciones
+                const boton = menu.previousElementSibling; // El botón .estado-btn
+                const textoBoton = boton.querySelector('.estado-texto');
+
+                // Actualiza el texto del botón con la opción seleccionada
+                textoBoton.textContent = nuevoEstado;
+
+                // Oculta el menú
+                menu.classList.remove('mostrar');
+
+                // Aquí, en el futuro, podrías añadir una llamada (AJAX/Fetch) 
+                // para guardar el nuevo estado en la base de datos.
+                console.log(`Estado cambiado a: ${nuevoEstado}`);
+            });
+        });
+
+        // Cierra el menú si el usuario hace clic en cualquier otro lugar de la página
+        window.addEventListener('click', function(event) {
+            // Busca todos los menús que estén abiertos
+            const menúsAbiertos = document.querySelectorAll('.estado-opciones.mostrar');
+            menúsAbiertos.forEach(menu => {
+                // Y los cierra
+                menu.classList.remove('mostrar');
+            });
+        });
+    });
+    </script>
+
+
 </body>
 </html>
