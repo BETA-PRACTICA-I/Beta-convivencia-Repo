@@ -28,75 +28,58 @@ def formulario_paso2(request):
     return render(request, 'protocolo1/formulario_paso2.html', {'form': form})
 
 
-@login_required(login_url='Validaciones:login') 
+@login_required(login_url='Validaciones:login')
 def formulario_paso3(request):
-    form = DerivacionForm(request.POST or None, request.FILES or None) 
-    
-    if request.method == 'POST' and form.is_valid():
-        data = form.cleaned_data
-        try:
-            from .models import Derivacion
+    if request.method == 'POST':
+        form = DerivacionForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = form.cleaned_data
+            try:
+                from .models import Derivacion
 
-            # Mapeo de campos del formulario a campos del modelo
-            derivaciones = ", ".join(data['tipo_derivacion'])
+                # Crea una instancia del modelo Derivacion
+                derivacion_obj = Derivacion(
+                    derivaciones=", ".join(data['tipo_derivacion'])
+                )
 
-            # Inicializa todos los campos en None/'' por defecto
-            kwargs = {
-                'derivaciones': derivaciones,
-                'fecha_lesiones': None,
-                'institucion_lesiones': '',
-                'funcionario_lesiones': '',
-                'firma_lesiones': '',
-                'respaldo_lesiones': None,
-                'fecha_delito': None,
-                'institucion_delito': '',
-                'funcionario_delito': '',
-                'firma_delito': '',
-                'respaldo_delito': None,
-                'fecha_tribunal': None,
-                'institucion_tribunal': '',
-                'funcionario_tribunal': '',
-                'firma_tribunal': '',
-                'respaldo_tribunal': None,
-                'tipo_medida_otras': '',
-                'descripcion_otras': '',
-                'funcionario_otras': '',
-                'firma_otras': '',
-                'respaldo_otras': None,
-            }
+                # Asigna los datos directamente si la opción fue seleccionada
+                if 'constatar_lesiones' in data['tipo_derivacion']:
+                    derivacion_obj.fecha_lesiones = data.get('fecha_lesiones')
+                    derivacion_obj.institucion_lesiones = data.get('institucion_lesiones')
+                    derivacion_obj.funcionario_lesiones = data.get('funcionario_responsable_lesiones')
+                    derivacion_obj.firma_lesiones = data.get('firma_funcionario_lesiones')
+                    derivacion_obj.respaldo_lesiones = data.get('respaldo_lesiones')
+                
+                if 'denuncia_delito' in data['tipo_derivacion']:
+                    derivacion_obj.fecha_delito = data.get('fecha_delito')
+                    derivacion_obj.institucion_delito = data.get('institucion_delito')
+                    derivacion_obj.funcionario_delito = data.get('funcionario_responsable_delito')
+                    derivacion_obj.firma_delito = data.get('firma_funcionario_delito')
+                    derivacion_obj.respaldo_delito = data.get('respaldo_delito')
 
-            # Asigna los datos según las opciones seleccionadas
-            if 'constatar_lesiones' in data['tipo_derivacion']:
-                kwargs['fecha_lesiones'] = data['fecha']
-                kwargs['institucion_lesiones'] = data['institucion']
-                kwargs['funcionario_lesiones'] = data['funcionario_responsable']
-                kwargs['firma_lesiones'] = data['firma_funcionario']
-                kwargs['respaldo_lesiones'] = data['respaldo']
-            if 'denuncia_delito' in data['tipo_derivacion']:
-                kwargs['fecha_delito'] = data['fecha']
-                kwargs['institucion_delito'] = data['institucion']
-                kwargs['funcionario_delito'] = data['funcionario_responsable']
-                kwargs['firma_delito'] = data['firma_funcionario']
-                kwargs['respaldo_delito'] = data['respaldo']
-            if 'tribunal_familia' in data['tipo_derivacion']:
-                kwargs['fecha_tribunal'] = data['fecha']
-                kwargs['institucion_tribunal'] = data['institucion']
-                kwargs['funcionario_tribunal'] = data['funcionario_responsable']
-                kwargs['firma_tribunal'] = data['firma_funcionario']
-                kwargs['respaldo_tribunal'] = data['respaldo']
-            if 'otras' in data['tipo_derivacion']:
-                kwargs['tipo_medida_otras'] = data['tipo_medida']
-                kwargs['descripcion_otras'] = data['descripcion']
-                kwargs['funcionario_otras'] = data['funcionario_responsable_otras']
-                kwargs['firma_otras'] = data['firma_funcionario_otras']
-                kwargs['respaldo_otras'] = data['respaldo_otras']
+                if 'tribunal_familia' in data['tipo_derivacion']:
+                    derivacion_obj.fecha_tribunal = data.get('fecha_tribunal')
+                    derivacion_obj.institucion_tribunal = data.get('institucion_tribunal')
+                    derivacion_obj.funcionario_tribunal = data.get('funcionario_responsable_tribunal')
+                    derivacion_obj.firma_tribunal = data.get('firma_funcionario_tribunal')
+                    derivacion_obj.respaldo_tribunal = data.get('respaldo_tribunal')
 
-            Derivacion.objects.create(**kwargs)
+                if 'otras' in data['tipo_derivacion']:
+                    derivacion_obj.tipo_medida_otras = data.get('tipo_medida_otras')
+                    derivacion_obj.descripcion_otras = data.get('descripcion_otras')
+                    derivacion_obj.funcionario_otras = data.get('funcionario_responsable_otras')
+                    derivacion_obj.firma_otras = data.get('firma_funcionario_otras')
+                    derivacion_obj.respaldo_otras = data.get('respaldo_otras')
 
-        except Exception as e:
-            print(f"ERROR AL GUARDAR EL MODELO DERIVACION: {e}")
+                # Guarda el objeto en la base de datos
+                derivacion_obj.save()
 
-        return redirect('protocolo1:formulario_paso4')
+                return redirect('protocolo1:formulario_paso4')
+            except Exception as e:
+                print(f"ERROR AL GUARDAR EL MODELO DERIVACION: {e}")
+    else:
+        form = DerivacionForm()
+        
     return render(request, 'protocolo1/formulario_paso3.html', {'form': form})
 
 

@@ -5,75 +5,54 @@
 
 <div class="form-container">
     <h2>DERIVACIONES</h2>
+    
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <div class="derivacion-block">
-            <label>
-                <input type="checkbox" id="chk_lesiones" name="tipo_derivacion" value="constatar_lesiones"
-                    onclick="toggleBlock('block_lesiones', this)">
-                Derivación a constatar lesiones
-            </label>
-            <div id="block_lesiones" class="derivacion-form" style="display:none;">
-                <label>Fecha: <input type="date" name="fecha_lesiones"></label>
-                <label>Institución: <input type="text" name="institucion_lesiones"></label>
-                <label>Funcionario Responsable: <input type="text" name="funcionario_lesiones"></label>
-                <label>Firma del Funcionario Responsable: <input type="text" name="firma_lesiones"></label>
-                <label>Adjuntar documentación de respaldo:
-                    <input type="file" name="respaldo_lesiones" accept=".pdf,.doc,.docx,image/*">
-                </label>
-            </div>
+        {# Este campo es el de los checkboxes y es mejor renderizarlo con Django #}
+        <div class.derivacion-block>
+             <p>Seleccione las derivaciones:</p>
+             {{ form.tipo_derivacion }}
         </div>
 
-        <div class="derivacion-block">
-            <label>
-                <input type="checkbox" id="chk_delito" name="tipo_derivacion" value="denuncia_delito"
-                    onclick="toggleBlock('block_delito', this)">
-                Denuncia (Si es constitutivo de delito)
-            </label>
-            <div id="block_delito" class="derivacion-form" style="display:none;">
-                <label>Fecha: <input type="date" name="fecha_delito"></label>
-                <label>Institución: <input type="text" name="institucion_delito"></label>
-                <label>Funcionario Responsable: <input type="text" name="funcionario_delito"></label>
-                <label>Firma del Funcionario Responsable: <input type="text" name="firma_delito"></label>
-                <label>Adjuntar documentación de respaldo:
-                    <input type="file" name="respaldo_delito" accept=".pdf,.doc,.docx,image/*">
-                </label>
-            </div>
+        {# --- Bloque para 'Constatar Lesiones' --- #}
+        <div id="block_lesiones" class="derivacion-form" style="display:none;">
+            <h4>Derivación a constatar lesiones</h4>
+            <label>Fecha: {{ form.fecha_lesiones }}</label>
+            <label>Institución: {{ form.institucion_lesiones }}</label>
+            <label>Funcionario Responsable: {{ form.funcionario_responsable_lesiones }}</label>
+            <label>Firma del Funcionario Responsable: {{ form.firma_funcionario_lesiones }}</label>
+            <label>Adjuntar documentación de respaldo: {{ form.respaldo_lesiones }}</label>
         </div>
 
-        <div class="derivacion-block">
-            <label>
-                <input type="checkbox" id="chk_tribunal" name="tipo_derivacion" value="tribunal_familia"
-                    onclick="toggleBlock('block_tribunal', this)">
-                Derivación a tribunal de familia
-            </label>
-            <div id="block_tribunal" class="derivacion-form" style="display:none;">
-                <label>Fecha: <input type="date" name="fecha_tribunal"></label>
-                <label>Institución: <input type="text" name="institucion_tribunal"></label>
-                <label>Funcionario Responsable: <input type="text" name="funcionario_tribunal"></label>
-                <label>Firma del Funcionario Responsable: <input type="text" name="firma_tribunal"></label>
-                <label>Adjuntar documentación de respaldo:
-                    <input type="file" name="respaldo_tribunal" accept=".pdf,.doc,.docx,image/*">
-                </label>
-            </div>
+        {# --- Bloque para 'Denuncia Delito' --- #}
+        <div id="block_delito" class="derivacion-form" style="display:none;">
+            <h4>Denuncia (Si es constitutivo de delito)</h4>
+            <label>Fecha: {{ form.fecha_delito }}</label>
+            <label>Institución: {{ form.institucion_delito }}</label>
+            <label>Funcionario Responsable: {{ form.funcionario_responsable_delito }}</label>
+            <label>Firma del Funcionario Responsable: {{ form.firma_funcionario_delito }}</label>
+            <label>Adjuntar documentación de respaldo: {{ form.respaldo_delito }}</label>
         </div>
 
-        <div class="derivacion-block">
-            <label>
-                <input type="checkbox" id="chk_otras" name="tipo_derivacion" value="otras"
-                    onclick="toggleBlock('block_otras', this)">
-                Otras
-            </label>
-            <div id="block_otras" class="derivacion-form" style="display:none;">
-                <label>Tipo de medida: <input type="text" name="tipo_medida_otras"></label>
-                <label>Descripción: <textarea name="descripcion_otras" rows="3"></textarea></label>
-                <label>Funcionario Responsable: <input type="text" name="funcionario_otras"></label>
-                <label>Firma del Funcionario Responsable: <input type="text" name="firma_otras"></label>
-                <label>Adjuntar documentación de respaldo:
-                    <input type="file" name="respaldo_otras" accept=".pdf,.doc,.docx,image/*">
-                </label>
-            </div>
+        {# --- Bloque para 'Tribunal de Familia' --- #}
+        <div id="block_tribunal" class="derivacion-form" style="display:none;">
+            <h4>Derivación a tribunal de familia</h4>
+            <label>Fecha: {{ form.fecha_tribunal }}</label>
+            <label>Institución: {{ form.institucion_tribunal }}</label>
+            <label>Funcionario Responsable: {{ form.funcionario_responsable_tribunal }}</label>
+            <label>Firma del Funcionario Responsable: {{ form.firma_funcionario_tribunal }}</label>
+            <label>Adjuntar documentación de respaldo: {{ form.respaldo_tribunal }}</label>
+        </div>
+
+        {# --- Bloque para 'Otras' --- #}
+        <div id="block_otras" class="derivacion-form" style="display:none;">
+            <h4>Otras</h4>
+            <label>Tipo de medida: {{ form.tipo_medida_otras }}</label>
+            <label>Descripción: {{ form.descripcion_otras }}</label>
+            <label>Funcionario Responsable: {{ form.funcionario_responsable_otras }}</label>
+            <label>Firma del Funcionario Responsable: {{ form.firma_funcionario_otras }}</label>
+            <label>Adjuntar documentación de respaldo: {{ form.respaldo_otras }}</label>
         </div>
 
         <button type="submit" class="btn btn-primary">Guardar y continuar</button>
@@ -81,8 +60,36 @@
 </div>
 
 <script>
+// Tu script de Javascript está perfecto, pero necesita una pequeña adaptación
+// para funcionar con los checkboxes que ahora genera Django.
+
+// Función para mostrar/ocultar los bloques
 function toggleBlock(blockId, checkbox) {
-    document.getElementById(blockId).style.display = checkbox.checked ? 'block' : 'none';
+    const block = document.getElementById(blockId);
+    if (block) {
+        block.style.display = checkbox.checked ? 'block' : 'none';
+    }
 }
+
+// Escuchamos los cambios en los checkboxes de derivación
+document.querySelectorAll('input[name="tipo_derivacion"]').forEach(checkbox => {
+    // Definimos a qué bloque corresponde cada checkbox
+    const valueToBlockId = {
+        'constatar_lesiones': 'block_lesiones',
+        'denuncia_delito': 'block_delito',
+        'tribunal_familia': 'block_tribunal',
+        'otras': 'block_otras'
+    };
+    
+    const blockId = valueToBlockId[checkbox.value];
+
+    // Llamamos a la función toggleBlock cuando se hace clic
+    checkbox.addEventListener('change', function() {
+        toggleBlock(blockId, this);
+    });
+
+    // Verificamos el estado inicial al cargar la página (en caso de error de formulario)
+    toggleBlock(blockId, checkbox);
+});
 </script>
 {% endblock %}

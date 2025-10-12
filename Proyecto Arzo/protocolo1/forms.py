@@ -37,62 +37,37 @@ class DerivacionForm(forms.Form):
     tipo_derivacion = forms.MultipleChoiceField(
         choices=DERIVACION_CHOICES,
         widget=forms.CheckboxSelectMultiple,
-        label="Seleccione las derivaciones"
+        label="Seleccione las derivaciones",
+        required=True
     )
 
-    # Campos para las 3 primeras opciones
-    fecha = forms.DateField(
-        required=False,
-        widget=forms.DateInput(attrs={'type': 'date'}),
-        label="Fecha"
-    )
-    institucion = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Institución"
-    )
-    funcionario_responsable = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Funcionario Responsable"
-    )
-    firma_funcionario = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Firma del Funcionario Responsable"
-    )
-    respaldo = forms.FileField(
-        required=False,
-        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,image/*'}),
-        label="Adjuntar documentación de respaldo"
-    )
+    # --- Campos para 'Constatar Lesiones' ---
+    fecha_lesiones = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    institucion_lesiones = forms.CharField(required=False)
+    funcionario_responsable_lesiones = forms.CharField(required=False)
+    firma_funcionario_lesiones = forms.CharField(required=False)
+    respaldo_lesiones = forms.FileField(required=False)
 
-    # Campos para "Otras"
-    tipo_medida = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Tipo de medida"
-    )
-    descripcion = forms.CharField(
-        required=False,
-        widget=forms.Textarea(attrs={'rows': 3}),
-        label="Descripción"
-    )
-    funcionario_responsable_otras = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Funcionario Responsable (Otras)"
-    )
-    firma_funcionario_otras = forms.CharField(
-        required=False,
-        widget=forms.TextInput(),
-        label="Firma del Funcionario Responsable (Otras)"
-    )
-    respaldo_otras = forms.FileField(
-        required=False,
-        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,image/*'}),
-        label="Adjuntar documentación de respaldo (Otras)"
-    )
+    # --- Campos para 'Denuncia Delito' ---
+    fecha_delito = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    institucion_delito = forms.CharField(required=False)
+    funcionario_responsable_delito = forms.CharField(required=False)
+    firma_funcionario_delito = forms.CharField(required=False)
+    respaldo_delito = forms.FileField(required=False)
+    
+    # --- Campos para 'Tribunal Familia' ---
+    fecha_tribunal = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    institucion_tribunal = forms.CharField(required=False)
+    funcionario_responsable_tribunal = forms.CharField(required=False)
+    firma_funcionario_tribunal = forms.CharField(required=False)
+    respaldo_tribunal = forms.FileField(required=False)
+
+    # --- Campos para 'Otras' ---
+    tipo_medida_otras = forms.CharField(required=False, label="Tipo de medida")
+    descripcion_otras = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 3}), label="Descripción")
+    funcionario_responsable_otras = forms.CharField(required=False, label="Funcionario Responsable (Otras)")
+    firma_funcionario_otras = forms.CharField(required=False, label="Firma del Funcionario Responsable (Otras)")
+    respaldo_otras = forms.FileField(required=False, label="Adjuntar documentación de respaldo (Otras)")
 
 
 class InformeConcluyenteForm(forms.ModelForm):
