@@ -33,68 +33,6 @@ class FichaEntrevistaForm(forms.ModelForm):
             'contenido_entrevista': forms.Textarea(attrs={'rows':5}),
         }
 
-class DerivacionForm(forms.ModelForm):
-    class Meta:
-        model = Derivacion
-        fields = '__all__'
-        widgets = {
-            'fecha_apertura': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_cierre': forms.DateInput(attrs={'type': 'date'}),
-            'acciones_realizadas': forms.Textarea(attrs={'rows': 5}),
-            'conclusiones': forms.Textarea(attrs={'rows': 5}),
-            'recomendaciones': forms.Textarea(attrs={'rows': 4}),
-        }
-
-class InformeConcluyenteForm(forms.ModelForm):
-    class Meta:
-        model = InformeConcluyente
-        fields = '__all__'
-        widgets = {
-            'fecha_informe': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_accion': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_inicio_sancion': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_termino_sancion': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_inicio_medida': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_termino_medida': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_citacion_afectado': forms.DateInput(attrs={'type': 'date'}),
-            'hora_entrevista_afectado': forms.TimeInput(attrs={'type': 'time'}),
-            'fecha_envio': forms.DateInput(attrs={'type': 'date'}),
-            'hora_envio': forms.TimeInput(attrs={'type': 'time'}),
-            'fecha_citacion_denunciado': forms.DateInput(attrs={'type': 'date'}),
-            'hora_entrevista_denunciado': forms.TimeInput(attrs={'type': 'time'}),
-            'descripcion_accion': forms.Textarea(attrs={'rows': 4}),
-            'conclusiones': forms.Textarea(attrs={'rows': 4}),
-            'descripcion_sancion': forms.Textarea(attrs={'rows': 3}),
-            'descripcion_medida': forms.Textarea(attrs={'rows': 3}),
-        }
-
-class ApelacionForm(forms.ModelForm):
-    class Meta:
-        model = Apelacion
-        fields = '__all__'
-        widgets = {
-            'fecha_recepcion': forms.DateInput(attrs={'type': 'date'}),
-            'texto_apelacion': forms.Textarea(attrs={'rows': 6}),
-        }
-
-class ResolucionApelacionForm(forms.ModelForm):
-    class Meta:
-        model = ResolucionApelacion
-        fields = '__all__'
-        widgets = {
-            'fecha_recepcion': forms.DateInput(attrs={'type': 'date'}),
-            'resolucion': forms.Textarea(attrs={'rows': 5}),
-            'fundamentos': forms.Textarea(attrs={'rows': 6}),
-        }
-
-class EncuestaBullyingForm(forms.ModelForm):
-    class Meta:
-        model = EncuestaBullying
-        fields = '__all__'
-        widgets = {
-            'comentario_adicional': forms.Textarea(attrs={'rows': 4}),
-        }
-
 class DerivacionForm(forms.Form):
     tipo_derivacion = forms.MultipleChoiceField(
         choices=DERIVACION_CHOICES,
@@ -155,5 +93,57 @@ class DerivacionForm(forms.Form):
         widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,image/*'}),
         label="Adjuntar documentación de respaldo (Otras)"
     )
+
+
+class InformeConcluyenteForm(forms.ModelForm):
+    class Meta:
+        model = InformeConcluyente
+        fields = '__all__'
+        widgets = {
+            'fecha_informe': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_accion': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_inicio_sancion': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_termino_sancion': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_inicio_medida': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_termino_medida': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_citacion_afectado': forms.DateInput(attrs={'type': 'date'}),
+            'hora_entrevista_afectado': forms.TimeInput(attrs={'type': 'time'}),
+            'fecha_envio': forms.DateInput(attrs={'type': 'date'}),
+            'hora_envio': forms.TimeInput(attrs={'type': 'time'}),
+            'fecha_citacion_denunciado': forms.DateInput(attrs={'type': 'date'}),
+            'hora_entrevista_denunciado': forms.TimeInput(attrs={'type': 'time'}),
+            'descripcion_accion': forms.Textarea(attrs={'rows': 4}),
+            'conclusiones': forms.Textarea(attrs={'rows': 4}),
+            'descripcion_sancion': forms.Textarea(attrs={'rows': 3}),
+            'descripcion_medida': forms.Textarea(attrs={'rows': 3}),
+        }
+
+class ApelacionForm(forms.ModelForm):
+    class Meta:
+        model = Apelacion
+        fields = '__all__'
+        widgets = {
+            'fecha_recepcion': forms.DateInput(attrs={'type': 'date'}),
+            'texto_apelacion': forms.Textarea(attrs={'rows': 6}),
+        }
+
+class ResolucionApelacionForm(forms.ModelForm):
+    class Meta:
+        model = ResolucionApelacion
+        fields = '__all__'
+        widgets = {
+            'fecha_recepcion': forms.DateInput(attrs={'type': 'date'}),
+            'resolucion': forms.Textarea(attrs={'rows': 5}),
+            'fundamentos': forms.Textarea(attrs={'rows': 6}),
+        }
+
+class EncuestaBullyingForm(forms.ModelForm):
+    class Meta:
+        model = EncuestaBullying
+        fields = '__all__'
+        widgets = {
+            'comentario_adicional': forms.Textarea(attrs={'rows': 4}),
+        }
+
 
 
