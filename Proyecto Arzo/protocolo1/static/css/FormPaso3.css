@@ -27,14 +27,15 @@ body {
 }
 
 /* Título */
-.form-container h2 {
+.form-container h1 {
     color: rgb(30, 81, 160);
-    font-size: 2rem;
+    font-size: 28px;
     font-weight: 700;
     margin-bottom: 32px;
     letter-spacing: 1px;
-    text-align: center;
+    text-align: left; /* Alineado a la izquierda */
 }
+
 
 /* Bloques de derivación */
 .derivacion-block {

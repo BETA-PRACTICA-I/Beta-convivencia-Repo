@@ -4,15 +4,15 @@
 <link rel="stylesheet" href="{% static 'css/FormPaso3.css' %}">
 
 <div class="form-container">
-    <h2>DERIVACIONES</h2>
+    <h1>Formulario 3: Derivaciones</h1>
     
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         {# Este campo es el de los checkboxes y es mejor renderizarlo con Django #}
         <div class.derivacion-block>
-             <p>Seleccione las derivaciones:</p>
-             {{ form.tipo_derivacion }}
+            <p>Seleccione las derivaciones:</p>
+            {{ form.tipo_derivacion }}
         </div>
 
         {# --- Bloque para 'Constatar Lesiones' --- #}
