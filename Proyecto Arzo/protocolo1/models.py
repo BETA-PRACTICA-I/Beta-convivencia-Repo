@@ -25,7 +25,7 @@ class FormularioDenuncia(models.Model):
     # LA LÍNEA MÁGICA: Conecta este formulario a un único Protocolo.
     # Si se borra el Protocolo, este formulario se borra en cascada.
     # permitir NULL temporalmente para migraciones; no usar primary_key aquí
-    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
 
     # Datos del denunciante
     nombre_denunciante = models.CharField(max_length=100)
@@ -75,7 +75,7 @@ class FormularioDenuncia(models.Model):
 
 class FichaEntrevista(models.Model):
     # LA LÍNEA MÁGICA: Conecta este formulario a un único Protocolo, ya no te voy a explicar esto denuevo po.
-    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
 
     numero_entrevista = models.CharField(max_length=20)
     fecha_hora = models.CharField(max_length=100)
@@ -95,7 +95,7 @@ class FichaEntrevista(models.Model):
 # ============ FORMULARIO 3: Derivaciones ============
 class Derivacion(models.Model):
 
-    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
 
     derivaciones = models.CharField(max_length=100,)
     fecha_lesiones = models.DateField(null=True, blank=True)
@@ -127,7 +127,7 @@ class Derivacion(models.Model):
 
 # ============ FORMULARIO 4: Informe Concluyente ============
 class InformeConcluyente(models.Model):
-    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
 
     estado_informe = models.CharField(max_length=100, default='PENDIENTE')
     fecha_informe = models.DateField(default=timezone.now)
@@ -176,7 +176,7 @@ class InformeConcluyente(models.Model):
 
 # ============ FORMULARIO 5: Apelación ============
 class Apelacion(models.Model):
-    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
 
     estado_informe = models.CharField(max_length=100, default='PENDIENTE')
     fecha_recepcion = models.DateField(default=timezone.now)
@@ -189,7 +189,7 @@ class Apelacion(models.Model):
 
 # ============ FORMULARIO 6: Resolución de Apelación ============
 class ResolucionApelacion(models.Model):
-    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
 
     estado_informe = models.CharField(max_length=100, default='PENDIENTE')
     fecha_recepcion = models.DateField(default=timezone.now)
@@ -207,7 +207,7 @@ FRECUENCIAS = [
     ('0', 'Nunca'),
 ]
 class EncuestaBullying(models.Model):
-    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
 
     estudiante_iniciales = models.CharField(max_length=10, default='')
     curso = models.CharField(max_length=50, default='')
