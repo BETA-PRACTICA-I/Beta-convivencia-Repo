@@ -42,22 +42,15 @@
             <button class="boton-volver" id="volver-btn">&larr; Volver</button>
         </div>
         <div class="botones-grid">
-            <a href="{% url 'protocolo1:formulario_paso1' %}" class="boton-protocolo" id="btn-acoso"><i class="fa-solid fa-user-shield"></i><span>1. Acoso Escolar</span></a>
-            <button class="boton-protocolo"><i class="fa-solid fa-wine-bottle"></i><span>2. Drogas y Alcohol</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-hands-holding-child"></i><span>3. Agresión o Connotación Sexual</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-gavel"></i><span>4. Vulneración de derechos</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-users-slash"></i><span>5. Discriminación arbitraria</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-person-burst"></i><span>6. Violencia física o psicológica</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-heart-pulse"></i><span>7. Riesgo suicida</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-briefcase-medical"></i><span>8. Casos de salud</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-gun"></i><span>9. Armas blancas y de fuego</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-user-injured"></i><span>10. Autolesión</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-child-reaching"></i><span>11. Estudiantes Madres/Padres</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-venus-mars"></i><span>12. Identidad de género</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-bus-simple"></i><span>13. Salidas pedagógicas</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-brain"></i><span>14. Desregulación emocional</span></button>
-            <button class="boton-protocolo"><i class="fa-solid fa-handshake-angle"></i><span>15. Gestión de conflictos</span></button>
-        </div>
+            {% for tipo in tipos %}
+                <a href="{% url 'protocolo1:iniciar_protocolo' tipo.id %}" class="boton-protocolo">
+                    <i class="fa-solid fa-folder"></i>
+                    <span>{{ forloop.counter }}. {{ tipo.nombre }}</span>
+                </a>
+            {% empty %}
+                <p>No hay tipos de protocolo. Crea alguno en admin.</p>
+            {% endfor %}
+         </div>
     </section>
 
     <table class="protocol-table" id="protocol-table">

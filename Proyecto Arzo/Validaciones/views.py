@@ -4,6 +4,8 @@ from django.contrib import messages #para mensajes de ingresó correctamente o l
 from django.contrib.auth.decorators import login_required #obliga que el usuario este logeado para avanzar
 from .forms import LoginForm #importamos el formulario
 from django.utils.http import url_has_allowed_host_and_scheme
+# Importar tipos de protocolo para listarlos en la homepage
+from protocolo1.models import TipoProtocolo
 # Create your views here.
 
 def Login_view(request):
@@ -36,6 +38,7 @@ def Login_view(request):
 
 @login_required(login_url='Validaciones:Login') 
 def Home_view(request): #vista de la hompage
-    return render(request, "Validaciones/homepage.html") #renderiza la plantilla hompage
+    tipos = TipoProtocolo.objects.all()
+    return render(request, "Validaciones/homepage.html", {"tipos": tipos}) #renderiza la plantilla hompage con tipos
 
 
