@@ -1,8 +1,32 @@
 from django.db import models
 from django.utils import timezone
 
+# Importamos el modelo User de Django para saber quién crea cada protocolo
+from django.contrib.auth.models import User
+
+class TipoProtocolo(models.Model):
+    nombre = models.CharField(max_length=200, unique=True)
+    def __str__(self):
+        return self.nombre
+
+class Protocolo(models.Model):
+    tipo = models.ForeignKey(TipoProtocolo, on_delete=models.PROTECT, related_name="protocolos")
+    creador = models.ForeignKey(User, on_delete=models.PROTECT, related_name="protocolos_creados")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    estado = models.CharField(max_length=50, default='Pendiente', help_text="Ej: Pendiente, Resuelto, Vencido")
+    def __str__(self):
+        return f"{self.tipo.nombre} ({self.id}) - Creado por {self.creador.username}"
+
+
+
+# ============ FORMULARIO 1: FormularioDenuncia ============
 
 class FormularioDenuncia(models.Model):
+    # LA LÍNEA MÁGICA: Conecta este formulario a un único Protocolo.
+    # Si se borra el Protocolo, este formulario se borra en cascada.
+    # permitir NULL temporalmente para migraciones; no usar primary_key aquí
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+
     # Datos del denunciante
     nombre_denunciante = models.CharField(max_length=100)
     run_denunciante = models.CharField(max_length=12)
@@ -46,7 +70,13 @@ class FormularioDenuncia(models.Model):
     # Descripción
     descripcion = models.CharField(max_length=1000)
 
+
+# ============ FORMULARIO 2: FichaEntrevista ============
+
 class FichaEntrevista(models.Model):
+    # LA LÍNEA MÁGICA: Conecta este formulario a un único Protocolo, ya no te voy a explicar esto denuevo po.
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+
     numero_entrevista = models.CharField(max_length=20)
     fecha_hora = models.CharField(max_length=100)
 
@@ -62,8 +92,11 @@ class FichaEntrevista(models.Model):
     firma_entrevistador = models.CharField(max_length=100)
 
 
-# ============ FORMULARIO 3: Cierre/Acta de Investigación ============
+# ============ FORMULARIO 3: Derivaciones ============
 class Derivacion(models.Model):
+
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+
     derivaciones = models.CharField(max_length=100,)
     fecha_lesiones = models.DateField(null=True, blank=True)
     institucion_lesiones = models.CharField(max_length=100, blank=True)
@@ -94,7 +127,9 @@ class Derivacion(models.Model):
 
 # ============ FORMULARIO 4: Informe Concluyente ============
 class InformeConcluyente(models.Model):
-    protocolo = models.CharField(max_length=100, default='PENDIENTE')
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+
+    estado_informe = models.CharField(max_length=100, default='PENDIENTE')
     fecha_informe = models.DateField(default=timezone.now)
     nombre_encargado = models.CharField(max_length=100, default='')
     run_encargado = models.CharField(max_length=12, default='')
@@ -141,7 +176,9 @@ class InformeConcluyente(models.Model):
 
 # ============ FORMULARIO 5: Apelación ============
 class Apelacion(models.Model):
-    protocolo = models.CharField(max_length=100, default='PENDIENTE')
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+
+    estado_informe = models.CharField(max_length=100, default='PENDIENTE')
     fecha_recepcion = models.DateField(default=timezone.now)
     nombre_apelante = models.CharField(max_length=100, default='')
     run_apelante = models.CharField(max_length=12, default='')
@@ -152,7 +189,9 @@ class Apelacion(models.Model):
 
 # ============ FORMULARIO 6: Resolución de Apelación ============
 class ResolucionApelacion(models.Model):
-    protocolo = models.CharField(max_length=100, default='PENDIENTE')
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+
+    estado_informe = models.CharField(max_length=100, default='PENDIENTE')
     fecha_recepcion = models.DateField(default=timezone.now)
     medio_envio = models.CharField(max_length=100, default='')
     resolucion = models.TextField(default='')
@@ -168,6 +207,8 @@ FRECUENCIAS = [
     ('0', 'Nunca'),
 ]
 class EncuestaBullying(models.Model):
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, null=True, blank=True)
+
     estudiante_iniciales = models.CharField(max_length=10, default='')
     curso = models.CharField(max_length=50, default='')
     sobrenombres = models.CharField(max_length=1, choices=FRECUENCIAS, default='0')
