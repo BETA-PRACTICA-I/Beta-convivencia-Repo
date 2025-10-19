@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .forms import (
     FormularioDenunciaForm, FichaEntrevistaForm, DerivacionForm,
     InformeConcluyenteForm, ApelacionForm, ResolucionApelacionForm, EncuestaBullyingForm
@@ -22,6 +23,10 @@ def formulario_paso1(request, protocolo_id):
             obj.protocolo = protocolo
             obj.save()
             return redirect('protocolo1:formulario_paso2', protocolo_id=protocolo.id)
+        else:
+            # DEBUG: imprime errores en la consola y muestra mensaje en la plantilla
+            print("ERRORES FormularioDenuncia:", form.errors)   # ver en la consola donde corre runserver
+            messages.error(request, "Hay errores en el formulario. Revisa los campos marcados.")
     else:
         form = FormularioDenunciaForm()
     return render(request, 'protocolo1/formulario_paso1.html', {'form': form, 'protocolo': protocolo})
@@ -36,6 +41,9 @@ def formulario_paso2(request, protocolo_id):
             obj.protocolo = protocolo
             obj.save()
             return redirect('protocolo1:formulario_paso3', protocolo_id=protocolo.id)
+        else:
+            print("ERRORES FichaEntrevista:", form.errors)
+            messages.error(request, "Hay errores en el formulario (paso 2). Revisa los campos marcados.")
     else:
         form = FichaEntrevistaForm()
     return render(request, 'protocolo1/formulario_paso2.html', {'form': form, 'protocolo': protocolo})
@@ -86,44 +94,68 @@ def formulario_paso3(request, protocolo_id):
 def formulario_paso4(request, protocolo_id):
     protocolo = get_object_or_404(Protocolo, id=protocolo_id)
     form = InformeConcluyenteForm(request.POST or None, request.FILES or None)
-    if request.method == 'POST' and form.is_valid():
-        obj = form.save(commit=False)
-        obj.protocolo = protocolo
-        obj.save()
-        return redirect('protocolo1:formulario_paso5', protocolo_id=protocolo.id)
+    if request.method == 'POST':
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.protocolo = protocolo
+            obj.save()
+            return redirect('protocolo1:formulario_paso5', protocolo_id=protocolo.id)
+        else:
+            # DEBUG: mostrar errores en consola y mensaje al usuario
+            print("ERRORES InformeConcluyente:", form.errors)   # revisa la consola donde corre runserver
+            messages.error(request, "Hay errores en el formulario (paso 4). Revisa los campos marcados.")
     return render(request, 'protocolo1/formulario_paso4.html', {'form': form, 'protocolo': protocolo})
 
 @login_required(login_url='Validaciones:login')
 def formulario_paso5(request, protocolo_id):
     protocolo = get_object_or_404(Protocolo, id=protocolo_id)
     form = ApelacionForm(request.POST or None, request.FILES or None)
-    if request.method == 'POST' and form.is_valid():
-        obj = form.save(commit=False)
-        obj.protocolo = protocolo
-        obj.save()
-        return redirect('protocolo1:formulario_paso6', protocolo_id=protocolo.id)
+    if request.method == 'POST':
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.protocolo = protocolo
+            obj.save()
+            return redirect('protocolo1:formulario_paso6', protocolo_id=protocolo.id)
+        else:
+            print("ERRORES Apelacion:", form.errors)
+            messages.error(request, "Hay errores en el formulario (paso 5). Revisa los campos marcados.")
     return render(request, 'protocolo1/formulario_paso5.html', {'form': form, 'protocolo': protocolo})
 
 @login_required(login_url='Validaciones:login')
 def formulario_paso6(request, protocolo_id):
     protocolo = get_object_or_404(Protocolo, id=protocolo_id)
     form = ResolucionApelacionForm(request.POST or None, request.FILES or None)
-    if request.method == 'POST' and form.is_valid():
-        obj = form.save(commit=False)
-        obj.protocolo = protocolo
-        obj.save()
-        return redirect('protocolo1:formulario_paso7', protocolo_id=protocolo.id)
+    if request.method == 'POST':
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.protocolo = protocolo
+            obj.save()
+            return redirect('protocolo1:formulario_paso7', protocolo_id=protocolo.id)
+        else:
+            print("ERRORES ResolucionApelacion:", form.errors)
+            messages.error(request, "Hay errores en el formulario (paso 6). Revisa los campos marcados.")
     return render(request, 'protocolo1/formulario_paso6.html', {'form': form, 'protocolo': protocolo})
 
 @login_required(login_url='Validaciones:login')
 def formulario_paso7(request, protocolo_id):
     protocolo = get_object_or_404(Protocolo, id=protocolo_id)
-    form = EncuestaBullyingForm(request.POST or None, request.FILES or None)
-    if request.method == 'POST' and form.is_valid():
-        obj = form.save(commit=False)
-        obj.protocolo = protocolo
-        obj.save()
-        return redirect('protocolo1:formulario_exito', protocolo_id=protocolo.id)
+    # Si ya existe una encuesta para este protocolo, editarla; si no, crear nueva
+    instancia_existente = None
+    try:
+        instancia_existente = protocolo.encuestabullying
+    except Exception:
+        instancia_existente = None
+
+    form = EncuestaBullyingForm(request.POST or None, request.FILES or None, instance=instancia_existente)
+    if request.method == 'POST':
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.protocolo = protocolo
+            obj.save()
+            return redirect('protocolo1:formulario_exito', protocolo_id=protocolo.id)
+        else:
+            print("ERRORES EncuestaBullying:", form.errors)
+            messages.error(request, "Hay errores en el formulario (paso 7). Revisa los campos marcados.")
     return render(request, 'protocolo1/formulario_paso7.html', {'form': form, 'protocolo': protocolo})
 
 def formulario_exito(request, protocolo_id=None):

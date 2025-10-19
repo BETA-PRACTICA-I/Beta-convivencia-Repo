@@ -13,7 +13,7 @@ DERIVACION_CHOICES = [
 class FormularioDenunciaForm(forms.ModelForm):
     class Meta:
         model = FormularioDenuncia
-        fields = '__all__'
+        exclude = ('protocolo',)
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 5}),
             'testigos': forms.Textarea(attrs={'rows': 3}),
@@ -27,7 +27,7 @@ class FormularioDenunciaForm(forms.ModelForm):
 class FichaEntrevistaForm(forms.ModelForm):
     class Meta:
         model = FichaEntrevista
-        fields = '__all__'
+        exclude = ('protocolo',)
         widgets = {
             'fecha_hora': forms.TextInput(attrs={'type': 'datetime-local'}),
             'contenido_entrevista': forms.Textarea(attrs={'rows':5}),
@@ -73,7 +73,7 @@ class DerivacionForm(forms.Form):
 class InformeConcluyenteForm(forms.ModelForm):
     class Meta:
         model = InformeConcluyente
-        fields = '__all__'
+        exclude = ('protocolo',)
         widgets = {
             'fecha_informe': forms.DateInput(attrs={'type': 'date'}),
             'fecha_accion': forms.DateInput(attrs={'type': 'date'}),
@@ -93,29 +93,55 @@ class InformeConcluyenteForm(forms.ModelForm):
             'descripcion_medida': forms.Textarea(attrs={'rows': 3}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Campos que permitimos estar vacíos en este paso (no requeridos)
+        campos_no_obligatorios = [
+            'estado_informe', 'fecha_envio', 'hora_envio', 'empresa_correos',
+            'nombre_firma_remitente', 'medio_citacion_denunciado',
+            'fecha_citacion_denunciado', 'lugar_entrevista_denunciado',
+            'hora_entrevista_denunciado', 'firma_denunciado',
+            'nombre_firma_encargado'
+        ]
+        for nombre in campos_no_obligatorios:
+            if nombre in self.fields:
+                self.fields[nombre].required = False
+
 class ApelacionForm(forms.ModelForm):
     class Meta:
         model = Apelacion
-        fields = '__all__'
+        exclude = ('protocolo',)
         widgets = {
             'fecha_recepcion': forms.DateInput(attrs={'type': 'date'}),
             'texto_apelacion': forms.Textarea(attrs={'rows': 6}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # permitir que este campo esté vacío en este paso
+        if 'estado_informe' in self.fields:
+            self.fields['estado_informe'].required = False
+
 class ResolucionApelacionForm(forms.ModelForm):
     class Meta:
         model = ResolucionApelacion
-        fields = '__all__'
+        exclude = ('protocolo',)
         widgets = {
             'fecha_recepcion': forms.DateInput(attrs={'type': 'date'}),
             'resolucion': forms.Textarea(attrs={'rows': 5}),
             'fundamentos': forms.Textarea(attrs={'rows': 6}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # permitir que 'estado_informe' esté vacío en este paso
+        if 'estado_informe' in self.fields:
+            self.fields['estado_informe'].required = False
+
 class EncuestaBullyingForm(forms.ModelForm):
     class Meta:
         model = EncuestaBullying
-        fields = '__all__'
+        exclude = ('protocolo',)
         widgets = {
             'comentario_adicional': forms.Textarea(attrs={'rows': 4}),
         }

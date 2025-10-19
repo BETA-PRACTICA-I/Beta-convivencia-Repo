@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Protocolo guardado</title>
+    <link rel="stylesheet" href="{% static 'Validaciones/css/homepagestyles.css' %}">
+    <style>
+        .container { max-width: 800px; margin: 60px auto; text-align: center; }
+        .btn { display:inline-block; margin-top:20px; padding:10px 20px; background:#2b6cb0; color:#fff; border-radius:6px; text-decoration:none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Formulario guardado correctamente</h1>
+        <p>El protocolo <strong>#{{ protocolo_id }}</strong> se registró con éxito.</p>
+        <p>Puedes volver a la pantalla principal o revisar el protocolo en el panel de administración.</p>
+
+        <a class="btn" href="/homepage/">Volver al inicio</a>
+        <a class="btn" href="/admin/protocolo1/protocolo/{{ protocolo_id }}/change/" style="background:#38a169;">Ver en Admin</a>
+    </div>
+</body>
+</html>

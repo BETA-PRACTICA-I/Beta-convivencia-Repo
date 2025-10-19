@@ -15,7 +15,9 @@ class Protocolo(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     estado = models.CharField(max_length=50, default='Pendiente', help_text="Ej: Pendiente, Resuelto, Vencido")
     def __str__(self):
-        return f"{self.tipo.nombre} ({self.id}) - Creado por {self.creador.username}"
+        # muestra "Protocolo 12 - Acoso Escolar" si existe tipo.nombre
+        tipo_nombre = getattr(self.tipo, 'nombre', None)
+        return f"Protocolo {self.id}" + (f" - {tipo_nombre}" if tipo_nombre else "")
 
 
 
@@ -70,6 +72,9 @@ class FormularioDenuncia(models.Model):
     # Descripción
     descripcion = models.CharField(max_length=1000)
 
+    def __str__(self):
+        return f"FormularioDenuncia (Protocolo {getattr(self.protocolo, 'id', '—')})"
+
 
 # ============ FORMULARIO 2: FichaEntrevista ============
 
@@ -90,6 +95,9 @@ class FichaEntrevista(models.Model):
 
     firma_entrevistado = models.CharField(max_length=100)
     firma_entrevistador = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"FichaEntrevista (Protocolo {getattr(self.protocolo, 'id', '—')})"
 
 
 # ============ FORMULARIO 3: Derivaciones ============
@@ -124,6 +132,10 @@ class Derivacion(models.Model):
     respaldo_otras = models.FileField(upload_to='derivaciones/', null=True, blank=True)
 
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Derivacion (Protocolo {getattr(self.protocolo, 'id', '—')})"
+
 
 # ============ FORMULARIO 4: Informe Concluyente ============
 class InformeConcluyente(models.Model):
@@ -174,6 +186,10 @@ class InformeConcluyente(models.Model):
 
     nombre_firma_encargado = models.CharField(max_length=100, default='')
 
+    def __str__(self):
+        return f"InformeConcluyente (Protocolo {getattr(self.protocolo, 'id', '—')})"
+
+
 # ============ FORMULARIO 5: Apelación ============
 class Apelacion(models.Model):
     protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
@@ -187,6 +203,10 @@ class Apelacion(models.Model):
     correo = models.EmailField(default='')
     texto_apelacion = models.TextField(default='')
 
+    def __str__(self):
+        return f"Apelacion (Protocolo {getattr(self.protocolo, 'id', '—')})"
+
+
 # ============ FORMULARIO 6: Resolución de Apelación ============
 class ResolucionApelacion(models.Model):
     protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
@@ -197,6 +217,10 @@ class ResolucionApelacion(models.Model):
     resolucion = models.TextField(default='')
     fundamentos = models.TextField(default='')
     rector_o_sostenedor = models.CharField(max_length=100, default='')
+
+    def __str__(self):
+        return f"ResolucionApelacion (Protocolo {getattr(self.protocolo, 'id', '—')})"
+
 
 # ============ FORMULARIO 7: Encuesta ============
 FRECUENCIAS = [
@@ -229,3 +253,6 @@ class EncuestaBullying(models.Model):
     soledad = models.CharField(max_length=1, choices=FRECUENCIAS, default='0')
     molestia_sexual = models.CharField(max_length=1, choices=FRECUENCIAS, default='0')
     comentario_adicional = models.TextField(default='')
+
+    def __str__(self):
+        return f"EncuestaBullying (Protocolo {getattr(self.protocolo, 'id', '—')})"
