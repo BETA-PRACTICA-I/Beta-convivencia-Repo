@@ -16,7 +16,7 @@ class FormularioDenunciaForm(forms.ModelForm):
         exclude = ('protocolo',)
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 5}),
-            'testigos': forms.Textarea(attrs={'rows': 3}),
+            'testigos': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Nombre | Curso o Cargo | Contacto'}),
             'rol': forms.Select(attrs={'id': 'id_rol'}),
             'curso_denunciado_extra': forms.TextInput(attrs={'id': 'id_curso_denunciado'}),
             'asignatura': forms.TextInput(attrs={'id': 'id_asignatura'}),

@@ -28,7 +28,7 @@
 
                 <form id="loginForm" class="form-vertical" method="POST" action="{% url 'Validaciones:login' %}"> <!--que es esto?-->
                     {% csrf_token %}
-                    <input type="Text" id="Rut" name="username" required placeholder="RUT" inputmode="numeric">
+                    <input type="Text" id="Rut" name="username" required placeholder="RUT (Ej: 157262887)" inputmode="numeric">
                     <input type="password" id="password" name="password" required placeholder="Contraseña">
                     <button type="submit">Iniciar Sesión</button>
                 </form>
