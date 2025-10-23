@@ -79,10 +79,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'la_base', 
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',   
+        'NAME': 'beta_dev',
+        'USER': 'app_beta_dev',
+        'PASSWORD': 'Beta@2025.DevHub!',
+        'HOST': 'dev-db-beta.unabdevhub.cl',   
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
