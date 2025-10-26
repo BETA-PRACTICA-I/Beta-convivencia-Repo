@@ -141,10 +141,8 @@ class ResolucionApelacionForm(forms.ModelForm):
 class EncuestaBullyingForm(forms.ModelForm):
     class Meta:
         model = EncuestaBullying
-        exclude = ('protocolo',)
+        # Añade los nuevos campos a exclude si no los quieres en el formulario
+        exclude = ('protocolo', 'fecha_encuesta', 'edad_estudiante', 'genero_estudiante')
         widgets = {
             'comentario_adicional': forms.Textarea(attrs={'rows': 4}),
         }
-
-
-

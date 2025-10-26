@@ -230,11 +230,24 @@ FRECUENCIAS = [
     ('1', 'Una vez al mes'),
     ('0', 'Nunca'),
 ]
-class EncuestaBullying(models.Model):
-    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
 
-    estudiante_iniciales = models.CharField(max_length=10, default='')
-    curso = models.CharField(max_length=50, default='')
+GENERO = [
+    ('M', 'Masculino'),
+    ('F', 'Femenino'),
+    ('O', 'Otro/No especifica'),
+]
+
+class EncuestaBullying(models.Model):
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, related_name='encuestabullying') # Cambio: related_name añadido para consistencia
+
+    # Campos del PDF
+    estudiante_iniciales = models.CharField(max_length=10, default='', blank=True) # Blank=True si es opcional
+    curso = models.CharField(max_length=50, default='', blank=True) # Blank=True si es opcional
+    fecha_encuesta = models.DateField(default=timezone.now) # NUEVO: Fecha de la encuesta
+    edad_estudiante = models.PositiveSmallIntegerField(null=True, blank=True) # NUEVO: Edad (opcional)
+    genero_estudiante = models.CharField(max_length=1, choices=GENERO, blank=True) # NUEVO: Género (opcional)
+
+    # Campos de frecuencia (igual que antes)
     sobrenombres = models.CharField(max_length=1, choices=FRECUENCIAS, default='0')
     burlas = models.CharField(max_length=1, choices=FRECUENCIAS, default='0')
     agresion_fisica = models.CharField(max_length=1, choices=FRECUENCIAS, default='0')
@@ -252,7 +265,9 @@ class EncuestaBullying(models.Model):
     tristeza = models.CharField(max_length=1, choices=FRECUENCIAS, default='0')
     soledad = models.CharField(max_length=1, choices=FRECUENCIAS, default='0')
     molestia_sexual = models.CharField(max_length=1, choices=FRECUENCIAS, default='0')
-    comentario_adicional = models.TextField(default='')
 
-    def __str__(self):
+    comentario_adicional = models.TextField(default='', blank=True) # Blank=True si es opcional
+
+def __str__(self):
+        # Ajustar esto si se necesita más información, como las iniciales
         return f"EncuestaBullying (Protocolo {getattr(self.protocolo, 'id', '—')})"
