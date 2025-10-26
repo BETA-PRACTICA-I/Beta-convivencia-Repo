@@ -133,3 +133,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+#Redirecciones de autenticación
+LOGIN_URL = 'Validaciones:login'
+LOGIN_REDIRECT_URL = 'Validaciones:homepage'

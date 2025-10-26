@@ -53,6 +53,8 @@
         </div>
     </section>
 
+    DEBUG: protocolos={{ protocolos|length }}  tipos={{ tipos|length }} 
+
     <table class="protocol-table" id="protocol-table">
         <thead>
             <tr>
@@ -67,29 +69,40 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Pedro sánchez - Carlos Tevez</td>
-                <td>7°A - 8°B</td>
-                <td>2. Violencia entre miembros de la C.E</td>
-                
+            {% for p in protocolos %}
+                <tr>
+                <td>{{ p.nombres_implicados }}</td>
+                <td>{{ p.curso }}</td>
+                <td>
+                    {% if p.tipo_protocolo %}
+                    {{ p.tipo_protocolo.numero }}. {{ p.tipo_protocolo.nombre }}
+                    {% else %}—{% endif %}
+                </td>
                 <td class="estado-cell">
                     <div class="estado-dropdown">
-                        <button class="estado-btn">
-                            <span class="estado-texto">Completado</span>
-                            <span class="icono-desplegable">▾</span>
-                        </button>
-                        <div class="estado-opciones">
-                            <a href="#" data-value="Resuelto">Resuelto</a>
-                            <a href="#" data-value="Pendiente">Pendiente</a>
-                            <a href="#" data-value="Vencido">Vencido</a>
-                        </div>
+                    <button class="estado-btn">
+                        <span class="estado-texto">{{ p.get_estado_display|default:p.estado }}</span>
+                        <span class="icono-desplegable">▾</span>
+                    </button>
+                    <div class="estado-opciones">
+                        <a href="#" data-value="Resuelto">Resuelto</a>
+                        <a href="#" data-value="Pendiente">Pendiente</a>
+                        <a href="#" data-value="Vencido">Vencido</a>
+                    </div>
                     </div>
                 </td>
-                <td>Encargado 1</td>
-                <td>03/03/2025</td>
-                <td>18/03/2025</td>
-                <td>P1</td>
-            </tr>
+                <td>
+                    {% if p.persona_a_cargo %}
+                    {{ p.persona_a_cargo.get_full_name|default:p.persona_a_cargo }}
+                    {% else %}—{% endif %}
+                </td>
+                <td>{{ p.fecha_apertura|date:"d/m/Y" }}</td>
+                <td>{{ p.fecha_limite|date:"d/m/Y" }}</td>
+                <td>{{ p.id }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="8" style="text-align:center;">No hay protocolos registrados.</td></tr>
+            {% endfor %}
         </tbody>
     </table>
 
