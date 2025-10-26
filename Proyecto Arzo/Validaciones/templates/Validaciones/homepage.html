@@ -58,7 +58,7 @@
     <table class="protocol-table" id="protocol-table">
         <thead>
             <tr>
-                <th>Nombres implicados</th>
+                <th>Nombres denunciantes</th>
                 <th>Curso(s)</th>
                 <th>Protocolo activado</th>
                 <th>Estado</th>
@@ -71,7 +71,7 @@
         <tbody>
             {% for p in protocolos %}
                 <tr>
-                <td>{{ p.nombres_implicados }}</td>
+                <td>{{ p.ficha_denuncia.nombre_denunciante|default:"N/A" }}</td>
                 <td>{{ p.curso }}</td>
                 <td>
                     {% if p.tipo_protocolo %}

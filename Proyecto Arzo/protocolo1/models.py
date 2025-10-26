@@ -27,7 +27,7 @@ class FormularioDenuncia(models.Model):
     # LA LÍNEA MÁGICA: Conecta este formulario a un único Protocolo.
     # Si se borra el Protocolo, este formulario se borra en cascada.
     # permitir NULL temporalmente para migraciones; no usar primary_key aquí
-    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE)
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, related_name='ficha_denuncia')
 
     # Datos del denunciante
     nombre_denunciante = models.CharField(max_length=100)
