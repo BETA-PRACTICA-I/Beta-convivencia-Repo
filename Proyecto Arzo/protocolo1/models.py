@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from datetime import timedelta
 
 # Importamos el modelo User de Django para saber quién crea cada protocolo
 from django.contrib.auth.models import User
@@ -13,7 +14,13 @@ class Protocolo(models.Model):
     tipo = models.ForeignKey(TipoProtocolo, on_delete=models.PROTECT, related_name="protocolos")
     creador = models.ForeignKey(User, on_delete=models.PROTECT, related_name="protocolos_creados")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    estado = models.CharField(max_length=50, default='Pendiente', help_text="Ej: Pendiente, Resuelto, Vencido")
+    estado = models.CharField(max_length=50, default='En Creacion', help_text="Ej: En Creacion, Pendiente, Resuelto, Vencido")
+    
+    @property
+    def fecha_limite(self): #aqui definimos otro parametro pasandole fecha de creacion + 15 dias
+        if self.fecha_creacion:
+            return self.fecha_creacion + timedelta(days=15)
+        return None
     def __str__(self):
         # muestra "Protocolo 12 - Acoso Escolar" si existe tipo.nombre
         tipo_nombre = getattr(self.tipo, 'nombre', None)

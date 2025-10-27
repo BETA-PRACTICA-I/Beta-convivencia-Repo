@@ -32,7 +32,7 @@
     </header>
 
     <main id= "main-content" class = "main-content">
-        <h1 class="greeting">Hola, Usuario!</h1>
+        <h1 class="greeting">Hola, {{ user.get_full_name|default:user.username }}!</h1>
         <button id="abrir-protocolo-btn" class="abrir-protocolo">Abrir protocolo</button>
     </main>
     <!--barra superior y 15 botones-->
@@ -53,7 +53,7 @@
         </div>
     </section>
 
-    DEBUG: protocolos={{ protocolos|length }}  tipos={{ tipos|length }} 
+
 
     <table class="protocol-table" id="protocol-table">
         <thead>
@@ -72,10 +72,10 @@
             {% for p in protocolos %}
                 <tr class="protocol-row" data-protocolo-id="{{ p.id }}">
                     <td>{{ p.ficha_denuncia.nombre_denunciante|default:"N/A" }}</td>
-                    <td>{{ p.curso }}</td>
+                    <td>{{ p.ficha_denuncia.curso_denunciado|default:"N/A" }}</td>
                     <td>
-                        {% if p.tipo_protocolo %}
-                            {{ p.tipo_protocolo.numero }}. {{ p.tipo_protocolo.nombre }}
+                        {% if p.tipo.nombre %}
+                            {{ p.tipo.nombre }}
                         {% else %}—{% endif %}
                     </td>
                     <td class="estado-cell">
@@ -92,11 +92,9 @@
                         </div>
                     </td>
                     <td>
-                        {% if p.persona_a_cargo %}
-                            {{ p.persona_a_cargo.get_full_name|default:p.persona_a_cargo }}
-                        {% else %}—{% endif %}
+                        {{ p.creador.get_full_name|default:p.creador.username }}
                     </td>
-                    <td>{{ p.fecha_apertura|date:"d/m/Y" }}</td>
+                    <td>{{ p.fecha_creacion|date:"d/m/Y" }}</td>
                     <td>{{ p.fecha_limite|date:"d/m/Y" }}</td>
                     <td>{{ p.id }}</td>
                 </tr>

@@ -159,5 +159,16 @@ def formulario_paso7(request, protocolo_id):
     return render(request, 'protocolo1/formulario_paso7.html', {'form': form, 'protocolo': protocolo})
 
 def formulario_exito(request, protocolo_id=None):
+    if protocolo_id:
+        try:
+            protocolo = Protocolo.objects.get(id=protocolo_id)
+            # Cambiamos su estado de 'En Creacion' a 'Pendiente'
+            protocolo.estado = 'Pendiente'
+            protocolo.save() # Guardamos el cambio en la base de datos
+        except Protocolo.DoesNotExist:
+            # Si por alguna razón no se encuentra, mostramos un error
+            messages.error(request, "Error: No se pudo encontrar el protocolo para finalizarlo.")
+            return redirect('Validaciones:homepage')
+
     return render(request, 'protocolo1/exito.html', {'protocolo_id': protocolo_id})
 

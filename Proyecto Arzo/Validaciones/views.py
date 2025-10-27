@@ -38,13 +38,16 @@ def Login_view(request):
 
 @login_required(login_url='Validaciones:login') 
 def Home_view(request):
-    protocolos = (Protocolo.objects
+    protocolos_filtrados = (Protocolo.objects
+                .exclude(estado='En Creacion')
                 .select_related('tipo', 'creador')
                 .order_by('-fecha_creacion'))
+    
     tipos = TipoProtocolo.objects.all()
+
     return render(request, "Validaciones/homepage.html", {
         "tipos": tipos,
-        "protocolos": protocolos,#renderiza la plantilla hompage con tipos
+        "protocolos": protocolos_filtrados,#renderiza la plantilla hompage con tipos
     })
 
 
