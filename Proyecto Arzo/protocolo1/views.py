@@ -6,6 +6,10 @@ from .forms import (
     InformeConcluyenteForm, ApelacionForm, ResolucionApelacionForm, EncuestaBullyingForm
 )
 from .models import Protocolo, TipoProtocolo, Derivacion as DerivacionModel
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from django.utils import timezone
 
 @login_required(login_url='Validaciones:login')
 def iniciar_protocolo(request, tipo_id):
@@ -172,3 +176,62 @@ def formulario_exito(request, protocolo_id=None):
 
     return render(request, 'protocolo1/exito.html', {'protocolo_id': protocolo_id})
 
+@login_required(login_url='Validaciones:login')
+def descargar_protocolo_pdf(request, protocolo_id):
+    # 1. Obtener el protocolo con todos sus datos relacionados para optimizar la consulta.
+    protocolo = get_object_or_404(
+        Protocolo.objects.select_related(
+            'ficha_denuncia', 
+            'fichaentrevista', 
+            'derivacion', 
+            'informeconcluyente', 
+            'apelacion', 
+            'resolucionapelacion', 
+            'encuestabullying'
+        ), 
+        id=protocolo_id
+    )
+
+    # 2. Preparar el contexto para la plantilla del PDF.
+    context = {
+        'protocolo': protocolo,
+        'fecha_actual': timezone.now(),
+        'request': request
+    }
+
+    # 3. Renderizar la plantilla HTML a una cadena de texto.
+    html_string = render_to_string('protocolo1/protocolo_pdf.html', context)
+
+    # 4. Generar el PDF en memoria desde la cadena HTML.
+    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
+
+    # 5. Crear la respuesta HTTP con el contenido del PDF.
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    
+    # 6. Añadir la cabecera 'Content-Disposition' para forzar la descarga del archivo.
+    response['Content-Disposition'] = f'attachment; filename="protocolo_{protocolo.id}_{protocolo.tipo.nombre}.pdf"'
+
+    return response
+
+def ver_protocolo(request, protocolo_id):
+
+    # Usamos la misma lógica eficiente para obtener todos los datos
+    protocolo = get_object_or_404(
+        Protocolo.objects.select_related(
+            'tipo',
+            'ficha_denuncia', 
+            'fichaentrevista', 
+            'derivacion', 
+            'informeconcluyente', 
+            'apelacion', 
+            'resolucionapelacion', 
+            'encuestabullying'
+        ), 
+        id=protocolo_id
+    )
+
+    context = {
+        'protocolo': protocolo
+    }
+
+    return render(request, 'protocolo1/ver_protocolo.html', context)

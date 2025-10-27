@@ -29,4 +29,6 @@ urlpatterns = [
     path('<int:protocolo_id>/paso6/', views.formulario_paso6, name='formulario_paso6'),
     path('<int:protocolo_id>/paso7/', views.formulario_paso7, name='formulario_paso7'),
     path('<int:protocolo_id>/exito/', views.formulario_exito, name='formulario_exito'),
+    path('protocolo/descargar/<int:protocolo_id>/', views.descargar_protocolo_pdf, name='descargar_protocolo_pdf'),
+    path('protocolo/ver/<int:protocolo_id>/', views.ver_protocolo, name='ver_protocolo'),
 ]

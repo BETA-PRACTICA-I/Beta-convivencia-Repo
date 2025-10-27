@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Protocolo #{{ protocolo.id }}</title>
+    <style>
+        @page { size: A4; margin: 1.5cm; }
+        body { font-family: "Helvetica", "Arial", sans-serif; line-height: 1.6; font-size: 11pt; }
+        h1, h2, h3 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 6px; margin-top: 25px; }
+        h1 { font-size: 22pt; text-align: center; border: none; }
+        h2 { font-size: 16pt; }
+        h3 { font-size: 13pt; border-bottom: 1px solid #bdc3c7; }
+        p { margin: 8px 0; }
+        strong { color: #34495e; }
+        pre { background-color: #ecf0f1; padding: 15px; white-space: pre-wrap; word-wrap: break-word; border-left: 3px solid #3498db; font-family: "Courier New", monospace; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .section { margin-bottom: 20px; }
+        .footer { position: fixed; bottom: -1cm; left: 0; right: 0; height: 1cm; text-align: center; font-size: 9pt; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Informe de Protocolo #{{ protocolo.id }}</h1>
+        <p><strong>Tipo de Protocolo:</strong> {{ protocolo.tipo.nombre }}</p>
+        <p><strong>Estado Actual:</strong> {{ protocolo.estado }}</p>
+        <p><strong>Fecha de Apertura:</strong> {{ protocolo.fecha_creacion|date:"d/m/Y" }}</p>
+    </div>
+
+    {% with p=protocolo %}
+
+    {% if p.ficha_denuncia %}
+    <div class="section">
+        <h2>Paso 1: Formulario de Denuncia</h2>
+        <p><strong>Nombre Denunciante:</strong> {{ p.ficha_denuncia.nombre_denunciante|default:"No especificado" }}</p>
+        <p><strong>RUT Denunciante:</strong> {{ p.ficha_denuncia.rut_denunciante|default:"No especificado" }}</p>
+        <p><strong>Estamento Denunciante:</strong> {{ p.ficha_denuncia.estamento_denunciante|default:"No especificado" }}</p>
+        <p><strong>Nombre Denunciado:</strong> {{ p.ficha_denuncia.nombre_denunciado|default:"No especificado" }}</p>
+        <p><strong>Curso Denunciado:</strong> {{ p.ficha_denuncia.curso_denunciado|default:"No especificado" }}</p>
+        <h3>Descripción de los Hechos:</h3>
+        <pre>{{ p.ficha_denuncia.descripcion_hechos|default:"Sin descripción." }}</pre>
+        <h3>Medidas Inmediatas Adoptadas:</h3>
+        <pre>{{ p.ficha_denuncia.medidas_inmediatas|default:"Sin medidas." }}</pre>
+    </div>
+    {% endif %}
+
+    {% if p.fichaentrevista %}
+    <div class="section">
+        <h2>Paso 2: Ficha de Entrevista</h2>
+        <p><strong>Fecha de Entrevista:</strong> {{ p.fichaentrevista.fecha_entrevista|date:"d/m/Y" }}</p>
+        <p><strong>Nombre Entrevistado:</strong> {{ p.fichaentrevista.nombre_entrevistado|default:"No especificado" }}</p>
+        <p><strong>RUT Entrevistado:</strong> {{ p.fichaentrevista.rut_entrevistado|default:"No especificado" }}</p>
+        <p><strong>Calidad de Entrevistado:</strong> {{ p.fichaentrevista.calidad_entrevistado|default:"No especificado" }}</p>
+        <h3>Resumen de la Entrevista:</h3>
+        <pre>{{ p.fichaentrevista.resumen_entrevista|default:"Sin resumen." }}</pre>
+    </div>
+    {% endif %}
+
+    {% if p.derivacion %}
+    <div class="section">
+        <h2>Paso 3: Derivaciones</h2>
+        <p><strong>Derivación a:</strong> {{ p.derivacion.get_derivaciones_display|default:"No especificado" }}</p>
+        <h3>Descripción de la Derivación:</h3>
+        <pre>{{ p.derivacion.descripcion|default:"Sin descripción." }}</pre>
+    </div>
+    {% endif %}
+
+    {% if p.informeconcluyente %}
+    <div class="section">
+        <h2>Paso 4: Informe Concluyente</h2>
+        <p><strong>Fecha del Informe:</strong> {{ p.informeconcluyente.fecha_informe|date:"d/m/Y" }}</p>
+        <h3>Análisis del Caso:</h3>
+        <pre>{{ p.informeconcluyente.analisis_caso|default:"Sin análisis." }}</pre>
+        <h3>Conclusiones:</h3>
+        <pre>{{ p.informeconcluyente.conclusiones|default:"Sin conclusiones." }}</pre>
+        <h3>Medidas y Sanciones:</h3>
+        <pre>{{ p.informeconcluyente.medidas_sanciones|default:"Sin medidas/sanciones." }}</pre>
+    </div>
+    {% endif %}
+
+    {% if p.apelacion %}
+    <div class="section">
+        <h2>Paso 5: Apelación</h2>
+        <p><strong>Fecha de Apelación:</strong> {{ p.apelacion.fecha_apelacion|date:"d/m/Y" }}</p>
+        <p><strong>Presentada por:</strong> {{ p.apelacion.presentada_por|default:"No especificado" }}</p>
+        <h3>Argumentos de la Apelación:</h3>
+        <pre>{{ p.apelacion.argumentos_apelacion|default:"Sin argumentos." }}</pre>
+    </div>
+    {% endif %}
+
+    {% if p.resolucionapelacion %}
+    <div class="section">
+        <h2>Paso 6: Resolución de Apelación</h2>
+        <p><strong>Fecha de Resolución:</strong> {{ p.resolucionapelacion.fecha_resolucion|date:"d/m/Y" }}</p>
+        <p><strong>Resolución:</strong> {{ p.resolucionapelacion.resolucion|default:"No especificado" }}</p>
+        <h3>Fundamentos de la Resolución:</h3>
+        <pre>{{ p.resolucionapelacion.fundamentos_resolucion|default:"Sin fundamentos." }}</pre>
+    </div>
+    {% endif %}
+
+    {% if p.encuestabullying %}
+    <div class="section">
+        <h2>Paso 7: Encuesta de Bullying</h2>
+        <p><strong>Edad del Estudiante:</strong> {{ p.encuestabullying.edad_estudiante|default:"No especificado" }}</p>
+        <p><strong>Género:</strong> {{ p.encuestabullying.genero_estudiante|default:"No especificado" }}</p>
+        <p><strong>Tipo de Bullying:</strong> {{ p.encuestabullying.tipo_bullying|default:"No especificado" }}</p>
+        <p><strong>Frecuencia:</strong> {{ p.encuestabullying.frecuencia|default:"No especificado" }}</p>
+        <p><strong>Lugar:</strong> {{ p.encuestabullying.lugar|default:"No especificado" }}</p>
+        <p><strong>Respuesta del Colegio:</strong> {{ p.encuestabullying.respuesta_colegio|default:"No especificado" }}</p>
+    </div>
+    {% endif %}
+
+    {% endwith %}
+
+    <div class="footer">
+        Documento generado el {{ fecha_actual|date:"d/m/Y H:i" }} por {{ request.user.get_full_name|default:request.user.username }}.
+    </div>
+</body>
+</html>

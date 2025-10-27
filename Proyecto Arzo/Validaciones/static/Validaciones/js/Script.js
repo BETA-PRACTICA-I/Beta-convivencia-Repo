@@ -43,9 +43,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
                 <div style="display:flex;align-items:center;gap:12px;">
                     <div class="expanded-actions">
-                        <a href="#" class="btn-ver" data-id="${protocoloId}">Ver</a>
+                        <a href="/protocolo1/protocolo/ver/${protocoloId}/" class="btn-ver" data-id="${protocoloId}">Ver</a>
                         <a href="#" class="btn-editar" data-id="${protocoloId}">Editar</a>
-                        <a href="#" class="btn-descargar" data-id="${protocoloId}">Descargar</a>
+                        <a href="/protocolo1/protocolo/descargar/${protocoloId}/" class="btn-descargar" data-id="${protocoloId}">Descargar</a>
                     </div>
                     <button class="expanded-close" aria-label="Cerrar panel" title="Cerrar">✕</button>
                 </div>
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Evitar navegación en los links por ahora y loguear acción
-        expandedRow.querySelectorAll('.expanded-actions a').forEach(a => {
+        expandedRow.querySelectorAll('.expanded-actions a:not(.btn-descargar):not(.btn-ver)').forEach(a => {
             a.addEventListener('click', function (e) {
                 e.preventDefault();
                 console.log(`${this.textContent.trim()} pedido para protocolo ${this.dataset.id}`);
