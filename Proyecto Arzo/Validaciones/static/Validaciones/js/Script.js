@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const abrirBtn = document.getElementById('abrir-protocolo-btn');
     const volverBtn = document.getElementById('volver-btn');
 
-    // Mostrar / ocultar sección de inicio de protocolo (mantener lógica previa)
+    // Mostrar / ocultar sección de inicio de protocolo
     if (abrirBtn && mainContent && protocolTable && protocoloSection) {
         abrirBtn.addEventListener('click', function () {
             mainContent.style.display = 'none';
@@ -28,24 +28,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let openRowId = null;
 
-    function createExpandedRow(protocoloId) {
+    // FUNCIÓN CORREGIDA: Acepta 'row' para leer las URLs
+    function createExpandedRow(protocoloId, row) {
+        // Leemos las URLs desde los data attributes de la fila
+        const urlVer = row.dataset.urlVer;
+        const urlDescargar = row.dataset.urlDescargar;
+
         const tr = document.createElement('tr');
         tr.className = 'protocol-expanded';
         tr.dataset.for = protocoloId;
 
         const td = document.createElement('td');
         td.colSpan = 8;
+        // Usamos las variables con las URLs correctas que leímos
         td.innerHTML = `
             <div class="expanded-panel" role="region" aria-label="Acciones protocolo ${protocoloId}">
                 <div>
                     <strong>Acciones para protocolo #${protocoloId}</strong>
-                    <p style="margin:6px 0 0;color:#555;">Selecciona una acción. (UI nomás xd)</p>
+                    <p style="margin:6px 0 0;color:#555;">Selecciona una acción.</p>
                 </div>
                 <div style="display:flex;align-items:center;gap:12px;">
                     <div class="expanded-actions">
-                        <a href="/protocolo1/protocolo/ver/${protocoloId}/" class="btn-ver" data-id="${protocoloId}">Ver</a>
+                        <a href="${urlVer}" class="btn-ver" data-id="${protocoloId}">Ver</a>
                         <a href="#" class="btn-editar" data-id="${protocoloId}">Editar</a>
-                        <a href="/protocolo1/protocolo/descargar/${protocoloId}/" class="btn-descargar" data-id="${protocoloId}">Descargar</a>
+                        <a href="${urlDescargar}" class="btn-descargar" data-id="${protocoloId}">Descargar</a>
                     </div>
                     <button class="expanded-close" aria-label="Cerrar panel" title="Cerrar">✕</button>
                 </div>
@@ -55,19 +61,18 @@ document.addEventListener('DOMContentLoaded', function () {
         return tr;
     }
 
-    // Ignorar clicks que vienen desde el menú de estado u otros controles dentro de la fila
+    // Función auxiliar para ignorar clicks en el menú de estado
     function clickFromEstado(target) {
         return !!target.closest('.estado-dropdown');
     }
 
-    // Delegación: clic en tbody
     const tbody = protocolTable.querySelector('tbody');
     if (!tbody) return;
 
+    // BLOQUE CORREGIDO: Maneja los clicks en la tabla
     tbody.addEventListener('click', function (evt) {
         const target = evt.target;
 
-        // Si el click proviene del menú de estado, enlaces o botones dentro de la fila, no togglear el panel
         if (clickFromEstado(target) || target.closest('a') || target.closest('button.estado-btn')) {
             return;
         }
@@ -76,14 +81,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!row) return;
         const protocoloId = String(row.dataset.protocoloId);
 
-        // Cerrar panel abierto distinto
         if (openRowId && openRowId !== protocoloId) {
             const existing = protocolTable.querySelector(`tr.protocol-expanded[data-for="${openRowId}"]`);
             if (existing) existing.remove();
-            openRowId = null;
         }
 
-        // Toggle: si ya existe, eliminar; si no, crear
         const existingForThis = protocolTable.querySelector(`tr.protocol-expanded[data-for="${protocoloId}"]`);
         if (existingForThis) {
             existingForThis.remove();
@@ -91,43 +93,36 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const expandedRow = createExpandedRow(protocoloId);
+        // ¡Aquí está la magia! Le pasamos la 'row' a la función
+        const expandedRow = createExpandedRow(protocoloId, row);
         row.parentNode.insertBefore(expandedRow, row.nextSibling);
         openRowId = protocoloId;
 
-        // Cerrar con X
         const closeBtn = expandedRow.querySelector('.expanded-close');
         if (closeBtn) {
-            closeBtn.addEventListener('click', function (e) {
+            closeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 expandedRow.remove();
                 openRowId = null;
             });
         }
-
-        // Evitar navegación en los links por ahora y loguear acción
-        expandedRow.querySelectorAll('.expanded-actions a:not(.btn-descargar):not(.btn-ver)').forEach(a => {
-            a.addEventListener('click', function (e) {
-                e.preventDefault();
-                console.log(`${this.textContent.trim()} pedido para protocolo ${this.dataset.id}`);
-            });
-        });
     });
 
-    // Click fuera del área: cierra panel abierto
+    // Cierra el panel si se hace click fuera de la tabla
     document.addEventListener('click', function (e) {
-        const expanded = protocolTable.querySelector('tr.protocol-expanded');
-        if (!expanded) return;
-        if (!e.target.closest('tr.protocol-row') && !e.target.closest('tr.protocol-expanded')) {
-            expanded.remove();
-            openRowId = null;
+        if (openRowId && !e.target.closest('.protocol-table')) {
+            const expanded = protocolTable.querySelector(`tr.protocol-expanded[data-for="${openRowId}"]`);
+            if (expanded) {
+                expanded.remove();
+                openRowId = null;
+            }
         }
     });
 
-    // Tecla ESC cierra panel si está abierto
+    // Cierra el panel con la tecla ESC
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            const expanded = protocolTable.querySelector('tr.protocol-expanded');
+        if (e.key === 'Escape' && openRowId) {
+            const expanded = protocolTable.querySelector(`tr.protocol-expanded[data-for="${openRowId}"]`);
             if (expanded) {
                 expanded.remove();
                 openRowId = null;

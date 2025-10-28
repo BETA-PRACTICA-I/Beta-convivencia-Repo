@@ -25,7 +25,7 @@ urlpatterns = [
     # App de autenticación / homepage
     path('', include('Validaciones.urls', namespace = 'Validaciones')),  # login y homepage aquí
 
-    path('protocolo1/', include('protocolo1.urls', namespace='protocolo1')),
+    path('protocolos/', include('protocolos.urls', namespace='protocolos')),
 ]
 
 

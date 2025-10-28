@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required #obliga que el usuario
 from .forms import LoginForm #importamos el formulario
 from django.utils.http import url_has_allowed_host_and_scheme
 # Importar tipos de protocolo para listarlos en la homepage
-from protocolo1.models import TipoProtocolo, Protocolo
+from protocolos.models import TipoProtocolo, Protocolo
 # Create your views here.
 
 def Login_view(request):

@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Validaciones',
-    'protocolo1',
+    'protocolos',
+    'formularios',
 ]
 
 MIDDLEWARE = [
