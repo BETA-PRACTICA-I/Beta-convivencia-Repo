@@ -6,25 +6,12 @@
     <title>Detalle del Protocolo #{{ protocolo.id }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-        }
-        pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            background-color: #e9ecef;
-            padding: 1rem;
-            border-radius: .25rem;
-        }
-        fieldset {
-            background-color: #fff;
-        }
+        body { background-color: #f8f9fa; padding-top: 2rem; padding-bottom: 2rem; }
+        pre { white-space: pre-wrap; word-wrap: break-word; background-color: #e9ecef; padding: 1rem; border-radius: .25rem; }
+        fieldset { background-color: #fff; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="card shadow-sm">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
@@ -35,103 +22,111 @@
             <a href="{% url 'Validaciones:homepage' %}" class="btn btn-secondary">Volver a la Tabla</a>
         </div>
         <div class="card-body">
-            
             {% with p=protocolo %}
 
-            <!-- Paso 1: Formulario de Denuncia -->
             {% if p.ficha_denuncia %}
             <fieldset class="mb-4 p-3 border rounded">
                 <legend class="w-auto px-2 h5">Paso 1: Formulario de Denuncia</legend>
                 <p><strong>Nombre Denunciante:</strong> {{ p.ficha_denuncia.nombre_denunciante|default:"No especificado" }}</p>
-                <p><strong>RUT Denunciante:</strong> {{ p.ficha_denuncia.rut_denunciante|default:"No especificado" }}</p>
+                <p><strong>RUT Denunciante:</strong> {{ p.ficha_denuncia.run_denunciante|default:"No especificado" }}</p>
                 <p><strong>Nombre Denunciado:</strong> {{ p.ficha_denuncia.nombre_denunciado|default:"No especificado" }}</p>
                 <p><strong>Curso Denunciado:</strong> {{ p.ficha_denuncia.curso_denunciado|default:"No especificado" }}</p>
                 <h6>Descripción de los Hechos:</h6>
-                <pre>{{ p.ficha_denuncia.descripcion_hechos|default:"Sin descripción." }}</pre>
-                <h6>Medidas Inmediatas Adoptadas:</h6>
-                <pre>{{ p.ficha_denuncia.medidas_inmediatas|default:"Sin medidas." }}</pre>
+                <pre>{{ p.ficha_denuncia.descripcion|default:"Sin descripción." }}</pre> {# Corrección: descripcion_hechos -> descripcion #}
+                <h6>Testigos:</h6> {# Corrección: Añadido campo faltante #}
+                <pre>{{ p.ficha_denuncia.testigos|default:"Sin testigos." }}</pre>
             </fieldset>
             {% else %}
             <div class="alert alert-light"><em>Paso 1 no completado.</em></div>
             {% endif %}
 
-            <!-- Paso 2: Ficha de Entrevista -->
             {% if p.fichaentrevista %}
             <fieldset class="mb-4 p-3 border rounded">
                 <legend class="w-auto px-2 h5">Paso 2: Ficha de Entrevista</legend>
-                <p><strong>Fecha de Entrevista:</strong> {{ p.fichaentrevista.fecha_entrevista|date:"d/m/Y"|default:"No especificado" }}</p>
+                <p><strong>Fecha y Hora:</strong> {{ p.fichaentrevista.fecha_hora|default:"No especificado" }}</p> {# Corrección: fecha_entrevista -> fecha_hora #}
                 <p><strong>Nombre Entrevistado:</strong> {{ p.fichaentrevista.nombre_entrevistado|default:"No especificado" }}</p>
                 <h6>Resumen de la Entrevista:</h6>
-                <pre>{{ p.fichaentrevista.resumen_entrevista|default:"Sin resumen." }}</pre>
+                <pre>{{ p.fichaentrevista.contenido_entrevista|default:"Sin resumen." }}</pre> {# Corrección: resumen_entrevista -> contenido_entrevista #}
             </fieldset>
             {% else %}
             <div class="alert alert-light"><em>Paso 2 no completado.</em></div>
             {% endif %}
 
-            <!-- Paso 3: Derivaciones -->
             {% if p.derivacion %}
             <fieldset class="mb-4 p-3 border rounded">
                 <legend class="w-auto px-2 h5">Paso 3: Derivaciones</legend>
-                <p><strong>Derivación a:</strong> {{ p.derivacion.get_derivaciones_display|default:"No especificado" }}</p>
-                <h6>Descripción de la Derivación:</h6>
-                <pre>{{ p.derivacion.descripcion|default:"Sin descripción." }}</pre>
+                <p><strong>Derivación a:</strong> {{ p.derivacion.derivaciones|default:"No especificado" }}</p> {# Corrección: get_derivaciones_display -> derivaciones #}
+                <h6>Descripción Detallada (si aplica):</h6> {# Corrección: No hay campo 'descripcion' general, depende del tipo #}
+                {% if 'constatar_lesiones' in p.derivacion.derivaciones %}
+                    <p><strong>Lesiones - Institución:</strong> {{ p.derivacion.institucion_lesiones|default:"N/A" }}</p>
+                {% endif %}
+                {% if 'denuncia_delito' in p.derivacion.derivaciones %}
+                     <p><strong>Delito - Institución:</strong> {{ p.derivacion.institucion_delito|default:"N/A" }}</p>
+                {% endif %}
+                 {% if 'tribunal_familia' in p.derivacion.derivaciones %}
+                     <p><strong>Tribunal - Institución:</strong> {{ p.derivacion.institucion_tribunal|default:"N/A" }}</p>
+                {% endif %}
+                 {% if 'otras' in p.derivacion.derivaciones %}
+                    <p><strong>Otras - Tipo:</strong> {{ p.derivacion.tipo_medida_otras|default:"N/A" }}</p>
+                    <pre>{{ p.derivacion.descripcion_otras|default:"Sin descripción." }}</pre>
+                {% endif %}
             </fieldset>
             {% else %}
             <div class="alert alert-light"><em>Paso 3 no completado.</em></div>
             {% endif %}
 
-            <!-- Paso 4: Informe Concluyente -->
             {% if p.informeconcluyente %}
             <fieldset class="mb-4 p-3 border rounded">
                 <legend class="w-auto px-2 h5">Paso 4: Informe Concluyente</legend>
                 <p><strong>Fecha del Informe:</strong> {{ p.informeconcluyente.fecha_informe|date:"d/m/Y"|default:"No especificado" }}</p>
-                <h6>Análisis del Caso:</h6>
-                <pre>{{ p.informeconcluyente.analisis_caso|default:"Sin análisis." }}</pre>
+                <h6>Acciones Realizadas:</h6> {# Corrección: analisis_caso -> descripcion_accion #}
+                <pre>{{ p.informeconcluyente.descripcion_accion|default:"Sin descripción." }}</pre>
                 <h6>Conclusiones:</h6>
                 <pre>{{ p.informeconcluyente.conclusiones|default:"Sin conclusiones." }}</pre>
-                <h6>Medidas y Sanciones:</h6>
-                <pre>{{ p.informeconcluyente.medidas_sanciones|default:"Sin medidas/sanciones." }}</pre>
+                <h6>Medidas y Sanciones:</h6> {# Corrección: medidas_sanciones -> Varios campos #}
+                <p><strong>Sanción:</strong> {{ p.informeconcluyente.sancion|default:"N/A" }}</p>
+                <pre>{{ p.informeconcluyente.descripcion_sancion|default:"Sin descripción." }}</pre>
+                 <p><strong>Medida:</strong> {{ p.informeconcluyente.medida|default:"N/A" }}</p>
+                <pre>{{ p.informeconcluyente.descripcion_medida|default:"Sin descripción." }}</pre>
             </fieldset>
             {% else %}
             <div class="alert alert-light"><em>Paso 4 no completado.</em></div>
             {% endif %}
 
-            <!-- Paso 5: Apelación -->
             {% if p.apelacion %}
             <fieldset class="mb-4 p-3 border rounded">
                 <legend class="w-auto px-2 h5">Paso 5: Apelación</legend>
-                <p><strong>Fecha de Apelación:</strong> {{ p.apelacion.fecha_apelacion|date:"d/m/Y"|default:"No especificado" }}</p>
-                <p><strong>Presentada por:</strong> {{ p.apelacion.presentada_por|default:"No especificado" }}</p>
+                <p><strong>Fecha de Recepción:</strong> {{ p.apelacion.fecha_recepcion|date:"d/m/Y"|default:"No especificado" }}</p> {# Corrección: fecha_apelacion -> fecha_recepcion #}
+                <p><strong>Presentada por:</strong> {{ p.apelacion.nombre_apelante|default:"No especificado" }}</p> {# Corrección: presentada_por -> nombre_apelante #}
                 <h6>Argumentos de la Apelación:</h6>
-                <pre>{{ p.apelacion.argumentos_apelacion|default:"Sin argumentos." }}</pre>
+                <pre>{{ p.apelacion.texto_apelacion|default:"Sin argumentos." }}</pre> {# Corrección: argumentos_apelacion -> texto_apelacion #}
             </fieldset>
             {% else %}
             <div class="alert alert-light"><em>Paso 5 no completado.</em></div>
             {% endif %}
 
-            <!-- Paso 6: Resolución de Apelación -->
             {% if p.resolucionapelacion %}
             <fieldset class="mb-4 p-3 border rounded">
                 <legend class="w-auto px-2 h5">Paso 6: Resolución de Apelación</legend>
-                <p><strong>Fecha de Resolución:</strong> {{ p.resolucionapelacion.fecha_resolucion|date:"d/m/Y"|default:"No especificado" }}</p>
+                <p><strong>Fecha de Recepción:</strong> {{ p.resolucionapelacion.fecha_recepcion|date:"d/m/Y"|default:"No especificado" }}</p> {# Corrección: fecha_resolucion -> fecha_recepcion #}
                 <p><strong>Resolución:</strong> {{ p.resolucionapelacion.resolucion|default:"No especificado" }}</p>
                 <h6>Fundamentos de la Resolución:</h6>
-                <pre>{{ p.resolucionapelacion.fundamentos_resolucion|default:"Sin fundamentos." }}</pre>
+                <pre>{{ p.resolucionapelacion.fundamentos|default:"Sin fundamentos." }}</pre> {# Corrección: fundamentos_resolucion -> fundamentos #}
             </fieldset>
             {% else %}
             <div class="alert alert-light"><em>Paso 6 no completado.</em></div>
             {% endif %}
 
-            <!-- Paso 7: Encuesta de Bullying -->
             {% if p.encuestabullying %}
             <fieldset class="mb-4 p-3 border rounded">
                 <legend class="w-auto px-2 h5">Paso 7: Encuesta de Bullying</legend>
+                <p><strong>Fecha Encuesta:</strong> {{ p.encuestabullying.fecha_encuesta|date:"d/m/Y"|default:"No especificado" }}</p> {# Corrección: añadido #}
                 <p><strong>Edad del Estudiante:</strong> {{ p.encuestabullying.edad_estudiante|default:"No especificado" }}</p>
-                <p><strong>Género:</strong> {{ p.encuestabullying.genero_estudiante|default:"No especificado" }}</p>
-                <p><strong>Tipo de Bullying:</strong> {{ p.encuestabullying.tipo_bullying|default:"No especificado" }}</p>
-                <p><strong>Frecuencia:</strong> {{ p.encuestabullying.frecuencia|default:"No especificado" }}</p>
-                <p><strong>Lugar:</strong> {{ p.encuestabullying.lugar|default:"No especificado" }}</p>
-                <p><strong>Respuesta del Colegio:</strong> {{ p.encuestabullying.respuesta_colegio|default:"No especificado" }}</p>
+                <p><strong>Género:</strong> {{ p.encuestabullying.get_genero_estudiante_display|default:"No especificado" }}</p> {# Corrección: genero_estudiante -> get_genero_estudiante_display #}
+                {# Corrección: Los campos tipo_bullying, frecuencia, lugar, respuesta_colegio no existen #}
+                <p><strong>Comentario Adicional:</strong></p>
+                 <pre>{{ p.encuestabullying.comentario_adicional|default:"Sin comentarios." }}</pre>
+                 {# Aquí podrías mostrar las respuestas de frecuencia si lo deseas #}
             </fieldset>
             {% else %}
             <div class="alert alert-light"><em>Paso 7 no completado.</em></div>
@@ -141,6 +136,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>
