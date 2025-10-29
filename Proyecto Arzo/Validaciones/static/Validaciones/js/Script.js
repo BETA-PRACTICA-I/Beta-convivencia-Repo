@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div style="display:flex;align-items:center;gap:12px;">
                     <div class="expanded-actions">
                         <a href="${urlVer}" class="btn-ver" data-id="${protocoloId}">Ver</a>
-                        <a href="#" class="btn-editar" data-id="${protocoloId}">Editar</a>
+                        <a href="/protocolos/editar/paso1/${protocoloId}/" class="btn-editar" data-id="${protocoloId}">Editar</a>
                         <a href="${urlDescargar}" class="btn-descargar" data-id="${protocoloId}">Descargar</a>
                     </div>
                     <button class="expanded-close" aria-label="Cerrar panel" title="Cerrar">✕</button>

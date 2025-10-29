@@ -261,3 +261,183 @@ def ver_protocolo(request, protocolo_id):
     # para que muestre los campos de 'riesgo_suicida_anexo1'
 
     return render(request, 'protocolo1/ver_protocolo.html', context)
+
+def get_instance_or_none(model, **kwargs):
+    """Función de ayuda para obtener una instancia o devolver None si no existe."""
+    try:
+        return model.objects.get(**kwargs)
+    except model.DoesNotExist:
+        return None
+
+@login_required(login_url='Validaciones:login')
+def editar_paso1(request, protocolo_id):
+    protocolo = get_object_or_404(Protocolo, id=protocolo_id)
+    instancia = get_instance_or_none(FormularioDenuncia, protocolo=protocolo)
+    
+    if request.method == 'POST':
+        form = FormularioDenunciaForm(request.POST, request.FILES, instance=instancia)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.protocolo = protocolo
+            obj.save()
+            return redirect('protocolos:editar_paso2', protocolo_id=protocolo.id)
+    else:
+        form = FormularioDenunciaForm(instance=instancia)
+        
+    return render(request, 'protocolo1/formulario_paso1.html', {'form': form, 'protocolo': protocolo})
+
+@login_required(login_url='Validaciones:login')
+def editar_paso2(request, protocolo_id):
+    protocolo = get_object_or_404(Protocolo, id=protocolo_id)
+    instancia = get_instance_or_none(FichaEntrevista, protocolo=protocolo)
+    
+    if request.method == 'POST':
+        form = FichaEntrevistaForm(request.POST, request.FILES, instance=instancia)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.protocolo = protocolo
+            obj.save()
+            return redirect('protocolos:editar_paso3', protocolo_id=protocolo.id)
+    else:
+        form = FichaEntrevistaForm(instance=instancia)
+        
+    return render(request, 'protocolo1/formulario_paso2.html', {'form': form, 'protocolo': protocolo})
+
+@login_required(login_url='Validaciones:login')
+def editar_paso3(request, protocolo_id):
+    protocolo = get_object_or_404(Protocolo, id=protocolo_id)
+    instancia = get_instance_or_none(Derivacion, protocolo=protocolo) # <-- CORREGIDO
+
+    if request.method == 'POST':
+        form = DerivacionForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = form.cleaned_data
+            # Replicamos la lógica de la vista de creación
+            defaults_data = {
+                'derivaciones': ", ".join(data.get('tipo_derivacion', [])),
+                'fecha_lesiones': data.get('fecha_lesiones'),
+                'institucion_lesiones': data.get('institucion_lesiones'),
+                'funcionario_lesiones': data.get('funcionario_responsable_lesiones'),
+                'firma_lesiones': data.get('firma_funcionario_lesiones'),
+                'respaldo_lesiones': data.get('respaldo_lesiones'),
+                'fecha_delito': data.get('fecha_delito'),
+                'institucion_delito': data.get('institucion_delito'),
+                'funcionario_delito': data.get('funcionario_responsable_delito'),
+                'firma_delito': data.get('firma_funcionario_delito'),
+                'respaldo_delito': data.get('respaldo_delito'),
+                'fecha_tribunal': data.get('fecha_tribunal'),
+                'institucion_tribunal': data.get('institucion_tribunal'),
+                'funcionario_tribunal': data.get('funcionario_responsable_tribunal'),
+                'firma_tribunal': data.get('firma_funcionario_tribunal'),
+                'respaldo_tribunal': data.get('respaldo_tribunal'),
+                'tipo_medida_otras': data.get('tipo_medida_otras'),
+                'descripcion_otras': data.get('descripcion_otras'),
+                'funcionario_otras': data.get('funcionario_responsable_otras'),
+                'firma_otras': data.get('firma_funcionario_otras'),
+                'respaldo_otras': data.get('respaldo_otras'),
+            }
+            # Usamos update_or_create para manejar tanto la creación como la edición
+            obj, created = Derivacion.objects.update_or_create( # <-- CORREGIDO
+                protocolo=protocolo,
+                defaults=defaults_data
+            )
+            return redirect('protocolos:editar_paso4', protocolo_id=protocolo.id)
+    else:
+        # Replicamos la lógica para pre-rellenar el formulario
+        initial_data = {}
+        if instancia:
+            initial_data = {
+                'tipo_derivacion': instancia.derivaciones.split(', ') if instancia.derivaciones else [],
+                'fecha_lesiones': instancia.fecha_lesiones,
+                'institucion_lesiones': instancia.institucion_lesiones,
+                'funcionario_responsable_lesiones': instancia.funcionario_lesiones,
+                'firma_funcionario_lesiones': instancia.firma_lesiones,
+                'respaldo_lesiones': instancia.respaldo_lesiones,
+                'fecha_delito': instancia.fecha_delito,
+                'institucion_delito': instancia.institucion_delito,
+                'funcionario_responsable_delito': instancia.funcionario_delito,
+                'firma_funcionario_delito': instancia.firma_delito,
+                'respaldo_delito': instancia.respaldo_delito,
+                'fecha_tribunal': instancia.fecha_tribunal,
+                'institucion_tribunal': instancia.institucion_tribunal,
+                'funcionario_responsable_tribunal': instancia.funcionario_tribunal,
+                'firma_funcionario_tribunal': instancia.firma_tribunal,
+                'respaldo_tribunal': instancia.respaldo_tribunal,
+                'tipo_medida_otras': instancia.tipo_medida_otras,
+                'descripcion_otras': instancia.descripcion_otras,
+                'funcionario_otras': instancia.funcionario_otras,
+                'firma_funcionario_otras': instancia.firma_otras,
+                'respaldo_otras': instancia.respaldo_otras,
+            }
+        form = DerivacionForm(initial=initial_data)
+        
+    return render(request, 'protocolo1/formulario_paso3.html', {'form': form, 'protocolo': protocolo})
+
+@login_required(login_url='Validaciones:login')
+def editar_paso4(request, protocolo_id):
+    protocolo = get_object_or_404(Protocolo, id=protocolo_id)
+    instancia = get_instance_or_none(InformeConcluyente, protocolo=protocolo)
+    
+    if request.method == 'POST':
+        form = InformeConcluyenteForm(request.POST, request.FILES, instance=instancia)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.protocolo = protocolo
+            obj.save()
+            return redirect('protocolos:editar_paso5', protocolo_id=protocolo.id)
+    else:
+        form = InformeConcluyenteForm(instance=instancia)
+        
+    return render(request, 'protocolo1/formulario_paso4.html', {'form': form, 'protocolo': protocolo})
+
+@login_required(login_url='Validaciones:login')
+def editar_paso5(request, protocolo_id):
+    protocolo = get_object_or_404(Protocolo, id=protocolo_id)
+    instancia = get_instance_or_none(Apelacion, protocolo=protocolo)
+    
+    if request.method == 'POST':
+        form = ApelacionForm(request.POST, request.FILES, instance=instancia)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.protocolo = protocolo
+            obj.save()
+            return redirect('protocolos:editar_paso6', protocolo_id=protocolo.id)
+    else:
+        form = ApelacionForm(instance=instancia)
+        
+    return render(request, 'protocolo1/formulario_paso5.html', {'form': form, 'protocolo': protocolo})
+
+@login_required(login_url='Validaciones:login')
+def editar_paso6(request, protocolo_id):
+    protocolo = get_object_or_404(Protocolo, id=protocolo_id)
+    instancia = get_instance_or_none(ResolucionApelacion, protocolo=protocolo)
+    
+    if request.method == 'POST':
+        form = ResolucionApelacionForm(request.POST, request.FILES, instance=instancia)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.protocolo = protocolo
+            obj.save()
+            return redirect('protocolos:editar_paso7', protocolo_id=protocolo.id)
+    else:
+        form = ResolucionApelacionForm(instance=instancia)
+        
+    return render(request, 'protocolo1/formulario_paso6.html', {'form': form, 'protocolo': protocolo})
+
+@login_required(login_url='Validaciones:login')
+def editar_paso7(request, protocolo_id):
+    protocolo = get_object_or_404(Protocolo, id=protocolo_id)
+    instancia = get_instance_or_none(EncuestaBullying, protocolo=protocolo)
+    
+    if request.method == 'POST':
+        form = EncuestaBullyingForm(request.POST, request.FILES, instance=instancia)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.protocolo = protocolo
+            obj.save()
+            messages.success(request, '¡Protocolo actualizado con éxito!')
+            return redirect('protocolos:ver_protocolo', protocolo_id=protocolo.id)
+    else:
+        form = EncuestaBullyingForm(instance=instancia)
+        
+    return render(request, 'protocolo1/formulario_paso7.html', {'form': form, 'protocolo': protocolo})
