@@ -1,6 +1,7 @@
 from django import forms
 from .models import (FormularioDenuncia, FichaEntrevista, Derivacion,
-    InformeConcluyente, Apelacion, ResolucionApelacion, EncuestaBullying)
+    InformeConcluyente, Apelacion, ResolucionApelacion, EncuestaBullying, RiesgoSuicidaAnexo1)
+
 
 DERIVACION_CHOICES = [
     ('constatar_lesiones', 'Derivación a constatar lesiones'),
@@ -145,4 +146,16 @@ class EncuestaBullyingForm(forms.ModelForm):
         exclude = ('protocolo', 'fecha_encuesta', 'edad_estudiante', 'genero_estudiante')
         widgets = {
             'comentario_adicional': forms.Textarea(attrs={'rows': 4}),
+        }
+
+#===============================Para el protocolo 7============================#
+
+class RiesgoSuicidaAnexo1Form(forms.ModelForm):
+    class Meta:
+        model = RiesgoSuicidaAnexo1
+        exclude = ('protocolo',) # El sistema lo maneja, no el usuario
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'}),
+            'hora': forms.TimeInput(attrs={'type': 'time'}),
+            'relato_hechos': forms.Textarea(attrs={'rows': 5}),
         }

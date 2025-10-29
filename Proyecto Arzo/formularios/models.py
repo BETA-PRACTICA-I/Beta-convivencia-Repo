@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
+from protocolos.models import Protocolo
 
 # Importamos el modelo User de Django para saber quién crea cada protocolo
 from django.contrib.auth.models import User
@@ -323,3 +324,26 @@ class EncuestaBullying(models.Model):
 ██║░░░░░██║░░██║╚█████╔╝░░░██║░░░╚█████╔╝╚█████╔╝╚█████╔╝███████╗╚█████╔╝  ░░██╔╝░░
 ╚═╝░░░░░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░░╚════╝░░╚════╝░░╚════╝░╚══════╝░╚════╝░  ░░╚═╝░░░
 """
+
+class RiesgoSuicidaAnexo1(models.Model):
+    # Enlace UNO A UNO con el protocolo principal
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, related_name="riesgo_suicida_anexo1")
+    
+    # --- Datos del afectado ---
+    nombre_afectado = models.CharField(max_length=255)
+    curso = models.CharField(max_length=100)
+    profesor_jefe = models.CharField(max_length=255)
+    apoderado = models.CharField(max_length=255)
+
+    # --- Registro de situación ---
+    fecha = models.DateField()
+    hora = models.TimeField()
+    persona_detecta = models.CharField(max_length=255, verbose_name="Persona que detectó la situación")
+    relato_hechos = models.TextField(verbose_name="Relato de los hechos")
+
+    def __str__(self):
+        return f"Anexo 1 (Riesgo Suicida) para Protocolo {self.protocolo.id}"
+
+
+
+

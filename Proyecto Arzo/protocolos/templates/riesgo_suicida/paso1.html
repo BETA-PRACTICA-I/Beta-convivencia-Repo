@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso {{ step }}: {{ tipo_nombre }}</title>
+    
+    <!-- Enlazamos los mismos CSS de tu homepage y formularios -->
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css'%}">
+    
+</head>
+<body>
+    <!-- Este es el formulario (el código que ya teníamos) -->
+    <div class="form-container">
+        <h1>Protocolo: {{ tipo_nombre }}</h1>
+        <h2 style="font-size: 1.2rem; color: #555; margin-top: -10px; margin-bottom: 20px;">
+            Paso {{ step }}: Anexo 1: Detección de la situación
+        </h2>
+        
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="section-header">Datos del Afectado</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.nombre_afectado.label_tag }} {{ form.nombre_afectado }}</div>
+                <div class="form-group">{{ form.curso.label_tag }} {{ form.curso }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.profesor_jefe.label_tag }} {{ form.profesor_jefe }}</div>
+                <div class="form-group">{{ form.apoderado.label_tag }} {{ form.apoderado }}</div>
+            </div>
+
+            <div class="section-header">Registro de situación</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.fecha.label_tag }} {{ form.fecha }}</div>
+                <div class="form-group">{{ form.hora.label_tag }} {{ form.hora }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.persona_detecta.label_tag }} {{ form.persona_detecta }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.relato_hechos.label_tag }} {{ form.relato_hechos }}</div>
+            </div>
+
+            <button type-"submit" class="abrir-protocolo" style="width: 150px; margin-top: 1rem;">
+                Siguiente
+            </button>
+        </form>
+    </div>
+</body>
+</html>
