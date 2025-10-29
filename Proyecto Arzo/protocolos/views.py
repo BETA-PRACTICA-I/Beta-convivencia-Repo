@@ -60,7 +60,7 @@ def protocolo_step(request, protocolo_id, step):
     # --- 3. ¡AQUÍ ESTÁ LA NUEVA LÓGICA! ---
     elif tipo_nombre == "Riesgo suicida":
         # Por ahora, este protocolo solo tiene 1 paso
-        total_steps = 1 
+        total_steps = 2
         step_map = {
             1: {'form': RiesgoSuicidaAnexo1Form, 'model': RiesgoSuicidaAnexo1, 'template': 'riesgo_suicida/paso1.html'},
             2: {'form': RiesgoSuicidaAnexo2Form, 'model': RiesgoSuicidaAnexo2, 'template': 'riesgo_suicida/paso2.html'},

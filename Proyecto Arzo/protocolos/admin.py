@@ -1,6 +1,8 @@
 from django.contrib import admin
+# Modelos de ESTA app (protocolos)
 from .models import TipoProtocolo, Protocolo
 
+# Modelos de la app 'formularios' que se usarán como Inlines
 from formularios.models import (
     FormularioDenuncia,
     FichaEntrevista,
@@ -9,14 +11,17 @@ from formularios.models import (
     Apelacion,
     ResolucionApelacion,
     EncuestaBullying,
+    RiesgoSuicidaAnexo1,
+    RiesgoSuicidaAnexo2
 )
 
-# --- Inlines para mostrar los formularios dentro de Protocolo ---
+# --- Define las clases Inline para CADA formulario ---
+# (Estas ya las tenías bien definidas en admin1.py)
 
 class FormularioDenunciaInline(admin.StackedInline):
     model = FormularioDenuncia
-    can_delete = False
-    extra = 0
+    can_delete = False # Evita que se borre el formulario desde el protocolo
+    extra = 0 # No muestra formularios vacíos extra para añadir
 
 class FichaEntrevistaInline(admin.StackedInline):
     model = FichaEntrevista
@@ -48,23 +53,61 @@ class EncuestaBullyingInline(admin.StackedInline):
     can_delete = False
     extra = 0
 
+class RiesgoSuicidaAnexo1Inline(admin.StackedInline):
+    model = RiesgoSuicidaAnexo1
+    can_delete = False
+    extra = 0
+
+class RiesgoSuicidaAnexo2Inline(admin.StackedInline):
+    model = RiesgoSuicidaAnexo2
+    can_delete = False
+    extra = 0
+
+# --- Configuración del Admin para el modelo Protocolo ---
+
 @admin.register(Protocolo)
 class ProtocoloAdmin(admin.ModelAdmin):
-    # Ajustado: eliminar 'created_at' que no existe.
-    list_display = ('id', 'tipo', 'creador')
-    list_filter = ('tipo', 'creador')
-    search_fields = ('id',)
-    inlines = [
-        FormularioDenunciaInline,
-        FichaEntrevistaInline,
-        DerivacionInline,
-        InformeConcluyenteInline,
-        ApelacionInline,
-        ResolucionApelacionInline,
-        EncuestaBullyingInline,
-    ]
+    # Campos a mostrar en la lista de protocolos
+    list_display = ('id', 'tipo', 'creador', 'estado', 'fecha_creacion')
+    # Filtros disponibles en la barra lateral
+    list_filter = ('tipo', 'creador', 'estado')
+    # Campos por los que se puede buscar
+    search_fields = ('id', 'creador__username', 'tipo__nombre')
 
-# --- Solo registramos los modelos que viven en ESTA app
+    # --- MÉTODO CLAVE para mostrar los inlines correctos ---
+    def get_inlines(self, request, obj=None):
+        """
+        Devuelve la lista de clases Inline apropiada según el tipo
+        del objeto Protocolo (obj) que se está viendo.
+        """
+        # Nombres de los protocolos que usan el flujo original de 7 pasos
+        protocolos_tipo_1 = [
+            "Acoso Escolar", "Drogas y Alcohol", "Agresión o Connotación Sexual",
+            "Vulneración de derechos", "Discriminación arbitraria", "Violencia física o psicológica"
+        ]
+
+        if obj: # Si estamos viendo/editando un protocolo existente
+            if obj.tipo.nombre == "Riesgo suicida":
+                # Mostrar solo los inlines de Riesgo Suicida
+                return [RiesgoSuicidaAnexo1Inline, RiesgoSuicidaAnexo2Inline]
+            elif obj.tipo.nombre in protocolos_tipo_1:
+                # Mostrar los inlines del flujo original
+                 return [
+                    FormularioDenunciaInline,
+                    FichaEntrevistaInline,
+                    DerivacionInline,
+                    InformeConcluyenteInline,
+                    ApelacionInline,
+                    ResolucionApelacionInline,
+                    EncuestaBullyingInline,
+                ]
+            # Puedes añadir más elif obj.tipo.nombre == "Otro Tipo": return [OtrosInlines] aquí
+
+        # Si es un protocolo nuevo (obj=None) o el tipo no coincide con ninguno,
+        # no mostramos ningún inline por defecto.
+        return []
+
+# --- Configuración del Admin para TipoProtocolo (sin cambios) ---
 @admin.register(TipoProtocolo)
 class TipoProtocoloAdmin(admin.ModelAdmin):
     list_display = ('nombre',) # Muestra el nombre en la lista
