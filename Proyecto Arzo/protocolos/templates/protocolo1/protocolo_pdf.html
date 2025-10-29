@@ -125,6 +125,48 @@
     </div>
     {% endif %}
 
+    {# --- NUEVO: Mostrar datos de Anexo 1 Riesgo Suicida --- #}
+    {% if p.riesgo_suicida_anexo1 %}
+    <div class="section">
+        <h2>Riesgo Suicida - Paso 1: Anexo 1: Detección</h2>
+        <p><strong>Nombre Afectado:</strong> {{ p.riesgo_suicida_anexo1.nombre_afectado|default:"No especificado" }}</p>
+        <p><strong>Curso:</strong> {{ p.riesgo_suicida_anexo1.curso|default:"No especificado" }}</p>
+        <p><strong>Profesor Jefe:</strong> {{ p.riesgo_suicida_anexo1.profesor_jefe|default:"No especificado" }}</p>
+        <p><strong>Apoderado:</strong> {{ p.riesgo_suicida_anexo1.apoderado|default:"No especificado" }}</p>
+        <h3>Registro de situación</h3>
+        <p><strong>Fecha Detección:</strong> {{ p.riesgo_suicida_anexo1.fecha|date:"d/m/Y"|default:"No especificado" }}</p>
+        <p><strong>Hora Detección:</strong> {{ p.riesgo_suicida_anexo1.hora|time:"H:i"|default:"No especificado" }}</p>
+        <p><strong>Persona que detecta:</strong> {{ p.riesgo_suicida_anexo1.persona_detecta|default:"No especificado" }}</p>
+        <h3>Relato de los Hechos:</h3>
+        <pre>{{ p.riesgo_suicida_anexo1.relato_hechos|default:"Sin relato." }}</pre>
+    </div>
+    {% endif %}
+
+    {# --- NUEVO: Mostrar datos de Anexo 2 Riesgo Suicida --- #}
+    {% if p.riesgo_suicida_anexo2 %}
+    <div class="section">
+        <h2>Riesgo Suicida - Paso 2: Anexo 2: Derivación</h2>
+        <h3>1. Antecedentes Establecimiento</h3>
+        <p><strong>Fecha Derivación:</strong> {{ p.riesgo_suicida_anexo2.fecha_derivacion|date:"d/m/Y"|default:"No especificado" }}</p>
+        <p><strong>Establecimiento:</strong> {{ p.riesgo_suicida_anexo2.establecimiento_nombre|default:"No especificado" }}</p>
+        <p><strong>Profesional que Deriva:</strong> {{ p.riesgo_suicida_anexo2.profesional_deriva_nombre|default:"N/A" }} ({{ p.riesgo_suicida_anexo2.profesional_deriva_cargo|default:"N/A" }})</p>
+        <p><strong>Contacto Profesional:</strong> {{ p.riesgo_suicida_anexo2.profesional_deriva_email|default:"N/A" }} / {{ p.riesgo_suicida_anexo2.profesional_deriva_telefono|default:"N/A" }}</p>
+        <h3>2. Antecedentes Estudiante</h3>
+        <p><strong>Nombre Estudiante:</strong> {{ p.riesgo_suicida_anexo2.estudiante_nombre|default:"No especificado" }}</p>
+        <p><strong>RUN:</strong> {{ p.riesgo_suicida_anexo2.estudiante_run|default:"No especificado" }}</p>
+        <p><strong>Fecha Nacimiento:</strong> {{ p.riesgo_suicida_anexo2.estudiante_fecha_nacimiento|date:"d/m/Y"|default:"N/A" }} (Edad: {{ p.riesgo_suicida_anexo2.estudiante_edad|default:"N/A" }})</p>
+        <p><strong>Curso:</strong> {{ p.riesgo_suicida_anexo2.estudiante_curso|default:"N/A" }}</p>
+        <p><strong>Adulto Responsable:</strong> {{ p.riesgo_suicida_anexo2.adulto_responsable_nombre|default:"N/A" }} (Tel: {{ p.riesgo_suicida_anexo2.adulto_responsable_telefono|default:"N/A" }})</p>
+        <p><strong>Dirección:</strong> {{ p.riesgo_suicida_anexo2.estudiante_direccion|default:"N/A" }}</p>
+        <h3>3. Motivo Derivación</h3>
+        <pre>{{ p.riesgo_suicida_anexo2.motivo_derivacion|default:"Sin motivo especificado." }}</pre>
+        <h3>4. Acciones Efectuadas</h3>
+        <pre>{{ p.riesgo_suicida_anexo2.acciones_efectuadas|default:"Sin acciones especificadas." }}</pre>
+    </div>
+    {% endif %}
+
+
+
     {% endwith %}
 
     <div class="footer">

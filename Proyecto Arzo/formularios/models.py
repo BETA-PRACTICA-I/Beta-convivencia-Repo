@@ -343,7 +343,37 @@ class RiesgoSuicidaAnexo1(models.Model):
 
     def __str__(self):
         return f"Anexo 1 (Riesgo Suicida) para Protocolo {self.protocolo.id}"
+    
+class RiesgoSuicidaAnexo2(models.Model):
+    # Enlace UNO A UNO con el protocolo principal
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, related_name="riesgo_suicida_anexo2")
 
+    # --- 1. Antecedentes del Establecimiento Educacional ---
+    fecha_derivacion = models.DateField(default=timezone.now, verbose_name="Fecha de Derivación") # Usamos default timezone.now
+    establecimiento_nombre = models.CharField(max_length=255, verbose_name="Establecimiento Educacional", blank=True) # Podríamos autocompletarlo
+    profesional_deriva_nombre = models.CharField(max_length=255, verbose_name="Nombre del profesional que deriva")
+    profesional_deriva_cargo = models.CharField(max_length=150, verbose_name="Cargo del profesional que deriva")
+    profesional_deriva_email = models.EmailField(verbose_name="Correo electrónico del profesional que deriva")
+    profesional_deriva_telefono = models.CharField(max_length=50, verbose_name="Teléfono de contacto del profesional que deriva")
+    establecimiento_contacto_email = models.EmailField(verbose_name="Correo electrónico de contacto con el Establecimiento", blank=True) # Podríamos autocompletarlo
+    establecimiento_contacto_telefono = models.CharField(max_length=50, verbose_name="Teléfono de contacto con el Establecimiento", blank=True) # Podríamos autocompletarlo
 
+    # --- 2. Antecedentes del Estudiante ---
+    # (Podríamos intentar autocompletar algunos desde Anexo 1 si es necesario más adelante)
+    estudiante_nombre = models.CharField(max_length=255, verbose_name="Nombre del Estudiante")
+    estudiante_run = models.CharField(max_length=12, verbose_name="RUN del Estudiante")
+    estudiante_fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento del Estudiante")
+    estudiante_edad = models.PositiveSmallIntegerField(verbose_name="Edad del Estudiante")
+    estudiante_curso = models.CharField(max_length=100, verbose_name="Curso del Estudiante")
+    adulto_responsable_nombre = models.CharField(max_length=255, verbose_name="Adulto responsable o apoderado")
+    adulto_responsable_telefono = models.CharField(max_length=50, verbose_name="Teléfono de contacto del adulto responsable")
+    estudiante_direccion = models.CharField(max_length=300, verbose_name="Dirección del Estudiante")
 
+    # --- 3. Motivo de Derivación ---
+    motivo_derivacion = models.TextField(verbose_name="Motivos por el cual se deriva (indique el riesgo)")
 
+    # --- 4. Acciones Efectuadas ---
+    acciones_efectuadas = models.TextField(verbose_name="Acciones efectuadas por el Establecimiento Educacional")
+
+    def __str__(self):
+        return f"Anexo 2 (Riesgo Suicida - Derivación) para Protocolo {self.protocolo.id}"

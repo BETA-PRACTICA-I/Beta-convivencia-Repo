@@ -132,6 +132,55 @@
             <div class="alert alert-light"><em>Paso 7 no completado.</em></div>
             {% endif %}
 
+            {# --- NUEVO: Mostrar datos de Anexo 1 Riesgo Suicida --- #}
+            {% if p.riesgo_suicida_anexo1 %}
+            <fieldset class="mb-4 p-3 border rounded">
+                <legend class="w-auto px-2 h5">Riesgo Suicida - Paso 1: Anexo 1: Detección</legend>
+                <p><strong>Nombre Afectado:</strong> {{ p.riesgo_suicida_anexo1.nombre_afectado|default:"No especificado" }}</p>
+                <p><strong>Curso:</strong> {{ p.riesgo_suicida_anexo1.curso|default:"No especificado" }}</p>
+                <p><strong>Profesor Jefe:</strong> {{ p.riesgo_suicida_anexo1.profesor_jefe|default:"No especificado" }}</p>
+                <p><strong>Apoderado:</strong> {{ p.riesgo_suicida_anexo1.apoderado|default:"No especificado" }}</p>
+                <hr>
+                <p><strong>Fecha Detección:</strong> {{ p.riesgo_suicida_anexo1.fecha|date:"d/m/Y"|default:"No especificado" }}</p>
+                <p><strong>Hora Detección:</strong> {{ p.riesgo_suicida_anexo1.hora|time:"H:i"|default:"No especificado" }}</p>
+                <p><strong>Persona que detecta:</strong> {{ p.riesgo_suicida_anexo1.persona_detecta|default:"No especificado" }}</p>
+                <h6>Relato de los Hechos:</h6>
+                <pre>{{ p.riesgo_suicida_anexo1.relato_hechos|default:"Sin relato." }}</pre>
+            </fieldset>
+            {% elif p.tipo.nombre == "Riesgo suicida" %} {# Mostrar solo si es este protocolo y no está completo #}
+             <div class="alert alert-light"><em>Riesgo Suicida - Paso 1 no completado.</em></div>
+            {% endif %}
+
+            {# --- NUEVO: Mostrar datos de Anexo 2 Riesgo Suicida --- #}
+            {% if p.riesgo_suicida_anexo2 %}
+            <fieldset class="mb-4 p-3 border rounded">
+                <legend class="w-auto px-2 h5">Riesgo Suicida - Paso 2: Anexo 2: Derivación</legend>
+                <h6>1. Antecedentes Establecimiento</h6>
+                <p><strong>Fecha Derivación:</strong> {{ p.riesgo_suicida_anexo2.fecha_derivacion|date:"d/m/Y"|default:"No especificado" }}</p>
+                <p><strong>Establecimiento:</strong> {{ p.riesgo_suicida_anexo2.establecimiento_nombre|default:"No especificado" }}</p>
+                <p><strong>Profesional que Deriva:</strong> {{ p.riesgo_suicida_anexo2.profesional_deriva_nombre|default:"N/A" }} ({{ p.riesgo_suicida_anexo2.profesional_deriva_cargo|default:"N/A" }})</p>
+                <p><strong>Contacto Profesional:</strong> {{ p.riesgo_suicida_anexo2.profesional_deriva_email|default:"N/A" }} / {{ p.riesgo_suicida_anexo2.profesional_deriva_telefono|default:"N/A" }}</p>
+                <hr>
+                <h6>2. Antecedentes Estudiante</h6>
+                <p><strong>Nombre Estudiante:</strong> {{ p.riesgo_suicida_anexo2.estudiante_nombre|default:"No especificado" }}</p>
+                <p><strong>RUN:</strong> {{ p.riesgo_suicida_anexo2.estudiante_run|default:"No especificado" }}</p>
+                <p><strong>Fecha Nacimiento:</strong> {{ p.riesgo_suicida_anexo2.estudiante_fecha_nacimiento|date:"d/m/Y"|default:"N/A" }} (Edad: {{ p.riesgo_suicida_anexo2.estudiante_edad|default:"N/A" }})</p>
+                <p><strong>Curso:</strong> {{ p.riesgo_suicida_anexo2.estudiante_curso|default:"N/A" }}</p>
+                <p><strong>Adulto Responsable:</strong> {{ p.riesgo_suicida_anexo2.adulto_responsable_nombre|default:"N/A" }} (Tel: {{ p.riesgo_suicida_anexo2.adulto_responsable_telefono|default:"N/A" }})</p>
+                <p><strong>Dirección:</strong> {{ p.riesgo_suicida_anexo2.estudiante_direccion|default:"N/A" }}</p>
+                <hr>
+                <h6>3. Motivo Derivación</h6>
+                <pre>{{ p.riesgo_suicida_anexo2.motivo_derivacion|default:"Sin motivo especificado." }}</pre>
+                <hr>
+                 <h6>4. Acciones Efectuadas</h6>
+                <pre>{{ p.riesgo_suicida_anexo2.acciones_efectuadas|default:"Sin acciones especificadas." }}</pre>
+            </fieldset>
+            {% elif p.tipo.nombre == "Riesgo suicida" %} {# Mostrar solo si es este protocolo y no está completo #}
+             <div class="alert alert-light"><em>Riesgo Suicida - Paso 2 no completado.</em></div>
+            {% endif %}
+
+
+
             {% endwith %}
         </div>
     </div>

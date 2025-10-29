@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso {{ step }}: {{ tipo_nombre }}</title>
+    
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css'%}">
+    
+</head>
+<body>
+    <div class="form-container">
+        <h1>Protocolo: {{ tipo_nombre }}</h1>
+        <h2 style="font-size: 1.2rem; color: #555; margin-top: -10px; margin-bottom: 20px;">
+            Paso {{ step }}: Anexo 2: Ficha de Derivación a Centro de Salud
+        </h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }} {# Muestra errores generales del formulario #}
+
+            <div class="section-header">1. Antecedentes del Establecimiento Educacional</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.fecha_derivacion.label_tag }} {{ form.fecha_derivacion }} {{ form.fecha_derivacion.errors }}</div>
+                <div class="form-group">{{ form.establecimiento_nombre.label_tag }} {{ form.establecimiento_nombre }} {{ form.establecimiento_nombre.errors }}</div>
+            </div>
+             <div class="form-row">
+                <div class="form-group">{{ form.profesional_deriva_nombre.label_tag }} {{ form.profesional_deriva_nombre }} {{ form.profesional_deriva_nombre.errors }}</div>
+                <div class="form-group">{{ form.profesional_deriva_cargo.label_tag }} {{ form.profesional_deriva_cargo }} {{ form.profesional_deriva_cargo.errors }}</div>
+            </div>
+            <div class="form-row">
+                 <div class="form-group">{{ form.profesional_deriva_email.label_tag }} {{ form.profesional_deriva_email }} {{ form.profesional_deriva_email.errors }}</div>
+                 <div class="form-group">{{ form.profesional_deriva_telefono.label_tag }} {{ form.profesional_deriva_telefono }} {{ form.profesional_deriva_telefono.errors }}</div>
+            </div>
+             <div class="form-row">
+                <div class="form-group">{{ form.establecimiento_contacto_email.label_tag }} {{ form.establecimiento_contacto_email }} {{ form.establecimiento_contacto_email.errors }}</div>
+                <div class="form-group">{{ form.establecimiento_contacto_telefono.label_tag }} {{ form.establecimiento_contacto_telefono }} {{ form.establecimiento_contacto_telefono.errors }}</div>
+            </div>
+
+            <div class="section-header">2. Antecedentes del Estudiante</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.estudiante_nombre.label_tag }} {{ form.estudiante_nombre }} {{ form.estudiante_nombre.errors }}</div>
+                <div class="form-group">{{ form.estudiante_run.label_tag }} {{ form.estudiante_run }} {{ form.estudiante_run.errors }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.estudiante_fecha_nacimiento.label_tag }} {{ form.estudiante_fecha_nacimiento }} {{ form.estudiante_fecha_nacimiento.errors }}</div>
+                 <div class="form-group">{{ form.estudiante_edad.label_tag }} {{ form.estudiante_edad }} {{ form.estudiante_edad.errors }}</div>
+            </div>
+             <div class="form-row">
+                <div class="form-group">{{ form.estudiante_curso.label_tag }} {{ form.estudiante_curso }} {{ form.estudiante_curso.errors }}</div>
+                <div class="form-group">{{ form.adulto_responsable_nombre.label_tag }} {{ form.adulto_responsable_nombre }} {{ form.adulto_responsable_nombre.errors }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.adulto_responsable_telefono.label_tag }} {{ form.adulto_responsable_telefono }} {{ form.adulto_responsable_telefono.errors }}</div>
+                <div class="form-group">{{ form.estudiante_direccion.label_tag }} {{ form.estudiante_direccion }} {{ form.estudiante_direccion.errors }}</div>
+            </div>
+
+            <div class="section-header">3. Motivo de Derivación</div>
+             <div class="form-row">
+                <div class="form-group">{{ form.motivo_derivacion.label_tag }} {{ form.motivo_derivacion }} {{ form.motivo_derivacion.errors }}</div>
+            </div>
+
+            <div class="section-header">4. Acciones Efectuadas por el Establecimiento</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.acciones_efectuadas.label_tag }} {{ form.acciones_efectuadas }} {{ form.acciones_efectuadas.errors }}</div>
+            </div>
+
+            <button type="submit" class="abrir-protocolo" style="width: auto; margin-top: 1rem; padding: 0.85rem 1.5rem;">
+                Guardar
+            </button>
+        </form>
+    </div>
+</body>
+</html>

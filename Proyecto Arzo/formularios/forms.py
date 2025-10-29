@@ -1,6 +1,6 @@
 from django import forms
 from .models import (FormularioDenuncia, FichaEntrevista, Derivacion,
-    InformeConcluyente, Apelacion, ResolucionApelacion, EncuestaBullying, RiesgoSuicidaAnexo1)
+    InformeConcluyente, Apelacion, ResolucionApelacion, EncuestaBullying, RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2)
 
 
 DERIVACION_CHOICES = [
@@ -158,4 +158,32 @@ class RiesgoSuicidaAnexo1Form(forms.ModelForm):
             'fecha': forms.DateInput(attrs={'type': 'date'}),
             'hora': forms.TimeInput(attrs={'type': 'time'}),
             'relato_hechos': forms.Textarea(attrs={'rows': 5}),
+        }
+
+class RiesgoSuicidaAnexo2Form(forms.ModelForm):
+    class Meta:
+        model = RiesgoSuicidaAnexo2
+        exclude = ('protocolo',) # El sistema lo maneja
+        widgets = {
+            # --- Widgets para mejorar la entrada de datos ---
+            'fecha_derivacion': forms.DateInput(attrs={'type': 'date'}),
+            'estudiante_fecha_nacimiento': forms.DateInput(attrs={'type': 'date'}),
+            'motivo_derivacion': forms.Textarea(attrs={'rows': 4}),
+            'acciones_efectuadas': forms.Textarea(attrs={'rows': 4}),
+
+            # --- Podrías añadir placeholders o clases si usas CSS específico ---
+            'establecimiento_nombre': forms.TextInput(attrs={'placeholder': 'Nombre del colegio'}),
+            'profesional_deriva_nombre': forms.TextInput(attrs={'placeholder': 'Ej: Juan Pérez'}),
+            'profesional_deriva_cargo': forms.TextInput(attrs={'placeholder': 'Ej: Psicólogo Educacional'}),
+            'profesional_deriva_email': forms.EmailInput(attrs={'placeholder': 'ejemplo@colegio.cl'}),
+            'profesional_deriva_telefono': forms.TextInput(attrs={'placeholder': '+569...'}),
+            'establecimiento_contacto_email': forms.EmailInput(attrs={'placeholder': 'contacto@colegio.cl'}),
+            'establecimiento_contacto_telefono': forms.TextInput(attrs={'placeholder': '+56...'}),
+            'estudiante_nombre': forms.TextInput(attrs={'placeholder': 'Nombre completo'}),
+            'estudiante_run': forms.TextInput(attrs={'placeholder': '12345678-9'}),
+            'estudiante_edad': forms.NumberInput(attrs={'min': '0'}),
+            'estudiante_curso': forms.TextInput(attrs={'placeholder': 'Ej: 8vo Básico A'}),
+            'adulto_responsable_nombre': forms.TextInput(attrs={'placeholder': 'Nombre completo apoderado'}),
+            'adulto_responsable_telefono': forms.TextInput(attrs={'placeholder': '+569...'}),
+            'estudiante_direccion': forms.TextInput(attrs={'placeholder': 'Calle Ejemplo 123, Comuna'}),
         }

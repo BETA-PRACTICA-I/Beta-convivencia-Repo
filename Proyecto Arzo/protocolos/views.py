@@ -13,12 +13,12 @@ from .models import Protocolo, TipoProtocolo
 from formularios.forms import (
     FormularioDenunciaForm, FichaEntrevistaForm, DerivacionForm,
     InformeConcluyenteForm, ApelacionForm, ResolucionApelacionForm, EncuestaBullyingForm,
-    RiesgoSuicidaAnexo1Form  # <-- 1. ¡IMPORTAMOS EL NUEVO FORM!
+    RiesgoSuicidaAnexo1Form, RiesgoSuicidaAnexo2Form  # <-- 1. ¡IMPORTAMOS EL NUEVO FORM!
 )
 from formularios.models import (
     FormularioDenuncia, FichaEntrevista, Derivacion, InformeConcluyente,
     Apelacion, ResolucionApelacion, EncuestaBullying,
-    RiesgoSuicidaAnexo1  # <-- 2. ¡IMPORTAMOS EL NUEVO MODELO!
+    RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2  # <-- 2. ¡IMPORTAMOS EL NUEVO MODELO!
 )
 
 PROTOCOLOS_TIPO_1 = [
@@ -63,6 +63,7 @@ def protocolo_step(request, protocolo_id, step):
         total_steps = 1 
         step_map = {
             1: {'form': RiesgoSuicidaAnexo1Form, 'model': RiesgoSuicidaAnexo1, 'template': 'riesgo_suicida/paso1.html'},
+            2: {'form': RiesgoSuicidaAnexo2Form, 'model': RiesgoSuicidaAnexo2, 'template': 'riesgo_suicida/paso2.html'},
             # Cuando tengas el Anexo 2, lo añades aquí:
             # 2: {'form': RiesgoSuicidaAnexo2Form, 'model': RiesgoSuicidaAnexo2, 'template': 'riesgo_suicida/paso2.html'},
         }
@@ -212,7 +213,8 @@ def descargar_protocolo_pdf(request, protocolo_id):
             'resolucionapelacion', 
             'encuestabullying',
             # --- ¡Aquí añadirás los related_name de los NUEVOS formularios! ---
-            'riesgo_suicida_anexo1', # ¡Añadido!
+            'riesgo_suicida_anexo1',  # ¡Añadido!
+            'riesgo_suicida_anexo2',
         ), 
         id=protocolo_id,
         creador=request.user
@@ -247,7 +249,8 @@ def ver_protocolo(request, protocolo_id):
             'apelacion', 
             'resolucionapelacion', 
             'encuestabullying',
-            'riesgo_suicida_anexo1', # ¡Añadido!
+            'riesgo_suicida_anexo1',
+            'riesgo_suicida_anexo2',  # ¡Añadido!
         ), 
         id=protocolo_id
     )
