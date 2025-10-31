@@ -11,8 +11,12 @@ from formularios.models import (
     Apelacion,
     ResolucionApelacion,
     EncuestaBullying,
+
     RiesgoSuicidaAnexo1,
-    RiesgoSuicidaAnexo2
+    RiesgoSuicidaAnexo2,
+    RiesgoSuicidaAnexo3,
+    RiesgoSuicidaAnexo4,
+    RiesgoSuicidaAnexo5,
 )
 
 # --- Define las clases Inline para CADA formulario ---
@@ -53,6 +57,8 @@ class EncuestaBullyingInline(admin.StackedInline):
     can_delete = False
     extra = 0
 
+# --- Inlines para Riesgo Suicida ---
+
 class RiesgoSuicidaAnexo1Inline(admin.StackedInline):
     model = RiesgoSuicidaAnexo1
     can_delete = False
@@ -60,6 +66,21 @@ class RiesgoSuicidaAnexo1Inline(admin.StackedInline):
 
 class RiesgoSuicidaAnexo2Inline(admin.StackedInline):
     model = RiesgoSuicidaAnexo2
+    can_delete = False
+    extra = 0
+
+class RiesgoSuicidaAnexo3Inline(admin.StackedInline):
+    model = RiesgoSuicidaAnexo3
+    can_delete = False
+    extra = 0
+
+class RiesgoSuicidaAnexo4Inline(admin.StackedInline):
+    model = RiesgoSuicidaAnexo4
+    can_delete = False
+    extra = 0
+
+class RiesgoSuicidaAnexo5Inline(admin.StackedInline):
+    model = RiesgoSuicidaAnexo5
     can_delete = False
     extra = 0
 
@@ -89,7 +110,14 @@ class ProtocoloAdmin(admin.ModelAdmin):
         if obj: # Si estamos viendo/editando un protocolo existente
             if obj.tipo.nombre == "Riesgo suicida":
                 # Mostrar solo los inlines de Riesgo Suicida
-                return [RiesgoSuicidaAnexo1Inline, RiesgoSuicidaAnexo2Inline]
+                return [
+                    RiesgoSuicidaAnexo1Inline,
+                    RiesgoSuicidaAnexo2Inline,
+                    RiesgoSuicidaAnexo3Inline,
+                    RiesgoSuicidaAnexo4Inline,
+                    RiesgoSuicidaAnexo5Inline,
+                    ]
+            
             elif obj.tipo.nombre in protocolos_tipo_1:
                 # Mostrar los inlines del flujo original
                  return [
@@ -99,8 +127,8 @@ class ProtocoloAdmin(admin.ModelAdmin):
                     InformeConcluyenteInline,
                     ApelacionInline,
                     ResolucionApelacionInline,
-                    EncuestaBullyingInline,
-                ]
+                    EncuestaBullyingInline
+                    ]
             # Puedes añadir más elif obj.tipo.nombre == "Otro Tipo": return [OtrosInlines] aquí
 
         # Si es un protocolo nuevo (obj=None) o el tipo no coincide con ninguno,

@@ -13,13 +13,17 @@ from .models import Protocolo, TipoProtocolo
 from formularios.forms import (
     FormularioDenunciaForm, FichaEntrevistaForm, DerivacionForm,
     InformeConcluyenteForm, ApelacionForm, ResolucionApelacionForm, EncuestaBullyingForm,
-    RiesgoSuicidaAnexo1Form, RiesgoSuicidaAnexo2Form  # <-- 1. ¡IMPORTAMOS EL NUEVO FORM!
-)
+
+    RiesgoSuicidaAnexo1Form, RiesgoSuicidaAnexo2Form, RiesgoSuicidaAnexo3Form,
+    RiesgoSuicidaAnexo4Form, RiesgoSuicidaAnexo5Form
+    )
 from formularios.models import (
     FormularioDenuncia, FichaEntrevista, Derivacion, InformeConcluyente,
     Apelacion, ResolucionApelacion, EncuestaBullying,
-    RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2  # <-- 2. ¡IMPORTAMOS EL NUEVO MODELO!
-)
+
+    RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2, RiesgoSuicidaAnexo3,
+    RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5
+    )
 
 PROTOCOLOS_TIPO_1 = [
     "Acoso Escolar", "Drogas y Alcohol", "Agresión o Connotación Sexual",
@@ -59,14 +63,15 @@ def protocolo_step(request, protocolo_id, step):
 
     # --- 3. ¡AQUÍ ESTÁ LA NUEVA LÓGICA! ---
     elif tipo_nombre == "Riesgo suicida":
-        # Por ahora, este protocolo solo tiene 1 paso
-        total_steps = 2
+        # Cantidad de pasos, debe ser = a la cantidad de anexos.
+        total_steps = 5
         step_map = {
             1: {'form': RiesgoSuicidaAnexo1Form, 'model': RiesgoSuicidaAnexo1, 'template': 'riesgo_suicida/paso1.html'},
             2: {'form': RiesgoSuicidaAnexo2Form, 'model': RiesgoSuicidaAnexo2, 'template': 'riesgo_suicida/paso2.html'},
-            # Cuando tengas el Anexo 2, lo añades aquí:
-            # 2: {'form': RiesgoSuicidaAnexo2Form, 'model': RiesgoSuicidaAnexo2, 'template': 'riesgo_suicida/paso2.html'},
-        }
+            3: {'form': RiesgoSuicidaAnexo3Form, 'model': RiesgoSuicidaAnexo3, 'template': 'riesgo_suicida/paso3.html'},
+            4: {'form': RiesgoSuicidaAnexo4Form, 'model': RiesgoSuicidaAnexo4, 'template': 'riesgo_suicida/paso4.html'},
+            5: {'form': RiesgoSuicidaAnexo5Form, 'model': RiesgoSuicidaAnexo5, 'template': 'riesgo_suicida/paso5.html'}
+            }
         form_config = step_map.get(step)
     
     elif tipo_nombre == "Casos de salud":
@@ -212,10 +217,13 @@ def descargar_protocolo_pdf(request, protocolo_id):
             'apelacion', 
             'resolucionapelacion', 
             'encuestabullying',
-            # --- ¡Aquí añadirás los related_name de los NUEVOS formularios! ---
-            'riesgo_suicida_anexo1',  # ¡Añadido!
+
+            'riesgo_suicida_anexo1',
             'riesgo_suicida_anexo2',
-        ), 
+            'riesgo_suicida_anexo3',
+            'riesgo_suicida_anexo4',
+            'riesgo_suicida_anexo5'
+            ),
         id=protocolo_id,
         creador=request.user
     )
@@ -249,9 +257,13 @@ def ver_protocolo(request, protocolo_id):
             'apelacion', 
             'resolucionapelacion', 
             'encuestabullying',
+
             'riesgo_suicida_anexo1',
-            'riesgo_suicida_anexo2',  # ¡Añadido!
-        ), 
+            'riesgo_suicida_anexo2',
+            'riesgo_suicida_anexo3',
+            'riesgo_suicida_anexo4',
+            'riesgo_suicida_anexo5'
+            ), 
         id=protocolo_id
     )
 

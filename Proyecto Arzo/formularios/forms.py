@@ -1,6 +1,12 @@
 from django import forms
-from .models import (FormularioDenuncia, FichaEntrevista, Derivacion,
-    InformeConcluyente, Apelacion, ResolucionApelacion, EncuestaBullying, RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2)
+from .models import (
+    FormularioDenuncia, FichaEntrevista, Derivacion,
+    InformeConcluyente, Apelacion, ResolucionApelacion,
+    EncuestaBullying,   #Protocolos 1-6
+    
+    RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2, RiesgoSuicidaAnexo3,
+    RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5,   #Protocolo 7
+    )
 
 
 DERIVACION_CHOICES = [
@@ -186,4 +192,67 @@ class RiesgoSuicidaAnexo2Form(forms.ModelForm):
             'adulto_responsable_nombre': forms.TextInput(attrs={'placeholder': 'Nombre completo apoderado'}),
             'adulto_responsable_telefono': forms.TextInput(attrs={'placeholder': '+569...'}),
             'estudiante_direccion': forms.TextInput(attrs={'placeholder': 'Calle Ejemplo 123, Comuna'}),
+        }
+
+class RiesgoSuicidaAnexo3Form(forms.ModelForm):
+    class Meta:
+        model = RiesgoSuicidaAnexo3
+        # Excluimos los campos que no debe llenar el usuario en este paso
+        # (o que podríamos autocompletar en el futuro)
+        exclude = ('protocolo', 'establecimiento_nombre', 'estudiante_nombre', 'estudiante_curso')
+
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'}),
+            'hora': forms.TimeInput(attrs={'type': 'time'}),
+            'acciones_a_seguir': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Ej: Asistir a citación en centro de salud, supervisar en domicilio...'}),
+            'apoderado_nombre': forms.TextInput(attrs={'placeholder': 'Nombre completo del apoderado'}),
+            'apoderado_run': forms.TextInput(attrs={'placeholder': '12345678-9'}),
+            'nombre_firma_apoderado': forms.TextInput(attrs={'placeholder': 'Nombre o firma de quien recibe...'}),
+            'nombre_firma_funcionario': forms.TextInput(attrs={'placeholder': 'Nombre de quien notifica...'}),
+            'cargo_funcionario': forms.TextInput(attrs={'placeholder': 'Ej: Psicólogo, Orientador...'}),
+        }
+
+class RiesgoSuicidaAnexo4Form(forms.ModelForm):
+    class Meta:
+        model = RiesgoSuicidaAnexo4
+        # Excluimos los campos del estudiante que podríamos autocompletar
+        exclude = ('protocolo', 'estudiante_nombre', 'estudiante_curso', 'profesor_jefe')
+
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'}),
+            'hora_inicio': forms.TimeInput(attrs={'type': 'time'}),
+            'hora_termino': forms.TimeInput(attrs={'type': 'time'}),
+            'lugar_reunion': forms.TextInput(attrs={'placeholder': 'Ej: Oficina de Orientación, Sala de reuniones...'}),
+
+            'asistentes': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Nombre Completo - Cargo/Rol (uno por línea)'}),
+            'puntos_tratados': forms.Textarea(attrs={'rows': 6}),
+            'acuerdos': forms.Textarea(attrs={'rows': 6}),
+
+            'proxima_reunion_fecha': forms.DateInput(attrs={'type': 'date'}),
+            'proxima_reunion_hora': forms.TimeInput(attrs={'type': 'time'}),
+            'proxima_reunion_lugar': forms.TextInput(attrs={'placeholder': 'Ej: CESFAM, Oficina Orientación...'}),
+
+            'firma_funcionario_establecimiento': forms.TextInput(attrs={'placeholder': 'Nombre y firma...'}),
+            'firma_profesional_salud': forms.TextInput(attrs={'placeholder': 'Nombre y firma...'}),
+        }
+
+class RiesgoSuicidaAnexo5Form(forms.ModelForm):
+    class Meta:
+        model = RiesgoSuicidaAnexo5
+        # Excluimos los campos que se llenarán automáticamente
+        exclude = ('protocolo', 'establecimiento_nombre', 'establecimiento_direccion', 
+                   'establecimiento_telefono', 'estudiante_nombre', 'estudiante_run',
+                   'estudiante_fecha_nacimiento', 'estudiante_edad', 'estudiante_curso')
+
+        widgets = {
+            'fecha_derivacion': forms.DateInput(attrs={'type': 'date'}),
+            'motivo_derivacion': forms.Textarea(attrs={'rows': 6, 'placeholder': 'Describir brevemente el motivo de la derivación...'}),
+            'acciones_entrevista_apoderado': forms.Textarea(attrs={'rows': 4}),
+            'acciones_coordinacion_salud': forms.Textarea(attrs={'rows': 4}),
+            'acciones_otras': forms.Textarea(attrs={'rows': 4}),
+
+            'responsable_nombre': forms.TextInput(attrs={'placeholder': 'Nombre completo...'}),
+            'responsable_cargo': forms.TextInput(attrs={'placeholder': 'Ej: Director, Encargado Convivencia...'}),
+            'responsable_telefono': forms.TextInput(attrs={'placeholder': '+56 9 ...'}),
+            'responsable_email': forms.EmailInput(attrs={'placeholder': 'correo@ejemplo.com'}),
         }

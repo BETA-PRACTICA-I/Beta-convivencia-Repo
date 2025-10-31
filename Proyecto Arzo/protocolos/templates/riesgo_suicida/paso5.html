@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso {{ step }}: {{ tipo_nombre }}</title>
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css'%}">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Protocolo: {{ tipo_nombre }}</h1>
+        <h2 style="font-size: 1.2rem; color: #555; margin-top: -10px; margin-bottom: 20px;">
+            Paso {{ step }}: Anexo 5: Hoja de Derivación
+        </h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="section-header">I. Antecedentes del Establecimiento</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.fecha_derivacion.label_tag }} {{ form.fecha_derivacion }} {{ form.fecha_derivacion.errors }}</div>
+            </div>
+            <p style="font-size: 0.9rem; color: #666;">Los datos del establecimiento y del estudiante se adjuntarán automáticamente.</p>
+
+
+            <div class="section-header">III. Motivo de Derivación</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.motivo_derivacion.label_tag }}
+                    {{ form.motivo_derivacion }}
+                    {{ form.motivo_derivacion.errors }}
+                </div>
+            </div>
+
+            <div class="section-header">IV. Acciones Realizadas por el Establecimiento</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.acciones_entrevista_apoderado.label_tag }}
+                    {{ form.acciones_entrevista_apoderado }}
+                    {{ form.acciones_entrevista_apoderado.errors }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.acciones_coordinacion_salud.label_tag }}
+                    {{ form.acciones_coordinacion_salud }}
+                    {{ form.acciones_coordinacion_salud.errors }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.acciones_otras.label_tag }}
+                    {{ form.acciones_otras }}
+                    {{ form.acciones_otras.errors }}
+                </div>
+            </div>
+
+            <div class="section-header">V. Responsable de la DerivACIÓN</div>
+             <div class="form-row">
+                <div class="form-group">{{ form.responsable_nombre.label_tag }} {{ form.responsable_nombre }} {{ form.responsable_nombre.errors }}</div>
+                <div class="form-group">{{ form.responsable_cargo.label_tag }} {{ form.responsable_cargo }} {{ form.responsable_cargo.errors }}</div>
+            </div>
+             <div class="form-row">
+                <div class="form-group">{{ form.responsable_telefono.label_tag }} {{ form.responsable_telefono }} {{ form.responsable_telefono.errors }}</div>
+                <div class="form-group">{{ form.responsable_email.label_tag }} {{ form.responsable_email }} {{ form.responsable_email.errors }}</div>
+            </div>
+
+            <button type="submit" style="width: auto; margin-top: 1rem; padding: 0.85rem 1.5rem;">
+                Finalizar Protocolo
+            </button>
+        </form>
+    </div>
+</body>
+</html>

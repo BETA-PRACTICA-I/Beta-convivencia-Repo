@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso {{ step }}: {{ tipo_nombre }}</title>
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css'%}">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Protocolo: {{ tipo_nombre }}</h1>
+        <h2 style="font-size: 1.2rem; color: #555; margin-top: -10px; margin-bottom: 20px;">
+            Paso {{ step }}: Anexo 4: Acta de Reunión Clínica y de Coordinación
+        </h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="section-header">1. Datos de la Reunión</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.fecha.label_tag }} {{ form.fecha }} {{ form.fecha.errors }}</div>
+                <div class="form-group">{{ form.lugar_reunion.label_tag }} {{ form.lugar_reunion }} {{ form.lugar_reunion.errors }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.hora_inicio.label_tag }} {{ form.hora_inicio }} {{ form.hora_inicio.errors }}</div>
+                <div class="form-group">{{ form.hora_termino.label_tag }} {{ form.hora_termino }} {{ form.hora_termino.errors }}</div>
+            </div>
+
+            <div class="section-header">2. Asistentes</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.asistentes.label_tag }}
+                    {{ form.asistentes }}
+                    {{ form.asistentes.errors }}
+                </div>
+            </div>
+
+            <div class="section-header">3. Resumen de la Reunión</div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.puntos_tratados.label_tag }}
+                    {{ form.puntos_tratados }}
+                    {{ form.puntos_tratados.errors }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.acuerdos.label_tag }}
+                    {{ form.acuerdos }}
+                    {{ form.acuerdos.errors }}
+                </div>
+            </div>
+
+            <div class="section-header">4. Próxima Reunión (si aplica)</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.proxima_reunion_fecha.label_tag }} {{ form.proxima_reunion_fecha }} {{ form.proxima_reunion_fecha.errors }}</div>
+                <div class="form-group">{{ form.proxima_reunion_hora.label_tag }} {{ form.proxima_reunion_hora }} {{ form.proxima_reunion_hora.errors }}</div>
+            </div>
+             <div class="form-row">
+                <div class="form-group">{{ form.proxima_reunion_lugar.label_tag }} {{ form.proxima_reunion_lugar }} {{ form.proxima_reunion_lugar.errors }}</div>
+            </div>
+
+            <div class="section-header">5. Firmas de los Responsables</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.firma_funcionario_establecimiento.label_tag }} {{ form.firma_funcionario_establecimiento }} {{ form.firma_funcionario_establecimiento.errors }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.firma_profesional_salud.label_tag }} {{ form.firma_profesional_salud }} {{ form.firma_profesional_salud.errors }}</div>
+            </div>
+
+            <button type="submit" style="width: auto; margin-top: 1rem; padding: 0.85rem 1.5rem;">
+                Guardar y Siguiente
+            </button>
+        </form>
+    </div>
+</body>
+</html>

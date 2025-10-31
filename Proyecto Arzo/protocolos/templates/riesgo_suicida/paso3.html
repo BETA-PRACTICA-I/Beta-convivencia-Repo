@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso {{ step }}: {{ tipo_nombre }}</title>
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css'%}">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Protocolo: {{ tipo_nombre }}</h1>
+        <h2 style="font-size: 1.2rem; color: #555; margin-top: -10px; margin-bottom: 20px;">
+            Paso {{ step }}: Anexo 3: Constancia de Notificación al Apoderado
+        </h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="section-header">1. Fecha y Hora de Notificación</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.fecha.label_tag }} {{ form.fecha }} {{ form.fecha.errors }}</div>
+                <div class="form-group">{{ form.hora.label_tag }} {{ form.hora }} {{ form.hora.errors }}</div>
+            </div>
+
+            <div class="section-header">2. Datos del Apoderado Notificado</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.apoderado_nombre.label_tag }} {{ form.apoderado_nombre }} {{ form.apoderado_nombre.errors }}</div>
+                <div class="form-group">{{ form.apoderado_run.label_tag }} {{ form.apoderado_run }} {{ form.apoderado_run.errors }}</div>
+            </div>
+            
+            <div class="section-header">3. Acciones a Seguir</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <p style="font-size: 0.9rem; color: #444; margin-top: 0;">
+                        Mediante la presente constancia, el apoderado toma conocimiento de la situación de riesgo y/o vulneración de derechos que afecta al estudiante, y se compromete a seguir las acciones indicadas por el establecimiento.
+                    </p>
+                    {{ form.acciones_a_seguir.label_tag }}
+                    {{ form.acciones_a_seguir }}
+                    {{ form.acciones_a_seguir.errors }}
+                </div>
+            </div>
+
+            <div class="section-header">4. Firmas de Constancia</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.nombre_firma_apoderado.label_tag }} {{ form.nombre_firma_apoderado }} {{ form.nombre_firma_apoderado.errors }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.nombre_firma_funcionario.label_tag }} {{ form.nombre_firma_funcionario }} {{ form.nombre_firma_funcionario.errors }}</div>
+                <div class="form-group">{{ form.cargo_funcionario.label_tag }} {{ form.cargo_funcionario }} {{ form.cargo_funcionario.errors }}</div>
+            </div>
+
+            <button type="submit" style="width: auto; margin-top: 1rem; padding: 0.85rem 1.5rem;">
+                Guardar y Siguiente
+            </button>
+        </form>
+    </div>
+</body>
+</html>
