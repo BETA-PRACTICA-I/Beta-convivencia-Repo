@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Reconocimiento de Identidad de Género</title>
+    <!-- Reutilizamos el CSS de los otros formularios para consistencia -->
+    <link rel="stylesheet" href="{% static 'protocolos/css/Form1styles.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Protocolo de Reconocimiento de Identidad de Género</h1>
+            <p>Este formulario permite solicitar el reconocimiento de tu nombre y pronombres acordes a tu identidad de género en los registros y sistemas de la institución.</p>
+        </div>
+
+        <form method="post" class="protocol-form">
+            {% csrf_token %}
+
+            <!-- SECCIÓN 1: DATOS DE IDENTIFICACIÓN DEL ESTUDIANTE -->
+            <fieldset>
+                <legend>1. Datos de Identificación (Legales)</legend>
+                <div class="form-group">
+                    <label for="nombre_legal">Nombre Completo (según documento de identidad)</label>
+                    <!-- Este campo podría ser pre-rellenado por el sistema -->
+                    <input type="text" id="nombre_legal" name="nombre_legal" placeholder="Ej: Juan Andrés Pérez Soto" required>
+                </div>
+                <div class="form-group">
+                    <label for="rut_estudiante">RUT / N° de Identificación</label>
+                    <!-- Este campo también podría ser pre-rellenado -->
+                    <input type="text" id="rut_estudiante" name="rut_estudiante" placeholder="Ej: 12.345.678-9" required>
+                </div>
+            </fieldset>
+
+            <!-- SECCIÓN 2: INFORMACIÓN PARA EL RECONOCIMIENTO -->
+            <fieldset>
+                <legend>2. Información para el Reconocimiento</legend>
+                <div class="form-group">
+                    <label for="nombre_identitario">Nombre Identitario / Social</label>
+                    <p class="form-hint">Este es el nombre que se usará en listas, carné, correos y en el trato diario.</p>
+                    <input type="text" id="nombre_identitario" name="nombre_identitario" placeholder="Escribe el nombre con el que te identificas" required>
+                </div>
+                <div class="form-group">
+                    <label for="pronombres">Pronombres</label>
+                    <p class="form-hint">Selecciona los pronombres con los que te identificas.</p>
+                    <select id="pronombres" name="pronombres" required>
+                        <option value="" disabled selected>Selecciona una opción...</option>
+                        <option value="El/La">Él / La</option>
+                        <option value="Ella/La">Ella / La</option>
+                        <option value="Elle/Le">Elle / Le</option>
+                        <option value="Otro">Otro (especificar)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="otro_pronombre_container" style="display: none;">
+                    <label for="otro_pronombre">Por favor, especifica tus pronombres</label>
+                    <input type="text" id="otro_pronombre" name="otro_pronombre">
+                </div>
+            </fieldset>
+
+            <!-- SECCIÓN 3: DECLARACIÓN Y ENVÍO -->
+            <fieldset>
+                <legend>3. Declaración y Envío</legend>
+                <div class="form-group declaration">
+                    <input type="checkbox" id="declaracion" name="declaracion" required>
+                    <label for="declaracion">Declaro, bajo mi exclusiva responsabilidad, que la información proporcionada es verídica y corresponde a mi identidad de género auto-percibida. Comprendo que este cambio se aplicará a los registros internos de la institución.</label>
+                </div>
+            </fieldset>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">Enviar Solicitud</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Script simple para mostrar el campo "Otro" de los pronombres
+        document.getElementById('pronombres').addEventListener('change', function() {
+            var otroContainer = document.getElementById('otro_pronombre_container');
+            if (this.value === 'Otro') {
+                otroContainer.style.display = 'block';
+            } else {
+                otroContainer.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>

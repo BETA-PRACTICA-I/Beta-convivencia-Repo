@@ -15,14 +15,16 @@ from formularios.forms import (
     InformeConcluyenteForm, ApelacionForm, ResolucionApelacionForm, EncuestaBullyingForm,
 
     RiesgoSuicidaAnexo1Form, RiesgoSuicidaAnexo2Form, RiesgoSuicidaAnexo3Form,
-    RiesgoSuicidaAnexo4Form, RiesgoSuicidaAnexo5Form
+    RiesgoSuicidaAnexo4Form, RiesgoSuicidaAnexo5Form,
+    SolicitudReconocimientoForm, GestionReconocimientoForm,
     )
 from formularios.models import (
-    FormularioDenuncia, FichaEntrevista, Derivacion, InformeConcluyente,
+    FormularioDenuncia, FichaEntrevista, Derivacion, GestionReconocimiento, InformeConcluyente,
     Apelacion, ResolucionApelacion, EncuestaBullying,
 
     RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2, RiesgoSuicidaAnexo3,
-    RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5
+    RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5,
+    ReconocimientoIdentidad, GestionReconocimiento,
     )
 
 PROTOCOLOS_TIPO_1 = [
@@ -61,9 +63,7 @@ def protocolo_step(request, protocolo_id, step):
         }
         form_config = step_map.get(step)
 
-    # --- 3. ¡AQUÍ ESTÁ LA NUEVA LÓGICA! ---
     elif tipo_nombre == "Riesgo suicida":
-        # Cantidad de pasos, debe ser = a la cantidad de anexos.
         total_steps = 5
         step_map = {
             1: {'form': RiesgoSuicidaAnexo1Form, 'model': RiesgoSuicidaAnexo1, 'template': 'riesgo_suicida/paso1.html'},
@@ -73,11 +73,18 @@ def protocolo_step(request, protocolo_id, step):
             5: {'form': RiesgoSuicidaAnexo5Form, 'model': RiesgoSuicidaAnexo5, 'template': 'riesgo_suicida/paso5.html'}
             }
         form_config = step_map.get(step)
-    
+
+    elif tipo_nombre == "Reconocimiento de Identidad de Género":
+        total_steps = 2
+        step_map = {
+            1: {'form': SolicitudReconocimientoForm, 'model': ReconocimientoIdentidad, 'template': 'identidad_genero/paso1.html'},
+            2: {'form': GestionReconocimientoForm, 'model': GestionReconocimiento, 'template': 'identidad_genero/paso2.html'},
+        }
+        form_config = step_map.get(step)
+
     elif tipo_nombre == "Casos de salud":
         return HttpResponse(f"Vista para Protocolo '{tipo_nombre}' - Paso {step} - AÚN NO IMPLEMENTADA")
 
-    
     if not form_config:
         messages.error(request, f"El paso {step} no está definido para el protocolo '{tipo_nombre}'.")
         return redirect('Validaciones:homepage')
@@ -91,42 +98,42 @@ def protocolo_step(request, protocolo_id, step):
         instance = model_class.objects.get(protocolo=protocolo)
     except ObjectDoesNotExist:
         instance = None 
-
+        
     if request.method == 'POST':
+        form_valid = False
         if form_class == DerivacionForm:
             form = DerivacionForm(request.POST, request.FILES)
             if form.is_valid():
                 data = form.cleaned_data
                 defaults_data = {
                     'derivaciones': ", ".join(data.get('tipo_derivacion', [])),
-                    'fecha_lesiones': data.get('fecha_lesiones'),
-                    'institucion_lesiones': data.get('institucion_lesiones'),
-                    'funcionario_lesiones': data.get('funcionario_responsable_lesiones'),
-                    'firma_lesiones': data.get('firma_funcionario_lesiones'),
-                    'respaldo_lesiones': data.get('respaldo_lesiones'),
-                    'fecha_delito': data.get('fecha_delito'),
-                    'institucion_delito': data.get('institucion_delito'),
-                    'funcionario_delito': data.get('funcionario_responsable_delito'),
-                    'firma_delito': data.get('firma_funcionario_delito'),
-                    'respaldo_delito': data.get('respaldo_delito'),
-                    'fecha_tribunal': data.get('fecha_tribunal'),
-                    'institucion_tribunal': data.get('institucion_tribunal'),
-                    'funcionario_tribunal': data.get('funcionario_responsable_tribunal'),
-                    'firma_tribunal': data.get('firma_funcionario_tribunal'),
-                    'respaldo_tribunal': data.get('respaldo_tribunal'),
-                    'tipo_medida_otras': data.get('tipo_medida_otras'),
-                    'descripcion_otras': data.get('descripcion_otras'),
-                    'funcionario_otras': data.get('funcionario_responsable_otras'),
-                    'firma_otras': data.get('firma_funcionario_otras'),
-                    'respaldo_otras': data.get('respaldo_otras'),
+                    'fecha_lesiones': data.get('fecha_lesiones'), 'institucion_lesiones': data.get('institucion_lesiones'),
+                    'funcionario_lesiones': data.get('funcionario_responsable_lesiones'), 'firma_lesiones': data.get('firma_funcionario_lesiones'),
+                    'respaldo_lesiones': data.get('respaldo_lesiones'), 'fecha_delito': data.get('fecha_delito'),
+                    'institucion_delito': data.get('institucion_delito'), 'funcionario_delito': data.get('funcionario_responsable_delito'),
+                    'firma_delito': data.get('firma_funcionario_delito'), 'respaldo_delito': data.get('respaldo_delito'),
+                    'fecha_tribunal': data.get('fecha_tribunal'), 'institucion_tribunal': data.get('institucion_tribunal'),
+                    'funcionario_tribunal': data.get('funcionario_responsable_tribunal'), 'firma_tribunal': data.get('firma_funcionario_tribunal'),
+                    'respaldo_tribunal': data.get('respaldo_tribunal'), 'tipo_medida_otras': data.get('tipo_medida_otras'),
+                    'descripcion_otras': data.get('descripcion_otras'), 'funcionario_otras': data.get('funcionario_responsable_otras'),
+                    'firma_otras': data.get('firma_funcionario_otras'), 'respaldo_otras': data.get('respaldo_otras'),
                 }
-                obj, created = Derivacion.objects.update_or_create(
+                obj, created = Derivacion.objects.update_or_create(protocolo=protocolo, defaults=defaults_data)
+                form_valid = True
+        
+        elif form_class == SolicitudReconocimientoForm:
+            form = SolicitudReconocimientoForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                pronombres_finales = data['otro_pronombre'] if data['pronombres'] == 'Otro' else data['pronombres']
+                obj, created = ReconocimientoIdentidad.objects.update_or_create(
                     protocolo=protocolo,
-                    defaults=defaults_data
+                    defaults={
+                        'nombre_legal': data['nombre_legal'], 'rut_estudiante': data['rut_estudiante'],
+                        'nombre_identitario': data['nombre_identitario'], 'pronombres': pronombres_finales,
+                    }
                 )
                 form_valid = True
-            else:
-                form_valid = False
         
         else:
             form = form_class(request.POST, request.FILES, instance=instance)
@@ -135,8 +142,6 @@ def protocolo_step(request, protocolo_id, step):
                 obj.protocolo = protocolo
                 obj.save()
                 form_valid = True
-            else:
-                form_valid = False
 
         if form_valid:
             messages.success(request, f"Paso {step} guardado correctamente. ✔️")
@@ -147,35 +152,34 @@ def protocolo_step(request, protocolo_id, step):
         else:
             messages.error(request, "Por favor, corrige los errores en el formulario.")
 
-    else:
+    else: # Petición GET
         if form_class == DerivacionForm:
             initial_data = {}
             if instance:
                 initial_data = {
                     'tipo_derivacion': instance.derivaciones.split(', ') if instance.derivaciones else [],
-                    'fecha_lesiones': instance.fecha_lesiones,
-                    'institucion_lesiones': instance.institucion_lesiones,
-                    'funcionario_responsable_lesiones': instance.funcionario_lesiones,
-                    'firma_funcionario_lesiones': instance.firma_lesiones,
-                    'respaldo_lesiones': instance.respaldo_lesiones,
-                    'fecha_delito': instance.fecha_delito,
-                    'institucion_delito': instance.institucion_delito,
-                    'funcionario_responsable_delito': instance.funcionario_delito,
-                    'firma_funcionario_delito': instance.firma_delito,
-                    'respaldo_delito': instance.respaldo_delito,
-                    'fecha_tribunal': instance.fecha_tribunal,
-                    'institucion_tribunal': instance.institucion_tribunal,
-                    'funcionario_responsable_tribunal': instance.funcionario_tribunal,
-                    'firma_funcionario_tribunal': instance.firma_tribunal,
-                    'respaldo_tribunal': instance.respaldo_tribunal,
-                    'tipo_medida_otras': instance.tipo_medida_otras,
-                    'descripcion_otras': instance.descripcion_otras,
-                    'funcionario_responsable_otras': instance.funcionario_otras,
-                    'firma_funcionario_otras': instance.firma_otras,
-                    'respaldo_otras': instance.respaldo_otras,
+                    'fecha_lesiones': instance.fecha_lesiones, 'institucion_lesiones': instance.institucion_lesiones,
+                    'funcionario_responsable_lesiones': instance.funcionario_lesiones, 'firma_funcionario_lesiones': instance.firma_lesiones,
+                    'respaldo_lesiones': instance.respaldo_lesiones, 'fecha_delito': instance.fecha_delito,
+                    'institucion_delito': instance.institucion_delito, 'funcionario_responsable_delito': instance.funcionario_delito,
+                    'firma_funcionario_delito': instance.firma_delito, 'respaldo_delito': instance.respaldo_delito,
+                    'fecha_tribunal': instance.fecha_tribunal, 'institucion_tribunal': instance.institucion_tribunal,
+                    'funcionario_responsable_tribunal': instance.funcionario_tribunal, 'firma_funcionario_tribunal': instance.firma_tribunal,
+                    'respaldo_tribunal': instance.respaldo_tribunal, 'tipo_medida_otras': instance.tipo_medida_otras,
+                    'descripcion_otras': instance.descripcion_otras, 'funcionario_responsable_otras': instance.funcionario_otras,
+                    'firma_funcionario_otras': instance.firma_otras, 'respaldo_otras': instance.respaldo_otras,
                 }
             form = DerivacionForm(initial=initial_data)
         
+        elif form_class == SolicitudReconocimientoForm:
+            initial_data = {}
+            if instance:
+                initial_data = {
+                    'nombre_legal': instance.nombre_legal, 'rut_estudiante': instance.rut_estudiante,
+                    'nombre_identitario': instance.nombre_identitario, 'pronombres': instance.pronombres,
+                }
+            form = SolicitudReconocimientoForm(initial=initial_data)
+
         else:
             form = form_class(instance=instance)
 
@@ -186,10 +190,6 @@ def protocolo_step(request, protocolo_id, step):
         'tipo_nombre': tipo_nombre,
     }
     return render(request, template_name, context)
-
-
-# --- VISTAS ADICIONALES (Éxito, PDF, Ver) ---
-# (Estas vistas no necesitan cambios, pero las incluyo para que el archivo esté completo)
 
 @login_required(login_url='Validaciones:login')
 def formulario_exito(request, protocolo_id=None):

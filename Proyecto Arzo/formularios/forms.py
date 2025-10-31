@@ -6,6 +6,7 @@ from .models import (
     
     RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2, RiesgoSuicidaAnexo3,
     RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5,   #Protocolo 7
+    GestionReconocimiento, ReconocimientoIdentidad  #Protocolo 12   
     )
 
 
@@ -256,3 +257,89 @@ class RiesgoSuicidaAnexo5Form(forms.ModelForm):
             'responsable_telefono': forms.TextInput(attrs={'placeholder': '+56 9 ...'}),
             'responsable_email': forms.EmailInput(attrs={'placeholder': 'correo@ejemplo.com'}),
         }
+
+
+class SolicitudReconocimientoForm(forms.Form):
+    PRONOMBRE_CHOICES = [
+        ('El/La', 'Él / La'),
+        ('Ella/La', 'Ella / La'),
+        ('Elle/Le', 'Elle / Le'),
+        ('Otro', 'Otro (especificar)'),
+    ]
+
+    # Sección 1: Datos Legales
+    nombre_legal = forms.CharField(
+        label="Nombre Completo (según documento de identidad)",
+        max_length=200,
+        widget=forms.TextInput(attrs={'placeholder': 'Ej: Juan Andrés Pérez Soto'})
+    )
+    rut_estudiante = forms.CharField(
+        label="RUT / N° de Identificación",
+        max_length=20,
+        widget=forms.TextInput(attrs={'placeholder': 'Ej: 12.345.678-9'})
+    )
+
+    # Sección 2: Datos Identitarios
+    nombre_identitario = forms.CharField(
+        label="Nombre Identitario / Social",
+        max_length=200,
+        widget=forms.TextInput(attrs={'placeholder': 'Escribe el nombre con el que te identificas'})
+    )
+    pronombres = forms.ChoiceField(
+        label="Pronombres",
+        choices=PRONOMBRE_CHOICES,
+        widget=forms.Select()
+    )
+    otro_pronombre = forms.CharField(
+        label="Por favor, especifica tus pronombres",
+        max_length=50,
+        required=False, # No es requerido a menos que se elija "Otro"
+        widget=forms.TextInput(attrs={'placeholder': 'Ej: Ella/Ello'})
+    )
+
+    # Sección 3: Declaración
+    declaracion = forms.BooleanField(
+        label="Declaro, bajo mi exclusiva responsabilidad, que la información proporcionada es verídica y corresponde a mi identidad de género auto-percibida. Comprendo que este cambio se aplicará a los registros internos de la institución."
+    )
+
+    def clean(self):
+        """
+        Añade validación personalizada: si el usuario elige 'Otro' en pronombres,
+        el campo 'otro_pronombre' se vuelve obligatorio.
+        """
+        cleaned_data = super().clean()
+        pronombres = cleaned_data.get("pronombres")
+        otro_pronombre = cleaned_data.get("otro_pronombre")
+
+        if pronombres == 'Otro' and not otro_pronombre:
+            self.add_error('otro_pronombre', "Debes especificar tus pronombres si seleccionas 'Otro'.")
+        
+        return cleaned_data
+    
+class GestionReconocimientoForm(forms.ModelForm):
+    SISTEMAS_CHOICES = [
+        ('listas_clase', 'Listas de Clase'),
+        ('carne_institucional', 'Carné Institucional'),
+        ('correo_electronico', 'Correo Electrónico'),
+        ('plataforma_virtual', 'Plataforma Virtual (Aula Virtual, etc.)'),
+        ('otros_sistemas', 'Otros Sistemas Internos'),
+    ]
+
+    sistemas_actualizados = forms.MultipleChoiceField(
+        choices=SISTEMAS_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        label="Acciones de Actualización en Sistemas",
+        help_text="Marque todos los sistemas que han sido actualizados."
+    )
+
+    class Meta:
+        model = GestionReconocimiento
+        exclude = ('protocolo',)
+        widgets = {
+            'fecha_actualizacion': forms.DateInput(attrs={'type': 'date'}),
+            'observaciones': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Añada cualquier observación relevante sobre el proceso...'}),
+        }
+
+    def clean_sistemas_actualizados(self):
+        # Convierte la lista de selecciones en un string separado por comas para guardarlo en la BD
+        return ", ".join(self.cleaned_data.get('sistemas_actualizados', []))

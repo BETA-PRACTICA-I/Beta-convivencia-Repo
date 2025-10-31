@@ -471,3 +471,60 @@ class RiesgoSuicidaAnexo5(models.Model):
 
     def __str__(self):
         return f"Anexo 5 (Derivación) para Protocolo {self.protocolo.id}"
+    
+
+
+class ReconocimientoIdentidad(models.Model):
+    """
+    Modelo para almacenar las solicitudes de reconocimiento de identidad de género.
+    """
+    ESTADO_CHOICES = [
+        ('Pendiente', 'Pendiente'),
+        ('Aplicado', 'Aplicado'),
+        ('Rechazado', 'Rechazado'),
+    ]
+
+    # Vinculamos esta solicitud a un protocolo general
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, related_name='reconocimiento_identidad')
+
+    # Datos del formulario
+    nombre_legal = models.CharField(max_length=200, help_text="Nombre completo según documento de identidad")
+    rut_estudiante = models.CharField(max_length=20, help_text="RUT o N° de identificación del estudiante")
+    nombre_identitario = models.CharField(max_length=200, help_text="Nombre social con el que se identifica")
+    pronombres = models.CharField(max_length=50, help_text="Pronombres seleccionados o especificados")
+    
+    # Datos de gestión
+    fecha_solicitud = models.DateTimeField(auto_now_add=True)
+    estado_solicitud = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Pendiente')
+
+    def __str__(self):
+        return f"Solicitud de {self.nombre_identitario} ({self.protocolo.creador.username})"
+
+    class Meta:
+        verbose_name = "Solicitud de Reconocimiento de Identidad"
+        verbose_name_plural = "Solicitudes de Reconocimiento de Identidad"
+
+class GestionReconocimiento(models.Model):
+    """
+    Modelo para la Ficha 2: Gestión interna de la solicitud de identidad de género.
+    """
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, related_name='gestion_reconocimiento')
+
+    # Acciones realizadas
+    sistemas_actualizados = models.CharField(max_length=255, blank=True, help_text="Sistemas actualizados, separados por comas")
+    fecha_actualizacion = models.DateField()
+    
+    # Comunicación y cierre
+    comunicacion_estudiante = models.CharField(max_length=2, choices=[('Si', 'Sí'), ('No', 'No')])
+    observaciones = models.TextField(blank=True)
+    respaldo_gestion = models.FileField(upload_to='reconocimiento_gestion/', blank=True, null=True)
+
+    # Responsable
+    funcionario_responsable = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Gestión de Solicitud para Protocolo {self.protocolo.id}"
+
+    class Meta:
+        verbose_name = "Gestión de Reconocimiento de Identidad"
+        verbose_name_plural = "Gestiones de Reconocimiento de Identidad"
