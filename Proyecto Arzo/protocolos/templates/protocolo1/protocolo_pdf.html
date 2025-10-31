@@ -125,7 +125,6 @@
     </div>
     {% endif %}
 
-    {# --- NUEVO: Mostrar datos de Anexo 1 Riesgo Suicida --- #}
     {% if p.riesgo_suicida_anexo1 %}
     <div class="section">
         <h2>Riesgo Suicida - Paso 1: Anexo 1: Detección</h2>
@@ -142,7 +141,6 @@
     </div>
     {% endif %}
 
-    {# --- NUEVO: Mostrar datos de Anexo 2 Riesgo Suicida --- #}
     {% if p.riesgo_suicida_anexo2 %}
     <div class="section">
         <h2>Riesgo Suicida - Paso 2: Anexo 2: Derivación</h2>
@@ -165,7 +163,50 @@
     </div>
     {% endif %}
 
+    {% if p.riesgo_suicida_anexo3 %}
+    <div class="section">
+        <h2>Riesgo Suicida - Paso 3: Anexo 3: Notificación Apoderado</h2>
+        <p><strong>Fecha Notificación:</strong> {{ p.riesgo_suicida_anexo3.fecha|date:"d/m/Y"|default:"N/A" }}</p>
+        <p><strong>Hora Notificación:</strong> {{ p.riesgo_suicida_anexo3.hora|time:"H:i"|default:"N/A" }}</p>
+        <p><strong>Apoderado Notificado:</strong> {{ p.riesgo_suicida_anexo3.apoderado_nombre|default:"N/A" }} (RUN: {{ p.riesgo_suicida_anexo3.apoderado_run|default:"N/A" }})</p>
+        <p><strong>Funcionario Notificante:</strong> {{ p.riesgo_suicida_anexo3.nombre_firma_funcionario|default:"N/A" }} (Cargo: {{ p.riesgo_suicida_anexo3.cargo_funcionario|default:"N/A" }})</p>
+        <h3>Acciones a seguir por el apoderado:</h3>
+        <pre>{{ p.riesgo_suicida_anexo3.acciones_a_seguir|default:"Sin acciones especificadas." }}</pre>
+    </div>
+    {% endif %}
 
+    {% if p.riesgo_suicida_anexo4 %}
+    <div class="section">
+        <h2>Riesgo Suicida - Paso 4: Anexo 4: Reunión Clínica</h2>
+        <p><strong>Fecha Reunión:</strong> {{ p.riesgo_suicida_anexo4.fecha|date:"d/m/Y"|default:"N/A" }}</p>
+        <p><strong>Lugar:</strong> {{ p.riesgo_suicida_anexo4.lugar_reunion|default:"N/A" }}</p>
+        <p><strong>Hora:</strong> {{ p.riesgo_suicida_anexo4.hora_inicio|time:"H:i"|default:"N/A" }} - {{ p.riesgo_suicida_anexo4.hora_termino|time:"H:i"|default:"N/A" }}</p>
+        <h3>Asistentes:</h3>
+        <pre>{{ p.riesgo_suicida_anexo4.asistentes|default:"No especificados." }}</pre>
+        <h3>Puntos Tratados:</h3>
+        <pre>{{ p.riesgo_suicida_anexo4.puntos_tratados|default:"No especificados." }}</pre>
+        <h3>Acuerdos y Compromisos:</h3>
+        <pre>{{ p.riesgo_suicida_anexo4.acuerdos|default:"No especificados." }}</pre>
+        <p><strong>Próxima Reunión:</strong> {{ p.riesgo_suicida_anexo4.proxima_reunion_fecha|date:"d/m/Y"|default:"N/A" }} a las {{ p.riesgo_suicida_anexo4.proxima_reunion_hora|time:"H:i"|default:"N/A" }} en {{ p.riesgo_suicida_anexo4.proxima_reunion_lugar|default:"N/A" }}</p>
+    </div>
+    {% endif %}
+
+    {% if p.riesgo_suicida_anexo5 %}
+    <div class="section">
+        <h2>Riesgo Suicida - Paso 5: Anexo 5: Hoja de Derivación</h2>
+        <p><strong>Fecha Derivación:</strong> {{ p.riesgo_suicida_anexo5.fecha_derivacion|date:"d/m/Y"|default:"N/A" }}</p>
+        <h3>Motivo de Derivación:</h3>
+        <pre>{{ p.riesgo_suicida_anexo5.motivo_derivacion|default:"No especificado." }}</pre>
+        <h3>Acciones: Entrevista con Apoderado:</h3>
+        <pre>{{ p.riesgo_suicida_anexo5.acciones_entrevista_apoderado|default:"No especificado." }}</pre>
+        <h3>Acciones: Coordinación Equipo de Salud:</h3>
+        <pre>{{ p.riesgo_suicida_anexo5.acciones_coordinacion_salud|default:"No especificado." }}</pre>
+        <h3>Otras Acciones:</h3>
+        <pre>{{ p.riesgo_suicida_anexo5.acciones_otras|default:"No especificado." }}</pre>
+        <p><strong>Funcionario Responsable:</strong> {{ p.riesgo_suicida_anexo5.responsable_nombre|default:"N/A" }} ({{ p.riesgo_suicida_anexo5.responsable_cargo|default:"N/A" }})</p>
+        <p><strong>Contacto:</strong> {{ p.riesgo_suicida_anexo5.responsable_email|default:"N/A" }} / {{ p.riesgo_suicida_anexo5.responsable_telefono|default:"N/A" }}</p>
+    </div>
+    {% endif %}
 
     {% endwith %}
 

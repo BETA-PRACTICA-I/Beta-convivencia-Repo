@@ -179,7 +179,61 @@
              <div class="alert alert-light"><em>Riesgo Suicida - Paso 2 no completado.</em></div>
             {% endif %}
 
+            {% if p.riesgo_suicida_anexo3 %}
+            <fieldset class="mb-4 p-3 border rounded">
+                <legend class="w-auto px-2 h5">Riesgo Suicida - Paso 3: Anexo 3: Notificación Apoderado</legend>
+                <p><strong>Fecha Notificación:</strong> {{ p.riesgo_suicida_anexo3.fecha|date:"d/m/Y"|default:"N/A" }}</p>
+                <p><strong>Hora Notificación:</strong> {{ p.riesgo_suicida_anexo3.hora|time:"H:i"|default:"N/A" }}</p>
+                <hr>
+                <p><strong>Apoderado Notificado:</strong> {{ p.riesgo_suicida_anexo3.apoderado_nombre|default:"N/A" }} (RUN: {{ p.riesgo_suicida_anexo3.apoderado_run|default:"N/A" }})</p>
+                <p><strong>Funcionario Notificante:</strong> {{ p.riesgo_suicida_anexo3.nombre_firma_funcionario|default:"N/A" }} (Cargo: {{ p.riesgo_suicida_anexo3.cargo_funcionario|default:"N/A" }})</p>
+                <h6>Acciones a seguir por el apoderado:</h6>
+                <pre>{{ p.riesgo_suicida_anexo3.acciones_a_seguir|default:"Sin acciones especificadas." }}</pre>
+            </fieldset>
+            {% elif p.tipo.nombre == "Riesgo suicida" %}
+             <div class="alert alert-light"><em>Riesgo Suicida - Paso 3 no completado.</em></div>
+            {% endif %}
 
+            {% if p.riesgo_suicida_anexo4 %}
+            <fieldset class="mb-4 p-3 border rounded">
+                <legend class="w-auto px-2 h5">Riesgo Suicida - Paso 4: Anexo 4: Reunión Clínica</legend>
+                <p><strong>Fecha Reunión:</strong> {{ p.riesgo_suicida_anexo4.fecha|date:"d/m/Y"|default:"N/A" }}</p>
+                <p><strong>Lugar:</strong> {{ p.riesgo_suicida_anexo4.lugar_reunion|default:"N/A" }}</p>
+                <p><strong>Hora:</strong> {{ p.riesgo_suicida_anexo4.hora_inicio|time:"H:i"|default:"N/A" }} - {{ p.riesgo_suicida_anexo4.hora_termino|time:"H:i"|default:"N/A" }}</p>
+                <hr>
+                <h6>Asistentes:</h6>
+                <pre>{{ p.riesgo_suicida_anexo4.asistentes|default:"No especificados." }}</pre>
+                <h6>Puntos Tratados:</h6>
+                <pre>{{ p.riesgo_suicida_anexo4.puntos_tratados|default:"No especificados." }}</pre>
+                <h6>Acuerdos y Compromisos:</h6>
+                <pre>{{ p.riesgo_suicida_anexo4.acuerdos|default:"No especificados." }}</pre>
+                <hr>
+                <p><strong>Próxima Reunión:</strong> {{ p.riesgo_suicida_anexo4.proxima_reunion_fecha|date:"d/m/Y"|default:"N/A" }} a las {{ p.riesgo_suicida_anexo4.proxima_reunion_hora|time:"H:i"|default:"N/A" }} en {{ p.riesgo_suicida_anexo4.proxima_reunion_lugar|default:"N/A" }}</p>
+            </fieldset>
+            {% elif p.tipo.nombre == "Riesgo suicida" %}
+             <div class="alert alert-light"><em>Riesgo Suicida - Paso 4 no completado.</em></div>
+            {% endif %}
+
+            {% if p.riesgo_suicida_anexo5 %}
+            <fieldset class="mb-4 p-3 border rounded">
+                <legend class="w-auto px-2 h5">Riesgo Suicida - Paso 5: Anexo 5: Hoja de Derivación</legend>
+                <p><strong>Fecha Derivación:</strong> {{ p.riesgo_suicida_anexo5.fecha_derivacion|date:"d/m/Y"|default:"N/A" }}</p>
+                <hr>
+                <h6>Motivo de Derivación:</h6>
+                <pre>{{ p.riesgo_suicida_anexo5.motivo_derivacion|default:"No especificado." }}</pre>
+                <h6>Acciones: Entrevista con Apoderado:</h6>
+                <pre>{{ p.riesgo_suicida_anexo5.acciones_entrevista_apoderado|default:"No especificado." }}</pre>
+                <h6>Acciones: Coordinación Equipo de Salud:</h6>
+                <pre>{{ p.riesgo_suicida_anexo5.acciones_coordinacion_salud|default:"No especificado." }}</pre>
+                <h6>Otras Acciones:</h6>
+                <pre>{{ p.riesgo_suicida_anexo5.acciones_otras|default:"No especificado." }}</pre>
+                <hr>
+                <p><strong>Funcionario Responsable:</strong> {{ p.riesgo_suicida_anexo5.responsable_nombre|default:"N/A" }} ({{ p.riesgo_suicida_anexo5.responsable_cargo|default:"N/A" }})</p>
+                <p><strong>Contacto:</strong> {{ p.riesgo_suicida_anexo5.responsable_email|default:"N/A" }} / {{ p.riesgo_suicida_anexo5.responsable_telefono|default:"N/A" }}</p>
+            </fieldset>
+            {% elif p.tipo.nombre == "Riesgo suicida" %}
+             <div class="alert alert-light"><em>Riesgo Suicida - Paso 5 no completado.</em></div>
+            {% endif %}
 
             {% endwith %}
         </div>
