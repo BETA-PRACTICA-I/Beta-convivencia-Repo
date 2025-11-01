@@ -1,6 +1,6 @@
 from django import forms
 from .models import (
-    FormularioDenuncia, FichaEntrevista, Derivacion,
+    ArmasAnexo1, FormularioDenuncia, FichaEntrevista, Derivacion,
     InformeConcluyente, Apelacion, ResolucionApelacion,
     EncuestaBullying,   #Protocolos 1-6
     
@@ -359,3 +359,13 @@ class GestionReconocimientoForm(forms.ModelForm):
     def clean_sistemas_actualizados(self):
         # Convierte la lista de selecciones en un string separado por comas para guardarlo en la BD
         return ", ".join(self.cleaned_data.get('sistemas_actualizados', []))
+    
+
+# --- NUEVO FORMULARIO PARA PROTOCOLO 9 ---
+class ArmasAnexo1Form(forms.ModelForm):
+    class Meta:
+        model = ArmasAnexo1
+        exclude = ('protocolo',)
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'rows': 6}),
+        }

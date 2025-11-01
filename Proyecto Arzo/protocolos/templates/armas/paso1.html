@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso {{ step }}: {{ tipo_nombre }}</title>
+    
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css' %}">
+</head>
+<body>
+
+    <div class="form-container">
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="Form-Tittle">
+                <h1>{{ tipo_nombre }}</h1>
+                <h2>Paso {{ step }}: Detección de la situación</h2>
+            </div>
+
+            <div class="section-header">Datos del Estudiante</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.nombre_estudiante.label_tag }}
+                    {{ form.nombre_estudiante }}
+                </div>
+                <div class="form-group">
+                    {{ form.curso.label_tag }}
+                    {{ form.curso }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.rut.label_tag }}
+                    {{ form.rut }}
+                </div>
+            </div>
+
+            <div class="section-header">Descripción de la situación</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.descripcion.label_tag }}
+                    {{ form.descripcion }}
+                </div>
+            </div>
+
+            <button type="submit">Finalizar</button>
+
+        </form>
+    </div>
+
+</body>
+</html>

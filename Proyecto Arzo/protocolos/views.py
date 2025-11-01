@@ -20,6 +20,9 @@ from formularios.forms import (
     SolicitudReconocimientoForm, GestionReconocimientoForm,  # Protocolo 7
 
     FichaAccidenteEscolarForm,  # Protocolo 8
+
+    ArmasAnexo1Form,  # Protocolo 9
+
     )
 from formularios.models import (
     FormularioDenuncia, FichaEntrevista, Derivacion,
@@ -31,6 +34,8 @@ from formularios.models import (
     GestionReconocimiento,  # Protocolo 7
 
     FichaAccidenteEscolar,  # Protocolo 8
+
+    ArmasAnexo1,  # Protocolo 9
     )
 
 PROTOCOLOS_TIPO_1 = [
@@ -92,6 +97,13 @@ def protocolo_step(request, protocolo_id, step):
         total_steps = 1 # Protocolo de un solo paso
         step_map = {
             1: {'form': FichaAccidenteEscolarForm, 'model': FichaAccidenteEscolar, 'template': 'casos_salud/paso1.html'},
+        }
+        form_config = step_map.get(step)
+
+    elif tipo_nombre == "Armas blancas y de fuego":
+        total_steps = 1 # Solo tiene un paso lol
+        step_map = {
+            1: {'form': ArmasAnexo1Form, 'model': ArmasAnexo1, 'template': 'armas/paso1.html'},
         }
         form_config = step_map.get(step)
 
@@ -234,7 +246,9 @@ def descargar_protocolo_pdf(request, protocolo_id):
             'riesgo_suicida_anexo4',
             'riesgo_suicida_anexo5',
 
-            'ficha_accidente_escolar'
+            'ficha_accidente_escolar',
+
+            'anexo_armas'
             ),
         id=protocolo_id,
         creador=request.user
@@ -276,7 +290,9 @@ def ver_protocolo(request, protocolo_id):
             'riesgo_suicida_anexo4',
             'riesgo_suicida_anexo5',
 
-            'ficha_accidente_escolar'
+            'ficha_accidente_escolar',
+            
+            'anexo_armas'
             ), 
         id=protocolo_id
     )

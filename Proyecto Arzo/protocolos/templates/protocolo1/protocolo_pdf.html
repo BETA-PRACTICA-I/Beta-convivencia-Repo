@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,11 +15,24 @@
         strong { color: #34495e; }
         pre { background-color: #ecf0f1; padding: 15px; white-space: pre-wrap; word-wrap: break-word; border-left: 3px solid #3498db; font-family: "Courier New", monospace; }
         .header { text-align: center; margin-bottom: 40px; }
-        .section { margin-bottom: 20px; }
+        .section { margin-bottom: 20px; page-break-inside: avoid; }
         .footer { position: fixed; bottom: -1cm; left: 0; right: 0; height: 1cm; text-align: center; font-size: 9pt; color: #7f8c8d; }
+        
+        /* Estilos para las imágenes del anexo */
+        .anexo-imagen { 
+            width: 100%; 
+            max-height: 22cm; /* Evita que la imagen sea más grande que la página */
+            object-fit: contain;
+            margin-top: 1rem; 
+            page-break-before: always; /* Pone cada imagen en una nueva página */
+        }
     </style>
 </head>
 <body>
+    <div class="footer">
+        Documento generado el {{ fecha_actual|date:"d/m/Y H:i" }} por {{ request.user.get_full_name|default:request.user.username }}.
+    </div>
+
     <div class="header">
         <h1>Informe de Protocolo #{{ protocolo.id }}</h1>
         <p><strong>Tipo de Protocolo:</strong> {{ protocolo.tipo.nombre }}</p>
@@ -28,103 +42,105 @@
 
     {% with p=protocolo %}
 
-    {% if p.ficha_denuncia %}
-    <div class="section">
-        <h2>Paso 1: Formulario de Denuncia</h2>
-        <p><strong>Nombre Denunciante:</strong> {{ p.ficha_denuncia.nombre_denunciante|default:"No especificado" }}</p>
-        <p><strong>RUT Denunciante:</strong> {{ p.ficha_denuncia.run_denunciante|default:"No especificado" }}</p>
-        {# Corrección: estamento_denunciante no existe #}
-        <p><strong>Nombre Denunciado:</strong> {{ p.ficha_denuncia.nombre_denunciado|default:"No especificado" }}</p>
-        <p><strong>Curso Denunciado:</strong> {{ p.ficha_denuncia.curso_denunciado|default:"No especificado" }}</p>
-        <h3>Descripción de los Hechos:</h3>
-        <pre>{{ p.ficha_denuncia.descripcion|default:"Sin descripción." }}</pre> {# Corrección: descripcion_hechos -> descripcion #}
-        <h3>Testigos:</h3> {# Corrección: medidas_inmediatas no existe, añadí testigos #}
-        <pre>{{ p.ficha_denuncia.testigos|default:"Sin testigos." }}</pre>
-    </div>
-    {% endif %}
+    {# --- ARREGLO 1: SÓLO MUESTRA PASOS 1-7 SI EL PROTOCOLO ES DE ESE TIPO --- #}
+    {% if protocolo.tipo.nombre in protocolos_tipo_1 %}
 
-    {% if p.fichaentrevista %}
-    <div class="section">
-        <h2>Paso 2: Ficha de Entrevista</h2>
-        <p><strong>Fecha y Hora:</strong> {{ p.fichaentrevista.fecha_hora|default:"No especificado" }}</p> {# Corrección: fecha_entrevista -> fecha_hora #}
-        <p><strong>Nombre Entrevistado:</strong> {{ p.fichaentrevista.nombre_entrevistado|default:"No especificado" }}</p>
-        <p><strong>RUT Entrevistado:</strong> {{ p.fichaentrevista.run_entrevistado|default:"No especificado" }}</p>
-        {# Corrección: calidad_entrevistado no existe #}
-        <h3>Resumen de la Entrevista:</h3>
-        <pre>{{ p.fichaentrevista.contenido_entrevista|default:"Sin resumen." }}</pre> {# Corrección: resumen_entrevista -> contenido_entrevista #}
-    </div>
-    {% endif %}
+        {% if p.ficha_denuncia %}
+        <div class="section">
+            <h2>Paso 1: Formulario de Denuncia</h2>
+            <p><strong>Nombre Denunciante:</strong> {{ p.ficha_denuncia.nombre_denunciante|default:"No especificado" }}</p>
+            <p><strong>RUT Denunciante:</strong> {{ p.ficha_denuncia.run_denunciante|default:"No especificado" }}</p>
+            <p><strong>Nombre Denunciado:</strong> {{ p.ficha_denuncia.nombre_denunciado|default:"No especificado" }}</p>
+            <p><strong>Curso Denunciado:</strong> {{ p.ficha_denuncia.curso_denunciado|default:"No especificado" }}</p>
+            <h3>Descripción de los Hechos:</h3>
+            <pre>{{ p.ficha_denuncia.descripcion|default:"Sin descripción." }}</pre>
+            <h3>Testigos:</h3>
+            <pre>{{ p.ficha_denuncia.testigos|default:"Sin testigos." }}</pre>
+        </div>
+        {% endif %}
 
-    {% if p.derivacion %}
-    <div class="section">
-        <h2>Paso 3: Derivaciones</h2>
-        <p><strong>Derivación a:</strong> {{ p.derivacion.derivaciones|default:"No especificado" }}</p> {# Corrección: get_derivaciones_display -> derivaciones #}
-         <h3>Descripción Detallada (si aplica):</h3> {# Corrección: No hay campo 'descripcion' general, depende del tipo #}
-         {% if 'constatar_lesiones' in p.derivacion.derivaciones %}
-            <p><strong>Lesiones - Institución:</strong> {{ p.derivacion.institucion_lesiones|default:"N/A" }}</p>
-         {% endif %}
-         {% if 'denuncia_delito' in p.derivacion.derivaciones %}
-            <p><strong>Delito - Institución:</strong> {{ p.derivacion.institucion_delito|default:"N/A" }}</p>
-         {% endif %}
-         {% if 'tribunal_familia' in p.derivacion.derivaciones %}
-            <p><strong>Tribunal - Institución:</strong> {{ p.derivacion.institucion_tribunal|default:"N/A" }}</p>
-         {% endif %}
-         {% if 'otras' in p.derivacion.derivaciones %}
-            <p><strong>Otras - Tipo:</strong> {{ p.derivacion.tipo_medida_otras|default:"N/A" }}</p>
-            <pre>{{ p.derivacion.descripcion_otras|default:"Sin descripción." }}</pre>
-         {% endif %}
-    </div>
-    {% endif %}
+        {% if p.fichaentrevista %}
+        <div class="section">
+            <h2>Paso 2: Ficha de Entrevista</h2>
+            <p><strong>Fecha y Hora:</strong> {{ p.fichaentrevista.fecha_hora|default:"No especificado" }}</p>
+            <p><strong>Nombre Entrevistado:</strong> {{ p.fichaentrevista.nombre_entrevistado|default:"No especificado" }}</p>
+            <h3>Resumen de la Entrevista:</h3>
+            <pre>{{ p.fichaentrevista.contenido_entrevista|default:"Sin resumen." }}</pre>
+        </div>
+        {% endif %}
 
-    {% if p.informeconcluyente %}
-    <div class="section">
-        <h2>Paso 4: Informe Concluyente</h2>
-        <p><strong>Fecha del Informe:</strong> {{ p.informeconcluyente.fecha_informe|date:"d/m/Y" }}</p>
-        <h3>Acciones Realizadas:</h3> {# Corrección: analisis_caso -> descripcion_accion #}
-        <pre>{{ p.informeconcluyente.descripcion_accion|default:"Sin descripción." }}</pre>
-        <h3>Conclusiones:</h3>
-        <pre>{{ p.informeconcluyente.conclusiones|default:"Sin conclusiones." }}</pre>
-        <h3>Medidas y Sanciones:</h3> {# Corrección: medidas_sanciones -> Varios campos #}
-        <p><strong>Sanción:</strong> {{ p.informeconcluyente.sancion|default:"N/A" }}</p>
-        <pre>{{ p.informeconcluyente.descripcion_sancion|default:"Sin descripción." }}</pre>
-        <p><strong>Medida:</strong> {{ p.informeconcluyente.medida|default:"N/A" }}</p>
-        <pre>{{ p.informeconcluyente.descripcion_medida|default:"Sin descripción." }}</pre>
-    </div>
-    {% endif %}
+        {% if p.derivacion %}
+        <div class="section">
+            <h2>Paso 3: Derivaciones</h2>
+            <p><strong>Derivación a:</strong> {{ p.derivacion.derivaciones|default:"No especificado" }}</p>
+            <h3>Descripción Detallada (si aplica):</h3>
+            {% if 'constatar_lesiones' in p.derivacion.derivaciones %}
+                <p><strong>Lesiones - Institución:</strong> {{ p.derivacion.institucion_lesiones|default:"N/A" }}</p>
+            {% endif %}
+            {% if 'denuncia_delito' in p.derivacion.derivaciones %}
+                <p><strong>Delito - Institución:</strong> {{ p.derivacion.institucion_delito|default:"N/A" }}</p>
+            {% endif %}
+            {% if 'tribunal_familia' in p.derivacion.derivaciones %}
+                <p><strong>Tribunal - Institución:</strong> {{ p.derivacion.institucion_tribunal|default:"N/A" }}</p>
+            {% endif %}
+            {% if 'otras' in p.derivacion.derivaciones %}
+                <p><strong>Otras - Tipo:</strong> {{ p.derivacion.tipo_medida_otras|default:"N/A" }}</p>
+                <pre>{{ p.derivacion.descripcion_otras|default:"Sin descripción." }}</pre>
+            {% endif %}
+        </div>
+        {% endif %}
 
-    {% if p.apelacion %}
-    <div class="section">
-        <h2>Paso 5: Apelación</h2>
-        <p><strong>Fecha de Recepción:</strong> {{ p.apelacion.fecha_recepcion|date:"d/m/Y" }}</p> {# Corrección: fecha_apelacion -> fecha_recepcion #}
-        <p><strong>Presentada por:</strong> {{ p.apelacion.nombre_apelante|default:"No especificado" }}</p> {# Corrección: presentada_por -> nombre_apelante #}
-        <h3>Argumentos de la Apelación:</h3>
-        <pre>{{ p.apelacion.texto_apelacion|default:"Sin argumentos." }}</pre> {# Corrección: argumentos_apelacion -> texto_apelacion #}
-    </div>
-    {% endif %}
+        {% if p.informeconcluyente %}
+        <div class="section">
+            <h2>Paso 4: Informe Concluyente</h2>
+            <p><strong>Fecha del Informe:</strong> {{ p.informeconcluyente.fecha_informe|date:"d/m/Y" }}</p>
+            <h3>Acciones Realizadas:</h3>
+            <pre>{{ p.informeconcluyente.descripcion_accion|default:"Sin descripción." }}</pre>
+            <h3>Conclusiones:</h3>
+            <pre>{{ p.informeconcluyente.conclusiones|default:"Sin conclusiones." }}</pre>
+            <h3>Medidas y Sanciones:</h3>
+            <p><strong>Sanción:</strong> {{ p.informeconcluyente.sancion|default:"N/A" }}</p>
+            <pre>{{ p.informeconcluyente.descripcion_sancion|default:"Sin descripción." }}</pre>
+            <p><strong>Medida:</strong> {{ p.informeconcluyente.medida|default:"N/A" }}</p>
+            <pre>{{ p.informeconcluyente.descripcion_medida|default:"Sin descripción." }}</pre>
+        </div>
+        {% endif %}
 
-    {% if p.resolucionapelacion %}
-    <div class="section">
-        <h2>Paso 6: Resolución de Apelación</h2>
-        <p><strong>Fecha de Recepción:</strong> {{ p.resolucionapelacion.fecha_recepcion|date:"d/m/Y" }}</p> {# Corrección: fecha_resolucion -> fecha_recepcion #}
-        <p><strong>Resolución:</strong> {{ p.resolucionapelacion.resolucion|default:"No especificado" }}</p>
-        <h3>Fundamentos de la Resolución:</h3>
-        <pre>{{ p.resolucionapelacion.fundamentos|default:"Sin fundamentos." }}</pre> {# Corrección: fundamentos_resolucion -> fundamentos #}
-    </div>
-    {% endif %}
+        {% if p.apelacion %}
+        <div class="section">
+            <h2>Paso 5: Apelación</h2>
+            <p><strong>Fecha de Recepción:</strong> {{ p.apelacion.fecha_recepcion|date:"d/m/Y" }}</p>
+            <p><strong>Presentada por:</strong> {{ p.apelacion.nombre_apelante|default:"No especificado" }}</p>
+            <h3>Argumentos de la Apelación:</h3>
+            <pre>{{ p.apelacion.texto_apelacion|default:"Sin argumentos." }}</pre>
+        </div>
+        {% endif %}
 
-    {% if p.encuestabullying %}
-    <div class="section">
-        <h2>Paso 7: Encuesta de Bullying</h2>
-         <p><strong>Fecha Encuesta:</strong> {{ p.encuestabullying.fecha_encuesta|date:"d/m/Y"|default:"No especificado" }}</p> {# Corrección: añadido #}
-        <p><strong>Edad del Estudiante:</strong> {{ p.encuestabullying.edad_estudiante|default:"No especificado" }}</p>
-        <p><strong>Género:</strong> {{ p.encuestabullying.get_genero_estudiante_display|default:"No especificado" }}</p> {# Corrección: genero_estudiante -> get_genero_estudiante_display #}
-        {# Corrección: Los campos tipo_bullying, frecuencia, lugar, respuesta_colegio no existen #}
-         <p><strong>Comentario Adicional:</strong></p>
-        <pre>{{ p.encuestabullying.comentario_adicional|default:"Sin comentarios." }}</pre>
-        {# Aquí podrías mostrar las respuestas de frecuencia si lo deseas #}
-    </div>
-    {% endif %}
+        {% if p.resolucionapelacion %}
+        <div class="section">
+            <h2>Paso 6: Resolución de Apelación</h2>
+            <p><strong>Fecha de Recepción:</strong> {{ p.resolucionapelacion.fecha_recepcion|date:"d/m/Y" }}</p>
+            <p><strong>Resolución:</strong> {{ p.resolucionapelacion.resolucion|default:"No especificado" }}</p>
+            <h3>Fundamentos de la Resolución:</h3>
+            <pre>{{ p.resolucionapelacion.fundamentos|default:"Sin fundamentos." }}</pre>
+        </div>
+        {% endif %}
 
+        {% if p.encuestabullying %}
+        <div class="section">
+            <h2>Paso 7: Encuesta de Bullying</h2>
+            <p><strong>Fecha Encuesta:</strong> {{ p.encuestabullying.fecha_encuesta|date:"d/m/Y"|default:"No especificado" }}</p>
+            <p><strong>Edad del Estudiante:</strong> {{ p.encuestabullying.edad_estudiante|default:"No especificado" }}</p>
+            <p><strong>Género:</strong> {{ p.encuestabullying.get_genero_estudiante_display|default:"No especificado" }}</p>
+            <p><strong>Comentario Adicional:</strong></p>
+            <pre>{{ p.encuestabullying.comentario_adicional|default:"Sin comentarios." }}</pre>
+        </div>
+        {% endif %}
+    
+    {% endif %} {# --- FIN DEL ARREGLO 1 --- #}
+    
+
+    {# --- MOSTRAR PROTOCOLO 7: RIESGO SUICIDA (CÓDIGO DE TU EQUIPO) --- #}
     {% if p.riesgo_suicida_anexo1 %}
     <div class="section">
         <h2>Riesgo Suicida - Paso 1: Anexo 1: Detección</h2>
@@ -209,7 +225,6 @@
     {% endif %}
 
     <!-- Ficha de Accidente Escolar para Casos de Salud -->
-
     {% if p.ficha_accidente_escolar %}
     <div class="section">
         <h2>Ficha de Accidente Escolar</h2>
@@ -228,10 +243,35 @@
     </div>
     {% endif %}
     
+    {# --- MOSTRAR PROTOCOLO 9: ARMAS --- #}
+    {% if p.anexo_armas %}
+    <div class="section">
+        <h2>Datos del Estudiante</h2>
+        <p><strong>Nombre:</strong> {{ p.anexo_armas.nombre_estudiante }}</p>
+        <p><strong>Curso:</strong> {{ p.anexo_armas.curso }}</p>
+        <p><strong>RUT:</strong> {{ p.anexo_armas.rut }}</p>
+        
+        <h3 style="border:none; margin-top: 15px;">Descripción de la situación</h3>
+        <pre>{{ p.anexo_armas.descripcion|linebreaks }}</pre>
+    </div>
+    {% endif %}
+
     {% endwith %}
 
-    <div class="footer">
-        Documento generado el {{ fecha_actual|date:"d/m/Y H:i" }} por {{ request.user.get_full_name|default:request.user.username }}.
-    </div>
+
+    {% if protocolo.tipo.nombre == "Armas blancas y de fuego" %}
+        <div class="section">
+            <h2 style="page-break-before: always;">Anexo: Procedimiento de Actuación</h2>
+            <p>A continuación, se adjunta el protocolo de actuación estándar:</p>
+        </div>
+        
+        <img src="/static/img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0001.jpg" class="anexo-imagen" alt="Protocolo Armas Portada">
+        <img src="/static/img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0002.jpg" class="anexo-imagen" alt="Protocolo Armas Página 2">
+        <img src="/static/img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0003.jpg" class="anexo-imagen" alt="Protocolo Armas Página 3">
+        <img src="/static/img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0004.jpg" class="anexo-imagen" alt="Protocolo Armas Página 4">
+        <img src="/static/img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0005.jpg" class="anexo-imagen" alt="Protocolo Armas Flujograma">
+
+    {% endif %}
+
 </body>
 </html>

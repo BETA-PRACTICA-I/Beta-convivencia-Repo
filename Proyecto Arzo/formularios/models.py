@@ -569,3 +569,34 @@ class FichaAccidenteEscolar(models.Model):
 
     def __str__(self):
         return f"Ficha Accidente Escolar (Protocolo {self.protocolo.id})"
+    
+
+"""
+██████╗░██████╗░░█████╗░████████╗░█████╗░░█████╗░░█████╗░██╗░░░░░░█████╗░  ░█████╗░
+██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██║░░░░░██╔══██╗  ██╔══██╗
+██████╔╝██████╔╝██║░░██║░░░██║░░░██║░░██║██║░░╚═╝██║░░██║██║░░░░░██║░░██║  ╚██████║
+██╔═══╝░██╔══██╗██║░░██║░░░██║░░░██║░░██║██║░░██╗██║░░██║██║░░░░░██║░░██║  ░╚═══██║
+██║░░░░░██║░░██║╚█████╔╝░░░██║░░░╚█████╔╝╚█████╔╝╚█████╔╝███████╗╚█████╔╝  ░█████╔╝
+╚═╝░░░░░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░░╚════╝░░╚════╝░░╚════╝░╚══════╝░╚════╝░  ░╚════╝░
+"""
+
+# --- NUEVO MODELO PARA PROTOCOLO 9: ARMAS ---
+class ArmasAnexo1(models.Model):
+    # Enlace UNO A UNO con el protocolo principal
+    protocolo = models.OneToOneField(
+        Protocolo, 
+        on_delete=models.CASCADE, 
+        related_name="anexo_armas" # Usaremos este nombre para llamarlo
+    )
+    
+    # --- Datos del Estudiante ---
+    nombre_estudiante = models.CharField(max_length=255)
+    curso = models.CharField(max_length=100)
+    rut = models.CharField(max_length=12)
+    descripcion = models.TextField(verbose_name="Descripción de la situación")
+
+    def __str__(self):
+        return f"Anexo 1 (Armas) para Protocolo {self.protocolo.id}"
+
+
+
