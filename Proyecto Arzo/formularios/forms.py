@@ -6,7 +6,9 @@ from .models import (
     
     RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2, RiesgoSuicidaAnexo3,
     RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5,   #Protocolo 7
-    GestionReconocimiento, ReconocimientoIdentidad  #Protocolo 12   
+    GestionReconocimiento, ReconocimientoIdentidad,
+    
+    FichaAccidenteEscolar,  #Protocolo 8
     )
 
 
@@ -258,6 +260,20 @@ class RiesgoSuicidaAnexo5Form(forms.ModelForm):
             'responsable_email': forms.EmailInput(attrs={'placeholder': 'correo@ejemplo.com'}),
         }
 
+#===============================Para el protocolo 8============================#
+
+class FichaAccidenteEscolarForm(forms.ModelForm):
+    class Meta:
+        model = FichaAccidenteEscolar
+        exclude = ('protocolo',)
+
+        widgets = {
+            'fecha_hora_accidente': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'descripcion_accidente': forms.Textarea(attrs={'rows': 4}),
+            'primeros_auxilios': forms.Textarea(attrs={'rows': 4}),
+            'aislamiento_motivo': forms.Textarea(attrs={'rows': 3}),
+            'traslado_fecha_hora': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
 
 class SolicitudReconocimientoForm(forms.Form):
     PRONOMBRE_CHOICES = [

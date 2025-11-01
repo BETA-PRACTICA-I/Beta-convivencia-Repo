@@ -208,6 +208,26 @@
     </div>
     {% endif %}
 
+    <!-- Ficha de Accidente Escolar para Casos de Salud -->
+
+    {% if p.ficha_accidente_escolar %}
+    <div class="section">
+        <h2>Ficha de Accidente Escolar</h2>
+        <p><strong>Estudiante:</strong> {{ p.ficha_accidente_escolar.estudiante_nombre|default:"N/A" }} ({{ p.ficha_accidente_escolar.estudiante_curso|default:"N/A" }})</p>
+        <p><strong>Fecha y Hora:</strong> {{ p.ficha_accidente_escolar.fecha_hora_accidente|date:"d/m/Y H:i"|default:"N/A" }}</p>
+        <h3>Descripción del Accidente:</h3>
+        <pre>{{ p.ficha_accidente_escolar.descripcion_accidente|default:"Sin descripción." }}</pre>
+        <h3>Primeros Auxilios Realizados:</h3>
+        <pre>{{ p.ficha_accidente_escolar.primeros_auxilios|default:"Sin descripción." }}</pre>
+        <p><strong>Apoderado Avisado:</strong> {{ p.ficha_accidente_escolar.aviso_apoderado_nombre|default:"N/A" }}</p>
+        <p><strong>Funcionario que avisa:</strong> {{ p.ficha_accidente_escolar.aviso_funcionario|default:"N/A" }}</p>
+        {% if p.ficha_accidente_escolar.traslado_centro %}
+            <p><strong>Traslado a:</strong> {{ p.ficha_accidente_escolar.traslado_centro|default:"N/A" }}</p>
+            <p><strong>Funcionario que traslada:</strong> {{ p.ficha_accidente_escolar.traslado_funcionario|default:"N/A" }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+    
     {% endwith %}
 
     <div class="footer">

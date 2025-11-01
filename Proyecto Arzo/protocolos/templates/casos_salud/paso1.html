@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso {{ step }}: {{ tipo_nombre }}</title>
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css'%}">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Protocolo: {{ tipo_nombre }}</h1>
+        <h2 style="font-size: 1.2rem; color: #555; margin-top: -10px; margin-bottom: 20px;">
+            Paso {{ step }}: Ficha de Accidente Escolar
+        </h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="section-header">Datos del Estudiante</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.estudiante_nombre.label_tag }} {{ form.estudiante_nombre }} {{ form.estudiante_nombre.errors }}</div>
+                <div class="form-group">{{ form.estudiante_curso.label_tag }} {{ form.estudiante_curso }} {{ form.estudiante_curso.errors }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.fecha_hora_accidente.label_tag }} {{ form.fecha_hora_accidente }} {{ form.fecha_hora_accidente.errors }}</div>
+            </div>
+
+            <div class="section-header">Detección y Primeros Auxilios</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.descripcion_accidente.label_tag }} {{ form.descripcion_accidente }} {{ form.descripcion_accidente.errors }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.primeros_auxilios.label_tag }} {{ form.primeros_auxilios }} {{ form.primeros_auxilios.errors }}</div>
+            </div>
+
+            <div class="section-header">Aviso a Apoderados</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.aviso_apoderado_nombre.label_tag }} {{ form.aviso_apoderado_nombre }} {{ form.aviso_apoderado_nombre.errors }}</div>
+                <div class="form-group">{{ form.aviso_apoderado_medio.label_tag }} {{ form.aviso_apoderado_medio }} {{ form.aviso_apoderado_medio.errors }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.aviso_funcionario.label_tag }} {{ form.aviso_funcionario }} {{ form.aviso_funcionario.errors }}</div>
+            </div>
+            
+            <div class="section-header">Aislamiento del Lugar (Si aplica)</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.aislamiento_motivo.label_tag }} {{ form.aislamiento_motivo }} {{ form.aislamiento_motivo.errors }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.aislamiento_funcionario.label_tag }} {{ form.aislamiento_funcionario }} {{ form.aislamiento_funcionario.errors }}</div>
+                <div class="form-group">{{ form.aislamiento_lugar.label_tag }} {{ form.aislamiento_lugar }} {{ form.aislamiento_lugar.errors }}</div>
+            </div>
+            
+            <div class="section-header">Traslado a Centro Asistencial (Si aplica)</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.traslado_fecha_hora.label_tag }} {{ form.traslado_fecha_hora }} {{ form.traslado_fecha_hora.errors }}</div>
+                <div class="form-group">{{ form.traslado_centro.label_tag }} {{ form.traslado_centro }} {{ form.traslado_centro.errors }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.traslado_funcionario.label_tag }} {{ form.traslado_funcionario }} {{ form.traslado_funcionario.errors }}</div>
+            </div>
+
+            <button type="submit" style="width: auto; margin-top: 1rem; padding: 0.85rem 1.5rem;">
+                Guardar Protocolo
+            </button>
+        </form>
+    </div>
+</body>
+</html>

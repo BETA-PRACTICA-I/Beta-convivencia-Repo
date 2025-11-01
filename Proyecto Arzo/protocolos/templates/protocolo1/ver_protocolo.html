@@ -235,6 +235,33 @@
              <div class="alert alert-light"><em>Riesgo Suicida - Paso 5 no completado.</em></div>
             {% endif %}
 
+            <!-- Ficha de Accidente Escolar para Casos de Salud -->
+             
+            {% if p.ficha_accidente_escolar %}
+            <fieldset class="mb-4 p-3 border rounded">
+                <legend class="w-auto px-2 h5">Ficha de Accidente Escolar</legend>
+                <p><strong>Estudiante:</strong> {{ p.ficha_accidente_escolar.estudiante_nombre|default:"N/A" }} ({{ p.ficha_accidente_escolar.estudiante_curso|default:"N/A" }})</p>
+                <p><strong>Fecha y Hora:</strong> {{ p.ficha_accidente_escolar.fecha_hora_accidente|date:"d/m/Y H:i"|default:"N/A" }}</p>
+                <hr>
+                <h6>Descripción del Accidente:</h6>
+                <pre>{{ p.ficha_accidente_escolar.descripcion_accidente|default:"Sin descripción." }}</pre>
+                <h6>Primeros Auxilios Realizados:</h6>
+                <pre>{{ p.ficha_accidente_escolar.primeros_auxilios|default:"Sin descripción." }}</pre>
+                <hr>
+                <p><strong>Apoderado Avisado:</strong> {{ p.ficha_accidente_escolar.aviso_apoderado_nombre|default:"N/A" }}</p>
+                <p><strong>Medio de Aviso:</strong> {{ p.ficha_accidente_escolar.aviso_apoderado_medio|default:"N/A" }}</p>
+                <p><strong>Funcionario que avisa:</strong> {{ p.ficha_accidente_escolar.aviso_funcionario|default:"N/A" }}</p>
+                <hr>
+                {% if p.ficha_accidente_escolar.traslado_centro %}
+                <p><strong>Traslado a:</strong> {{ p.ficha_accidente_escolar.traslado_centro|default:"N/A" }}</p>
+                <p><strong>Hora Traslado:</strong> {{ p.ficha_accidente_escolar.traslado_fecha_hora|time:"H:i"|default:"N/A" }}</p>
+                <p><strong>Funcionario que traslada:</strong> {{ p.ficha_accidente_escolar.traslado_funcionario|default:"N/A" }}</p>
+                {% endif %}
+            </fieldset>
+            {% elif p.tipo.nombre == "Casos de salud" or p.tipo.nombre == "Protocolo de actuación por casos de salud" %}
+             <div class="alert alert-light"><em>Ficha de Accidente Escolar no completada.</em></div>
+            {% endif %}
+
             {% endwith %}
         </div>
     </div>

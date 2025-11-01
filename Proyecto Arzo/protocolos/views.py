@@ -12,19 +12,25 @@ from .models import Protocolo, TipoProtocolo
 
 from formularios.forms import (
     FormularioDenunciaForm, FichaEntrevistaForm, DerivacionForm,
-    InformeConcluyenteForm, ApelacionForm, ResolucionApelacionForm, EncuestaBullyingForm,
+    InformeConcluyenteForm, ApelacionForm, ResolucionApelacionForm,
+    EncuestaBullyingForm,   # Protocolos 1-6
 
     RiesgoSuicidaAnexo1Form, RiesgoSuicidaAnexo2Form, RiesgoSuicidaAnexo3Form,
     RiesgoSuicidaAnexo4Form, RiesgoSuicidaAnexo5Form,
-    SolicitudReconocimientoForm, GestionReconocimientoForm,
+    SolicitudReconocimientoForm, GestionReconocimientoForm,  # Protocolo 7
+
+    FichaAccidenteEscolarForm,  # Protocolo 8
     )
 from formularios.models import (
-    FormularioDenuncia, FichaEntrevista, Derivacion, GestionReconocimiento, InformeConcluyente,
-    Apelacion, ResolucionApelacion, EncuestaBullying,
+    FormularioDenuncia, FichaEntrevista, Derivacion,
+    GestionReconocimiento, InformeConcluyente,
+    Apelacion, ResolucionApelacion, EncuestaBullying,   # Protocolos 1-6
 
     RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2, RiesgoSuicidaAnexo3,
-    RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5,
-    ReconocimientoIdentidad, GestionReconocimiento,
+    RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5, ReconocimientoIdentidad,
+    GestionReconocimiento,  # Protocolo 7
+
+    FichaAccidenteEscolar,  # Protocolo 8
     )
 
 PROTOCOLOS_TIPO_1 = [
@@ -83,7 +89,11 @@ def protocolo_step(request, protocolo_id, step):
         form_config = step_map.get(step)
 
     elif tipo_nombre == "Casos de salud":
-        return HttpResponse(f"Vista para Protocolo '{tipo_nombre}' - Paso {step} - AÚN NO IMPLEMENTADA")
+        total_steps = 1 # Protocolo de un solo paso
+        step_map = {
+            1: {'form': FichaAccidenteEscolarForm, 'model': FichaAccidenteEscolar, 'template': 'casos_salud/paso1.html'},
+        }
+        form_config = step_map.get(step)
 
     if not form_config:
         messages.error(request, f"El paso {step} no está definido para el protocolo '{tipo_nombre}'.")
@@ -222,7 +232,9 @@ def descargar_protocolo_pdf(request, protocolo_id):
             'riesgo_suicida_anexo2',
             'riesgo_suicida_anexo3',
             'riesgo_suicida_anexo4',
-            'riesgo_suicida_anexo5'
+            'riesgo_suicida_anexo5',
+
+            'ficha_accidente_escolar'
             ),
         id=protocolo_id,
         creador=request.user
@@ -262,7 +274,9 @@ def ver_protocolo(request, protocolo_id):
             'riesgo_suicida_anexo2',
             'riesgo_suicida_anexo3',
             'riesgo_suicida_anexo4',
-            'riesgo_suicida_anexo5'
+            'riesgo_suicida_anexo5',
+
+            'ficha_accidente_escolar'
             ), 
         id=protocolo_id
     )

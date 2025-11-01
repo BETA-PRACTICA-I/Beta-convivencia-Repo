@@ -10,13 +10,15 @@ from formularios.models import (
     InformeConcluyente,
     Apelacion,
     ResolucionApelacion,
-    EncuestaBullying,
+    EncuestaBullying,   # Protocolos 1-6
 
     RiesgoSuicidaAnexo1,
     RiesgoSuicidaAnexo2,
     RiesgoSuicidaAnexo3,
     RiesgoSuicidaAnexo4,
-    RiesgoSuicidaAnexo5,
+    RiesgoSuicidaAnexo5,    # Protocolo Riesgo Suicida
+
+    FichaAccidenteEscolar,  # Protocolo Casos de Salud
 )
 
 # --- Define las clases Inline para CADA formulario ---
@@ -84,6 +86,13 @@ class RiesgoSuicidaAnexo5Inline(admin.StackedInline):
     can_delete = False
     extra = 0
 
+# --- Inlines para Casos de Salud ---
+
+class FichaAccidenteEscolarInline(admin.StackedInline):
+    model = FichaAccidenteEscolar
+    can_delete = False
+    extra = 0
+
 # --- Configuración del Admin para el modelo Protocolo ---
 
 @admin.register(Protocolo)
@@ -129,6 +138,11 @@ class ProtocoloAdmin(admin.ModelAdmin):
                     ResolucionApelacionInline,
                     EncuestaBullyingInline
                     ]
+            
+            elif obj.tipo.nombre == "Casos de salud":
+                # Mostrar el inline de Casos de Salud
+                return [FichaAccidenteEscolarInline]
+            
             # Puedes añadir más elif obj.tipo.nombre == "Otro Tipo": return [OtrosInlines] aquí
 
         # Si es un protocolo nuevo (obj=None) o el tipo no coincide con ninguno,

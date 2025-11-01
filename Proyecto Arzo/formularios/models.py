@@ -528,3 +528,44 @@ class GestionReconocimiento(models.Model):
     class Meta:
         verbose_name = "Gestión de Reconocimiento de Identidad"
         verbose_name_plural = "Gestiones de Reconocimiento de Identidad"
+
+
+"""
+██████╗░██████╗░░█████╗░████████╗░█████╗░░█████╗░░█████╗░██╗░░░░░░█████╗░  ░█████╗░
+██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██║░░░░░██╔══██╗  ██╔══██╗
+██████╔╝██████╔╝██║░░██║░░░██║░░░██║░░██║██║░░╚═╝██║░░██║██║░░░░░██║░░██║  ░█████╔╝
+██╔═══╝░██╔══██╗██║░░██║░░░██║░░░██║░░██║██║░░██╗██║░░██║██║░░░░░██║░░██║  ██╔══██╗
+██║░░░░░██║░░██║╚█████╔╝░░░██║░░░╚█████╔╝╚█████╔╝╚█████╔╝███████╗╚█████╔╝  ╚█████╔╝
+╚═╝░░░░░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░░╚════╝░░╚════╝░░╚════╝░╚══════╝░╚════╝░  ░╚════╝░
+"""
+
+class FichaAccidenteEscolar(models.Model):
+
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, related_name="ficha_accidente_escolar")
+    
+    # Datos del estudiante
+    estudiante_nombre = models.CharField(max_length=255, verbose_name="Nombre Estudiante")
+    estudiante_curso = models.CharField(max_length=100, verbose_name="Curso")
+    fecha_hora_accidente = models.DateTimeField(verbose_name="Fecha y Hora del Accidente")
+    
+    # Detalle
+    descripcion_accidente = models.TextField(verbose_name="Describa el accidente escolar (Detección)")
+    primeros_auxilios = models.TextField(verbose_name="Acciones de Primeros Auxilios Realizadas")
+    
+    # Aviso a apoderados
+    aviso_apoderado_nombre = models.CharField(max_length=255, verbose_name="Nombre apoderado")
+    aviso_apoderado_medio = models.CharField(max_length=100, verbose_name="Medio de comunicación utilizado")
+    aviso_funcionario = models.CharField(max_length=255, verbose_name="Funcionario encargado de comunicarlo")
+    
+    # Aislamiento (si aplica)
+    aislamiento_motivo = models.TextField(verbose_name="Motivo del aislamiento", blank=True)
+    aislamiento_funcionario = models.CharField(max_length=255, verbose_name="Funcionario a cargo", blank=True)
+    aislamiento_lugar = models.CharField(max_length=255, verbose_name="Lugar aislado", blank=True)
+    
+    # Traslado (si aplica)
+    traslado_fecha_hora = models.DateTimeField(verbose_name="Día y hora del traslado", null=True, blank=True)
+    traslado_centro = models.CharField(max_length=255, verbose_name="Centro al que fue trasladado", blank=True)
+    traslado_funcionario = models.CharField(max_length=255, verbose_name="Quién efectúa el traslado", blank=True)
+
+    def __str__(self):
+        return f"Ficha Accidente Escolar (Protocolo {self.protocolo.id})"
