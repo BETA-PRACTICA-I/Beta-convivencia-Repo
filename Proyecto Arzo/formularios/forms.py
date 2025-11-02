@@ -1,6 +1,6 @@
 from django import forms
 from .models import (
-    ArmasAnexo1, FormularioDenuncia, FichaEntrevista, Derivacion,
+    ArmasAnexo1, AutolesionAnexo1, FormularioDenuncia, FichaEntrevista, Derivacion,
     InformeConcluyente, Apelacion, ResolucionApelacion,
     EncuestaBullying,   #Protocolos 1-6
     
@@ -368,4 +368,25 @@ class ArmasAnexo1Form(forms.ModelForm):
         exclude = ('protocolo',)
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 6}),
+        }
+
+# --- Formulario Protocolo 10 (NUEVO) ---
+class AutolesionAnexo1Form(forms.ModelForm):
+    class Meta:
+        model = AutolesionAnexo1
+        fields = ['nombre_estudiante', 'curso', 'rut', 'descripcion']
+        
+        # Usamos los mismos widgets y placeholders que el P9 para consistencia
+        widgets = {
+            'nombre_estudiante': forms.TextInput(attrs={'placeholder': 'Nombre completo del estudiante'}),
+            'curso': forms.TextInput(attrs={'placeholder': 'Ej: 1° Medio A'}),
+            'rut': forms.TextInput(attrs={'placeholder': 'Ej: 12.345.678-9'}),
+            'descripcion': forms.Textarea(attrs={'rows': 6, 'placeholder': 'Describa brevemente la situación detectada, indicadores observables, etc.'}),
+        }
+        
+        # Etiquetas claras para el formulario
+        labels = {
+            'nombre_estudiante': 'Nombre del Estudiante',
+            'rut': 'RUT del Estudiante',
+            'descripcion': 'Descripción de la situación',
         }

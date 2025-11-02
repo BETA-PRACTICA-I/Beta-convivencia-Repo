@@ -17,13 +17,15 @@ from formularios.forms import (
 
     RiesgoSuicidaAnexo1Form, RiesgoSuicidaAnexo2Form, RiesgoSuicidaAnexo3Form,
     RiesgoSuicidaAnexo4Form, RiesgoSuicidaAnexo5Form,
-    SolicitudReconocimientoForm, GestionReconocimientoForm,  # Protocolo 7
+    SolicitudReconocimientoForm, GestionReconocimientoForm,  # Protocolo 7 (Reconocimiento)
 
-    FichaAccidenteEscolarForm,  # Protocolo 8
+    FichaAccidenteEscolarForm,  # Protocolo 8 (Casos de salud)
 
     ArmasAnexo1Form,  # Protocolo 9
+    
+    AutolesionAnexo1Form,
+)
 
-    )
 from formularios.models import (
     FormularioDenuncia, FichaEntrevista, Derivacion,
     GestionReconocimiento, InformeConcluyente,
@@ -31,12 +33,14 @@ from formularios.models import (
 
     RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2, RiesgoSuicidaAnexo3,
     RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5, ReconocimientoIdentidad,
-    GestionReconocimiento,  # Protocolo 7
-
+    
     FichaAccidenteEscolar,  # Protocolo 8
 
     ArmasAnexo1,  # Protocolo 9
-    )
+
+    AutolesionAnexo1  # <-- ¡AÑADIDO PROTOCOLO 10!
+)
+# -----------------------------------
 
 PROTOCOLOS_TIPO_1 = [
     "Acoso Escolar", "Drogas y Alcohol", "Agresión o Connotación Sexual",
@@ -101,11 +105,19 @@ def protocolo_step(request, protocolo_id, step):
         form_config = step_map.get(step)
 
     elif tipo_nombre == "Armas blancas y de fuego":
-        total_steps = 1 # Solo tiene un paso lol
+        total_steps = 1 # Protocolo de un solo paso
         step_map = {
             1: {'form': ArmasAnexo1Form, 'model': ArmasAnexo1, 'template': 'armas/paso1.html'},
         }
         form_config = step_map.get(step)
+
+    elif tipo_nombre == "Autolesión": 
+        total_steps = 1 
+        step_map = {
+            1: {'form': AutolesionAnexo1Form, 'model': AutolesionAnexo1, 'template': 'autolesion/paso1.html'}, # <-- ¡Usando tu template!
+        }
+        form_config = step_map.get(step)
+    # -----------------------------------------
 
     if not form_config:
         messages.error(request, f"El paso {step} no está definido para el protocolo '{tipo_nombre}'.")
@@ -170,6 +182,8 @@ def protocolo_step(request, protocolo_id, step):
             if step < total_steps:
                 return redirect('protocolos:protocolo_step', protocolo_id=protocolo.id, step=step + 1)
             else:
+                protocolo.estado = 'Pendiente' 
+                protocolo.save()
                 return redirect('protocolos:formulario_exito', protocolo_id=protocolo.id)
         else:
             messages.error(request, "Por favor, corrige los errores en el formulario.")
@@ -209,6 +223,7 @@ def protocolo_step(request, protocolo_id, step):
         'form': form,
         'protocolo': protocolo,
         'step': step,
+        'total_steps': total_steps,
         'tipo_nombre': tipo_nombre,
     }
     return render(request, template_name, context)
@@ -246,10 +261,16 @@ def descargar_protocolo_pdf(request, protocolo_id):
             'riesgo_suicida_anexo4',
             'riesgo_suicida_anexo5',
 
-            'ficha_accidente_escolar',
+            'reconocimiento_identidad', # P7
+            'gestion_reconocimiento',  # P7
 
-            'anexo_armas'
+            'ficha_accidente_escolar', # P8
+
+            'anexo_armas', # P9
+
+            'anexo_autolesion'  
             ),
+            
         id=protocolo_id,
         creador=request.user
     )
@@ -261,12 +282,12 @@ def descargar_protocolo_pdf(request, protocolo_id):
         'protocolos_tipo_1': PROTOCOLOS_TIPO_1
     }
     
-    # IMPORTANTE: Ahora tendrás que editar 'protocolo_pdf.html'
-    # para que muestre los campos de 'riesgo_suicida_anexo1'
-    # si el tipo de protocolo es "Riesgo suicida"
-
     html_string = render_to_string('protocolo1/protocolo_pdf.html', context)
-    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
+    
+    # ¡Clave para tus imágenes estáticas en WeasyPrint!
+    base_url = request.build_absolute_uri('/')
+    
+    pdf_file = HTML(string=html_string, base_url=base_url).write_pdf()
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="protocolo_{protocolo.id}_{protocolo.tipo.nombre}.pdf"'
     return response
@@ -290,21 +311,27 @@ def ver_protocolo(request, protocolo_id):
             'riesgo_suicida_anexo4',
             'riesgo_suicida_anexo5',
 
-            'ficha_accidente_escolar',
+            'reconocimiento_identidad', # P7
+            'gestion_reconocimiento',  # P7
+
+            'ficha_accidente_escolar', # P8
             
-            'anexo_armas'
+            'anexo_armas', # P9
+            
+            'anexo_autolesion'  # <-- ¡AÑADIDO PROTOCOLO 10!
             ), 
         id=protocolo_id
     )
+    
+    if protocolo.creador != request.user:
+        messages.error(request, "No tienes permiso para ver este protocolo.")
+        return redirect('Validaciones:homepage')
 
     context = {
         'protocolo': protocolo,
         'protocolos_tipo_1': PROTOCOLOS_TIPO_1
     }
     
-    # IMPORTANTE: También tendrás que editar 'ver_protocolo.html'
-    # para que muestre los campos de 'riesgo_suicida_anexo1'
-
     return render(request, 'protocolo1/ver_protocolo.html', context)
 
 def get_instance_or_none(model, **kwargs):
@@ -313,6 +340,9 @@ def get_instance_or_none(model, **kwargs):
         return model.objects.get(**kwargs)
     except model.DoesNotExist:
         return None
+
+# --- Vistas de Edición (P1-P6) ---
+# (Estas vistas permanecen igual, ya que son específicas para los P1-P6)
 
 @login_required(login_url='Validaciones:login')
 def editar_paso1(request, protocolo_id):
@@ -351,13 +381,12 @@ def editar_paso2(request, protocolo_id):
 @login_required(login_url='Validaciones:login')
 def editar_paso3(request, protocolo_id):
     protocolo = get_object_or_404(Protocolo, id=protocolo_id)
-    instancia = get_instance_or_none(Derivacion, protocolo=protocolo) # <-- CORREGIDO
+    instancia = get_instance_or_none(Derivacion, protocolo=protocolo) 
 
     if request.method == 'POST':
         form = DerivacionForm(request.POST, request.FILES)
         if form.is_valid():
             data = form.cleaned_data
-            # Replicamos la lógica de la vista de creación
             defaults_data = {
                 'derivaciones': ", ".join(data.get('tipo_derivacion', [])),
                 'fecha_lesiones': data.get('fecha_lesiones'),
@@ -381,14 +410,12 @@ def editar_paso3(request, protocolo_id):
                 'firma_otras': data.get('firma_funcionario_otras'),
                 'respaldo_otras': data.get('respaldo_otras'),
             }
-            # Usamos update_or_create para manejar tanto la creación como la edición
-            obj, created = Derivacion.objects.update_or_create( # <-- CORREGIDO
+            obj, created = Derivacion.objects.update_or_create(
                 protocolo=protocolo,
                 defaults=defaults_data
             )
             return redirect('protocolos:editar_paso4', protocolo_id=protocolo.id)
     else:
-        # Replicamos la lógica para pre-rellenar el formulario
         initial_data = {}
         if instancia:
             initial_data = {
@@ -486,3 +513,4 @@ def editar_paso7(request, protocolo_id):
         form = EncuestaBullyingForm(instance=instancia)
         
     return render(request, 'protocolo1/formulario_paso7.html', {'form': form, 'protocolo': protocolo})
+

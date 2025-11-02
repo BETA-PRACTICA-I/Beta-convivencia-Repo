@@ -308,7 +308,42 @@
             </div>
         </div>
     {% endif %}
+    
+    {% if protocolo.anexo_autolesion %}
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0 h5">Datos del Estudiante (Protocolo Autolesión)</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Nombre:</strong> {{ protocolo.anexo_autolesion.nombre_estudiante }}</p>
+            <p><strong>Curso:</strong> {{ protocolo.anexo_autolesion.curso }}</p>
+            <p><strong>RUT:</strong> {{ protocolo.anexo_autolesion.rut }}</p>
+            <hr>
+            <h6 class="mb-2">Descripción de la situación</h6>
+            <pre>{{ protocolo.anexo_autolesion.descripcion|linebreaks }}</pre>
+        </div>
+    </div>
+    {% endif %}
 
+    <!-- --- MOSTRAR ANEXOS PROTOCOLO 10: AUTOLESIÓN (CON NOMBRES CORREGIDOS) --- -->
+    {% if protocolo.tipo.nombre == "Autolesión" %}
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white">
+                <h2 class="mb-0 h5">Anexo: Procedimiento de Actuación (Autolesión)</h2>
+            </div>
+            <div class="card-body">
+                <p>A continuación, se adjunta el protocolo de actuación estándar:</p>
+
+                <img src="{% static 'img/protocolo10/10.- PROTOCOLO-de actuacion ante situaciones de autolesión de los estudiantes Listo_page-0001.jpg' %}" class="anexo-imagen-web" alt="Protocolo Autolesión Página 1">
+                <img src="{% static 'img/protocolo10/10.- PROTOCOLO-de actuacion ante situaciones de autolesión de los estudiantes Listo_page-0002.jpg' %}" class="anexo-imagen-web" alt="Protocolo Autolesión Página 2">
+                <img src="{% static 'img/protocolo10/10.- PROTOCOLO-de actuacion ante situaciones de autolesión de los estudiantes Listo_page-0003.jpg' %}" class="anexo-imagen-web" alt="Protocolo Autolesión Página 3">
+                <img src="{% static 'img/protocolo10/10.- PROTOCOLO-de actuacion ante situaciones de autolesión de los estudiantes Listo_page-0004.jpg' %}" class="anexo-imagen-web" alt="Protocolo Autolesión Página 4">
+                <img src="{% static 'img/protocolo10/10.- PROTOCOLO-de actuacion ante situaciones de autolesión de los estudiantes Listo_page-0005.jpg' %}" class="anexo-imagen-web" alt="Protocolo Autolesión Página 5">
+                <img src="{% static 'img/protocolo10/10.- PROTOCOLO-de actuacion ante situaciones de autolesión de los estudiantes Listo_page-0006.jpg' %}" class="anexo-imagen-web" alt="Protocolo Autolesión Página 6">
+
+            </div>
+        </div>
+    {% endif %}
 
 </div>
 </body>

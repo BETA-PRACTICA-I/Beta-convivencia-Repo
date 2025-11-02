@@ -597,6 +597,32 @@ class ArmasAnexo1(models.Model):
 
     def __str__(self):
         return f"Anexo 1 (Armas) para Protocolo {self.protocolo.id}"
+    
 
+"""
+██████╗░██████╗░░█████╗░████████╗░█████╗░░█████╗░░█████╗░██╗░░░░░░█████╗░  ░░███╗░░░█████╗░
+██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██║░░░░░██╔══██╗  ░████║░░██╔══██╗
+██████╔╝██████╔╝██║░░██║░░░██║░░░██║░░██║██║░░╚═╝██║░░██║██║░░░░░██║░░██║  ██╔██║░░██║░░██║
+██╔═══╝░██╔══██╗██║░░██║░░░██║░░░██║░░██║██║░░██╗██║░░██║██║░░░░░██║░░██║  ╚═╝██║░░██║░░██║
+██║░░░░░██║░░██║╚█████╔╝░░░██║░░░╚█████╔╝╚█████╔╝╚█████╔╝███████╗╚█████╔╝  ███████╗╚█████╔╝
+╚═╝░░░░░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░░╚════╝░░╚════╝░░╚════╝░╚══════╝░╚════╝░  ╚══════╝░╚════╝░
 
+"""
+
+class AutolesionAnexo1(models.Model):
+    protocolo = models.OneToOneField(
+        'protocolos.Protocolo', 
+        on_delete=models.CASCADE, 
+        related_name='anexo_autolesion'  # <-- ¡Clave para la "súper-vista"!
+    )
+    
+    # Campos de entrada idénticos al Protocolo 9
+    nombre_estudiante = models.CharField(max_length=255, verbose_name="Nombre del Estudiante")
+    curso = models.CharField(max_length=100, verbose_name="Curso")
+    rut = models.CharField(max_length=12, verbose_name="RUT") 
+    descripcion = models.TextField(verbose_name="Descripción de la situación")
+
+    def __str__(self):
+        return f"Anexo Autolesión para Protocolo #{self.protocolo_id}"
+    
 
