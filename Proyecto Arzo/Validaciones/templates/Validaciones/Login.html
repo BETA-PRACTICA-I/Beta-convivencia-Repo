@@ -4,6 +4,7 @@
     <head>
         <title>Login Page</title>
         <link rel="stylesheet" href="{% static 'Validaciones/css/Login.css' %}">
+        <!-- ¡Asegúrate de que el nombre del JS sea el correcto! -->
         <script src="{% static 'Validaciones/js/Logica_Login.js' %}" defer></script>
     </head>
     <body>
@@ -11,11 +12,16 @@
             <img src="{% static 'Validaciones/img/logocolegioarzobispado2.png' %}" class="logo">
 
             <div class="botones">
-                <button class="btn" id="btn-convivencia">Encargado de convivencia escolar</button>
-                <button class="btn" id="btn-abogados">Abogados</button>
-                <button class="btn" id="btn-director">Director</button>
+                <!-- 
+                    ¡CAMBIO! Añadimos un 'data-role' a cada botón 
+                    para que el JavaScript sepa cuál se apretó.
+                -->
+                <button class="btn" id="btn-convivencia" data-role="encargado">Encargado de convivencia escolar</button>
+                <button class="btn" id="btn-abogados" data-role="abogado">Abogados</button>
+                <button class="btn" id="btn-director" data-role="director">Director</button>
             </div>
-            {% if messages %}  <!--mensajes de error y alerta, segun corresponda-->
+            
+            {% if messages %}
                 <ul class="messages">
                     {% for message in messages %}
                         <li class="msg {{ message.tags }}">{{ message }}</li>
@@ -24,10 +30,17 @@
             {% endif %}
 
             <div id="formularioContainer" class="FormInicioSesion oculto">
-                <h2>Inicio de Sesión</h2>
+                <h2 id="form-title">Inicio de Sesión</h2> <!-- Título dinámico -->
 
-                <form id="loginForm" class="form-vertical" method="POST" action="{% url 'Validaciones:login' %}"> <!--que es esto?-->
+                <form id="loginForm" class="form-vertical" method="POST" action="{% url 'Validaciones:login' %}">
                     {% csrf_token %}
+                    
+                    <!-- 
+                        ¡CAMBIO CLAVE! 
+                        Este campo oculto le dirá al backend qué botón apretó el usuario.
+                    -->
+                    <input type="hidden" name="role_type" id="role_type" value="">
+                    
                     <input type="Text" id="Rut" name="username" required placeholder="RUT (Ej: 157262887)" inputmode="numeric">
                     <input type="password" id="password" name="password" required placeholder="Contraseña">
                     <button type="submit">Iniciar Sesión</button>
