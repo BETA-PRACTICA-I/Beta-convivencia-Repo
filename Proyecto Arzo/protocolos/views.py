@@ -86,7 +86,7 @@ def protocolo_step(request, protocolo_id, step):
             3: {'form': RiesgoSuicidaAnexo3Form, 'model': RiesgoSuicidaAnexo3, 'template': 'riesgo_suicida/paso3.html'},
             4: {'form': RiesgoSuicidaAnexo4Form, 'model': RiesgoSuicidaAnexo4, 'template': 'riesgo_suicida/paso4.html'},
             5: {'form': RiesgoSuicidaAnexo5Form, 'model': RiesgoSuicidaAnexo5, 'template': 'riesgo_suicida/paso5.html'}
-            }
+        }
         form_config = step_map.get(step)
 
     elif tipo_nombre == "Reconocimiento de Identidad de Género":
@@ -272,7 +272,6 @@ def descargar_protocolo_pdf(request, protocolo_id):
             ),
             
         id=protocolo_id,
-        creador=request.user
     )
 
     context = {
@@ -317,16 +316,12 @@ def ver_protocolo(request, protocolo_id):
             'ficha_accidente_escolar', # P8
             
             'anexo_armas', # P9
-            
-            'anexo_autolesion'  # <-- ¡AÑADIDO PROTOCOLO 10!
+
+            'anexo_autolesion'  # P10
             ), 
         id=protocolo_id
     )
     
-    if protocolo.creador != request.user:
-        messages.error(request, "No tienes permiso para ver este protocolo.")
-        return redirect('Validaciones:homepage')
-
     context = {
         'protocolo': protocolo,
         'protocolos_tipo_1': PROTOCOLOS_TIPO_1
