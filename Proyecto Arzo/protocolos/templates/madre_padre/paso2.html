@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- El título ahora es dinámico según el paso y tipo de protocolo -->
+    <title>Paso {{ step }}: {{ tipo_nombre }}</title>
+    
+    <!-- Reutilizamos los mismos estilos del formulario 1 -->
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css' %}">
+</head>
+<body>
+
+    <div class="form-container">
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Encabezado dinámico -->
+            <div class="Form-Tittle">
+                <h1>{{ tipo_nombre }}</h1>
+                <h2>Paso {{ step }}: Ficha 1 - Registro de Entrevista con Apoderado</h2>
+            </div>
+
+            <!-- Campos de la Ficha 1 -->
+
+            <div class="section-header">Datos de la Entrevista</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.fecha_entrevista.label_tag }}
+                    {{ form.fecha_entrevista }}
+                    {% if form.fecha_entrevista.errors %}
+                        <div class="errorlist">{{ form.fecha_entrevista.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.individualizacion_apoderado.label_tag }}
+                    {{ form.individualizacion_apoderado }}
+                    {% if form.individualizacion_apoderado.errors %}
+                        <div class="errorlist">{{ form.individualizacion_apoderado.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="section-header">Contenido de la Entrevista</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.motivo_entrevista.label_tag }}
+                    {{ form.motivo_entrevista }}
+                    {% if form.motivo_entrevista.errors %}
+                        <div class="errorlist">{{ form.motivo_entrevista.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.aspectos_relevantes.label_tag }}
+                    {{ form.aspectos_relevantes }}
+                    {% if form.aspectos_relevantes.errors %}
+                        <div class="errorlist">{{ form.aspectos_relevantes.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="section-header">Firmas de Constancia</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.nombre_firma_funcionario.label_tag }}
+                    {{ form.nombre_firma_funcionario }}
+                    {% if form.nombre_firma_funcionario.errors %}
+                        <div class="errorlist">{{ form.nombre_firma_funcionario.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.nombre_firma_apoderado.label_tag }}
+                    {{ form.nombre_firma_apoderado }}
+                    {% if form.nombre_firma_apoderado.errors %}
+                        <div class="errorlist">{{ form.nombre_firma_apoderado.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Botón "Siguiente Paso" como solicitaste -->
+            <button type="submit">Siguiente Paso</button>
+
+        </form>
+    </div>
+
+</body>
+</html>
+

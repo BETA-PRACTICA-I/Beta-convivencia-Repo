@@ -23,8 +23,13 @@ from formularios.forms import (
 
     ArmasAnexo1Form,  # Protocolo 9
     
-    AutolesionAnexo1Form,
+    AutolesionAnexo1Form, # Protocolo 10
+
+    EstudianteMadrePadreFicha0Form, # Protocolo 11
+    EstudianteMadrePadreFicha1Form, # Protocolo 11
+    EstudianteMadrePadreFicha2Form, # Protocolo 11
 )
+# -----------------------------------
 
 from formularios.models import (
     FormularioDenuncia, FichaEntrevista, Derivacion,
@@ -38,7 +43,11 @@ from formularios.models import (
 
     ArmasAnexo1,  # Protocolo 9
 
-    AutolesionAnexo1  # <-- ¡AÑADIDO PROTOCOLO 10!
+    AutolesionAnexo1,  # Protocolo 10
+
+    EstudianteMadrePadreFicha0, # Protocolo 11
+    EstudianteMadrePadreFicha1, # Protocolo 11
+    EstudianteMadrePadreFicha2, # Protocolo 11
 )
 # -----------------------------------
 
@@ -117,6 +126,16 @@ def protocolo_step(request, protocolo_id, step):
             1: {'form': AutolesionAnexo1Form, 'model': AutolesionAnexo1, 'template': 'autolesion/paso1.html'}, # <-- ¡Usando tu template!
         }
         form_config = step_map.get(step)
+
+    elif tipo_nombre == "Estudiantes Madres/Padres":
+        total_steps = 3 # Este es el número total de pasos
+        step_map = {
+            1: {'form': EstudianteMadrePadreFicha0Form, 'model': EstudianteMadrePadreFicha0, 'template': 'madre_padre/paso1.html'},
+            2: {'form': EstudianteMadrePadreFicha1Form, 'model': EstudianteMadrePadreFicha1, 'template': 'madre_padre/paso2.html'},
+            3: {'form': EstudianteMadrePadreFicha2Form, 'model': EstudianteMadrePadreFicha2, 'template': 'madre_padre/paso3.html'},
+        }
+    form_config = step_map.get(step)
+
     # -----------------------------------------
 
     if not form_config:
@@ -268,7 +287,11 @@ def descargar_protocolo_pdf(request, protocolo_id):
 
             'anexo_armas', # P9
 
-            'anexo_autolesion'  
+            'anexo_autolesion', # P10
+
+            'ficha0_madre_padre',   # P11  
+            'ficha1_madre_padre',
+            'ficha2_madre_padre',
             ),
             
         id=protocolo_id,
@@ -317,7 +340,11 @@ def ver_protocolo(request, protocolo_id):
             
             'anexo_armas', # P9
 
-            'anexo_autolesion'  # P10
+            'anexo_autolesion',  # P10
+
+            'ficha0_madre_padre',  # P11
+            'ficha1_madre_padre', 
+            'ficha2_madre_padre',
             ), 
         id=protocolo_id
     )

@@ -42,7 +42,7 @@
 
     {% with p=protocolo %}
 
-    {# --- ARREGLO 1: SÓLO MUESTRA PASOS 1-7 SI EL PROTOCOLO ES DE ESE TIPO --- #}
+    {# --- PROTOCOLOS 1-7 --- #}
     {% if protocolo.tipo.nombre in protocolos_tipo_1 %}
 
         {% if p.ficha_denuncia %}
@@ -137,21 +137,18 @@
         </div>
         {% endif %}
     
-    {% endif %} {# --- FIN DEL ARREGLO 1 --- #}
+    {% endif %} {# --- FIN P1-7 --- #}
     
 
-    {# --- MOSTRAR PROTOCOLO 7: RIESGO SUICIDA (CÓDIGO DE TU EQUIPO) --- #}
+    {# --- PROTOCOLO 7: RIESGO SUICIDA --- #}
     {% if p.riesgo_suicida_anexo1 %}
     <div class="section">
         <h2>Riesgo Suicida - Paso 1: Anexo 1: Detección</h2>
         <p><strong>Nombre Afectado:</strong> {{ p.riesgo_suicida_anexo1.nombre_afectado|default:"No especificado" }}</p>
         <p><strong>Curso:</strong> {{ p.riesgo_suicida_anexo1.curso|default:"No especificado" }}</p>
-        <p><strong>Profesor Jefe:</strong> {{ p.riesgo_suicida_anexo1.profesor_jefe|default:"No especificado" }}</p>
-        <p><strong>Apoderado:</strong> {{ p.riesgo_suicida_anexo1.apoderado|default:"No especificado" }}</p>
         <h3>Registro de situación</h3>
         <p><strong>Fecha Detección:</strong> {{ p.riesgo_suicida_anexo1.fecha|date:"d/m/Y"|default:"No especificado" }}</p>
         <p><strong>Hora Detección:</strong> {{ p.riesgo_suicida_anexo1.hora|time:"H:i"|default:"No especificado" }}</p>
-        <p><strong>Persona que detecta:</strong> {{ p.riesgo_suicida_anexo1.persona_detecta|default:"No especificado" }}</p>
         <h3>Relato de los Hechos:</h3>
         <pre>{{ p.riesgo_suicida_anexo1.relato_hechos|default:"Sin relato." }}</pre>
     </div>
@@ -162,16 +159,10 @@
         <h2>Riesgo Suicida - Paso 2: Anexo 2: Derivación</h2>
         <h3>1. Antecedentes Establecimiento</h3>
         <p><strong>Fecha Derivación:</strong> {{ p.riesgo_suicida_anexo2.fecha_derivacion|date:"d/m/Y"|default:"No especificado" }}</p>
-        <p><strong>Establecimiento:</strong> {{ p.riesgo_suicida_anexo2.establecimiento_nombre|default:"No especificado" }}</p>
         <p><strong>Profesional que Deriva:</strong> {{ p.riesgo_suicida_anexo2.profesional_deriva_nombre|default:"N/A" }} ({{ p.riesgo_suicida_anexo2.profesional_deriva_cargo|default:"N/A" }})</p>
-        <p><strong>Contacto Profesional:</strong> {{ p.riesgo_suicida_anexo2.profesional_deriva_email|default:"N/A" }} / {{ p.riesgo_suicida_anexo2.profesional_deriva_telefono|default:"N/A" }}</p>
         <h3>2. Antecedentes Estudiante</h3>
         <p><strong>Nombre Estudiante:</strong> {{ p.riesgo_suicida_anexo2.estudiante_nombre|default:"No especificado" }}</p>
         <p><strong>RUN:</strong> {{ p.riesgo_suicida_anexo2.estudiante_run|default:"No especificado" }}</p>
-        <p><strong>Fecha Nacimiento:</strong> {{ p.riesgo_suicida_anexo2.estudiante_fecha_nacimiento|date:"d/m/Y"|default:"N/A" }} (Edad: {{ p.riesgo_suicida_anexo2.estudiante_edad|default:"N/A" }})</p>
-        <p><strong>Curso:</strong> {{ p.riesgo_suicida_anexo2.estudiante_curso|default:"N/A" }}</p>
-        <p><strong>Adulto Responsable:</strong> {{ p.riesgo_suicida_anexo2.adulto_responsable_nombre|default:"N/A" }} (Tel: {{ p.riesgo_suicida_anexo2.adulto_responsable_telefono|default:"N/A" }})</p>
-        <p><strong>Dirección:</strong> {{ p.riesgo_suicida_anexo2.estudiante_direccion|default:"N/A" }}</p>
         <h3>3. Motivo Derivación</h3>
         <pre>{{ p.riesgo_suicida_anexo2.motivo_derivacion|default:"Sin motivo especificado." }}</pre>
         <h3>4. Acciones Efectuadas</h3>
@@ -184,8 +175,8 @@
         <h2>Riesgo Suicida - Paso 3: Anexo 3: Notificación Apoderado</h2>
         <p><strong>Fecha Notificación:</strong> {{ p.riesgo_suicida_anexo3.fecha|date:"d/m/Y"|default:"N/A" }}</p>
         <p><strong>Hora Notificación:</strong> {{ p.riesgo_suicida_anexo3.hora|time:"H:i"|default:"N/A" }}</p>
-        <p><strong>Apoderado Notificado:</strong> {{ p.riesgo_suicida_anexo3.apoderado_nombre|default:"N/A" }} (RUN: {{ p.riesgo_suicida_anexo3.apoderado_run|default:"N/A" }})</p>
-        <p><strong>Funcionario Notificante:</strong> {{ p.riesgo_suicida_anexo3.nombre_firma_funcionario|default:"N/A" }} (Cargo: {{ p.riesgo_suicida_anexo3.cargo_funcionario|default:"N/A" }})</p>
+        <p><strong>Apoderado Notificado:</strong> {{ p.riesgo_suicida_anexo3.apoderado_nombre|default:"N/A" }}</p>
+        <p><strong>Funcionario Notificante:</strong> {{ p.riesgo_suicida_anexo3.nombre_firma_funcionario|default:"N/A" }}</p>
         <h3>Acciones a seguir por el apoderado:</h3>
         <pre>{{ p.riesgo_suicida_anexo3.acciones_a_seguir|default:"Sin acciones especificadas." }}</pre>
     </div>
@@ -195,15 +186,12 @@
     <div class="section">
         <h2>Riesgo Suicida - Paso 4: Anexo 4: Reunión Clínica</h2>
         <p><strong>Fecha Reunión:</strong> {{ p.riesgo_suicida_anexo4.fecha|date:"d/m/Y"|default:"N/A" }}</p>
-        <p><strong>Lugar:</strong> {{ p.riesgo_suicida_anexo4.lugar_reunion|default:"N/A" }}</p>
-        <p><strong>Hora:</strong> {{ p.riesgo_suicida_anexo4.hora_inicio|time:"H:i"|default:"N/A" }} - {{ p.riesgo_suicida_anexo4.hora_termino|time:"H:i"|default:"N/A" }}</p>
         <h3>Asistentes:</h3>
         <pre>{{ p.riesgo_suicida_anexo4.asistentes|default:"No especificados." }}</pre>
         <h3>Puntos Tratados:</h3>
         <pre>{{ p.riesgo_suicida_anexo4.puntos_tratados|default:"No especificados." }}</pre>
         <h3>Acuerdos y Compromisos:</h3>
         <pre>{{ p.riesgo_suicida_anexo4.acuerdos|default:"No especificados." }}</pre>
-        <p><strong>Próxima Reunión:</strong> {{ p.riesgo_suicida_anexo4.proxima_reunion_fecha|date:"d/m/Y"|default:"N/A" }} a las {{ p.riesgo_suicida_anexo4.proxima_reunion_hora|time:"H:i"|default:"N/A" }} en {{ p.riesgo_suicida_anexo4.proxima_reunion_lugar|default:"N/A" }}</p>
     </div>
     {% endif %}
 
@@ -213,40 +201,27 @@
         <p><strong>Fecha Derivación:</strong> {{ p.riesgo_suicida_anexo5.fecha_derivacion|date:"d/m/Y"|default:"N/A" }}</p>
         <h3>Motivo de Derivación:</h3>
         <pre>{{ p.riesgo_suicida_anexo5.motivo_derivacion|default:"No especificado." }}</pre>
-        <h3>Acciones: Entrevista con Apoderado:</h3>
-        <pre>{{ p.riesgo_suicida_anexo5.acciones_entrevista_apoderado|default:"No especificado." }}</pre>
-        <h3>Acciones: Coordinación Equipo de Salud:</h3>
-        <pre>{{ p.riesgo_suicida_anexo5.acciones_coordinacion_salud|default:"No especificado." }}</pre>
-        <h3>Otras Acciones:</h3>
-        <pre>{{ p.riesgo_suicida_anexo5.acciones_otras|default:"No especificado." }}</pre>
-        <p><strong>Funcionario Responsable:</strong> {{ p.riesgo_suicida_anexo5.responsable_nombre|default:"N/A" }} ({{ p.riesgo_suicida_anexo5.responsable_cargo|default:"N/A" }})</p>
-        <p><strong>Contacto:</strong> {{ p.riesgo_suicida_anexo5.responsable_email|default:"N/A" }} / {{ p.riesgo_suicida_anexo5.responsable_telefono|default:"N/A" }}</p>
+        <p><strong>Funcionario Responsable:</strong> {{ p.riesgo_suicida_anexo5.responsable_nombre|default:"N/A" }}</p>
     </div>
     {% endif %}
 
-    <!-- Ficha de Accidente Escolar para Casos de Salud -->
+    {# --- PROTOCOLO 8: CASOS DE SALUD --- #}
     {% if p.ficha_accidente_escolar %}
     <div class="section">
         <h2>Ficha de Accidente Escolar</h2>
-        <p><strong>Estudiante:</strong> {{ p.ficha_accidente_escolar.estudiante_nombre|default:"N/A" }} ({{ p.ficha_accidente_escolar.estudiante_curso|default:"N/A" }})</p>
+        <p><strong>Estudiante:</strong> {{ p.ficha_accidente_escolar.estudiante_nombre|default:"N/A" }}</p>
         <p><strong>Fecha y Hora:</strong> {{ p.ficha_accidente_escolar.fecha_hora_accidente|date:"d/m/Y H:i"|default:"N/A" }}</p>
         <h3>Descripción del Accidente:</h3>
         <pre>{{ p.ficha_accidente_escolar.descripcion_accidente|default:"Sin descripción." }}</pre>
         <h3>Primeros Auxilios Realizados:</h3>
         <pre>{{ p.ficha_accidente_escolar.primeros_auxilios|default:"Sin descripción." }}</pre>
-        <p><strong>Apoderado Avisado:</strong> {{ p.ficha_accidente_escolar.aviso_apoderado_nombre|default:"N/A" }}</p>
-        <p><strong>Funcionario que avisa:</strong> {{ p.ficha_accidente_escolar.aviso_funcionario|default:"N/A" }}</p>
-        {% if p.ficha_accidente_escolar.traslado_centro %}
-            <p><strong>Traslado a:</strong> {{ p.ficha_accidente_escolar.traslado_centro|default:"N/A" }}</p>
-            <p><strong>Funcionario que traslada:</strong> {{ p.ficha_accidente_escolar.traslado_funcionario|default:"N/A" }}</p>
-        {% endif %}
     </div>
     {% endif %}
     
-    {# --- MOSTRAR PROTOCOLO 9: ARMAS --- #}
+    {# --- PROTOCOLO 9: DATOS DE ARMAS --- #}
     {% if p.anexo_armas %}
     <div class="section">
-        <h2>Datos del Estudiante</h2>
+        <h2>Datos del Estudiante (Protocolo Armas)</h2>
         <p><strong>Nombre:</strong> {{ p.anexo_armas.nombre_estudiante }}</p>
         <p><strong>Curso:</strong> {{ p.anexo_armas.curso }}</p>
         <p><strong>RUT:</strong> {{ p.anexo_armas.rut }}</p>
@@ -256,9 +231,82 @@
     </div>
     {% endif %}
 
+    {# --- PROTOCOLO 10: DATOS DE AUTOLESIÓN --- #}
+    {% if p.anexo_autolesion %}
+    <div class="section">
+        <h2>Datos del Estudiante (Protocolo Autolesión)</h2>
+        <p><strong>Nombre:</strong> {{ p.anexo_autolesion.nombre_estudiante }}</p>
+        <p><strong>Curso:</strong> {{ p.anexo_autolesion.curso }}</p>
+        <p><strong>RUT:</strong> {{ p.anexo_autolesion.rut }}</p>
+        
+        <h3 style="border:none; margin-top: 15px;">Descripción de la situación</h3>
+        <pre>{{ p.anexo_autolesion.descripcion|linebreaks }}</pre>
+    </div>
+    {% endif %}
+
+    <!-- --- ¡NUEVO! MOSTRAR DATOS PROTOCOLO 11: ESTUDIANTES MADRES/PADRES --- -->
+    {% if p.ficha0_madre_padre %}
+    <div class="section">
+        <h2>Paso 1: Ficha 0 - Citación y Constancia</h2>
+        
+        <h3 style="border-bottom: 1px solid #bdc3c7;">Constancia de Citación</h3>
+        <p><strong>Nombre Alumna/o:</strong> {{ p.ficha0_madre_padre.nombre_estudiante|default:"N/A" }}</p>
+        <p><strong>Curso:</strong> {{ p.ficha0_madre_padre.curso|default:"N/A" }}</p>
+        <p><strong>Fecha Citación:</strong> {{ p.ficha0_madre_padre.fecha_citacion|date:"d/m/Y"|default:"N/A" }}</p>
+        <p><strong>Apoderado Citado:</strong> {{ p.ficha0_madre_padre.nombre_apoderado_citado|default:"N/A" }}</p>
+        <p><strong>Medio de Citación:</strong> {{ p.ficha0_madre_padre.medio_citacion|default:"N/A" }}</p>
+        <p><strong>Fecha Citado a Concurrir:</strong> {{ p.ficha0_madre_padre.fecha_concurrencia_citada|date:"d/m/Y"|default:"N/A" }}</p>
+        <p><strong>Funcionario que Cita:</strong> {{ p.ficha0_madre_padre.funcionario_que_cita|default:"N/A" }}</p>
+
+        <h3 style="border-bottom: 1px solid #bdc3c7; margin-top: 25px;">Constancia de Haber Concurrido</h3>
+        <p><strong>Apoderado que Concurre:</strong> {{ p.ficha0_madre_padre.nombre_apoderado_concurre|default:"N/A" }}</p>
+        <p><strong>RUT Apoderado:</strong> {{ p.ficha0_madre_padre.rut_apoderado_concurre|default:"N/A" }}</p>
+    </div>
+    {% endif %}
+
+    {% if p.ficha1_madre_padre %}
+    <div class="section">
+        <h2>Paso 2: Ficha 1 - Entrevista con Apoderado</h2>
+        
+        <p><strong>Fecha Entrevista:</strong> {{ p.ficha1_madre_padre.fecha_entrevista|date:"d/m/Y"|default:"N/A" }}</p>
+        <p><strong>Individualización Apoderado:</strong> {{ p.ficha1_madre_padre.individualizacion_apoderado|default:"N/A" }}</p>
+        
+        <h3 style="border:none; margin-top: 15px;">Motivo de la entrevista</h3>
+        <pre>{{ p.ficha1_madre_padre.motivo_entrevista|linebreaks|default:"Sin descripción." }}</pre>
+
+        <h3 style="border:none; margin-top: 15px;">Aspectos relevantes de la entrevista</h3>
+        <pre>{{ p.ficha1_madre_padre.aspectos_relevantes|linebreaks|default:"Sin descripción." }}</pre>
+        
+        <h3 style="border-bottom: 1px solid #bdc3c7; margin-top: 25px;">Firmas de Constancia</h3>
+        <p><strong>Funcionario:</strong> {{ p.ficha1_madre_padre.nombre_firma_funcionario|default:"N/A" }}</p>
+        <p><strong>Apoderado:</strong> {{ p.ficha1_madre_padre.nombre_firma_apoderado|default:"N/A" }}</p>
+    </div>
+    {% endif %}
+
+    {% if p.ficha2_madre_padre %}
+    <div class="section">
+        <h2>Paso 3: Ficha 2 - Cierre de Protocolo</h2>
+        
+        <h3 style="border-bottom: 1px solid #bdc3c7;">Datos del Cierre</h3>
+        <p><strong>Nombre Alumna/o:</strong> {{ p.ficha2_madre_padre.nombre_estudiante|default:"N/A" }}</p>
+        <p><strong>Curso:</strong> {{ p.ficha2_madre_padre.curso|default:"N/A" }}</p>
+        <p><strong>Fecha Informe Final:</strong> {{ p.ficha2_madre_padre.fecha_informe_final|date:"d/m/Y"|default:"N/A" }}</p>
+        <p><strong>Fecha Cierre Protocolo:</strong> {{ p.ficha2_madre_padre.fecha_cierre_protocolo|date:"d/m/Y"|default:"N/A" }}</p>
+        <p><strong>Quién elabora el informe:</strong> {{ p.ficha2_madre_padre.quien_elabora_informe|default:"N/A" }}</p>
+        <p><strong>Funcionario que recibe el informe:</strong> {{ p.ficha2_madre_padre.funcionario_recibe_informe|default:"N/A" }}</p>
+
+        <h3 style="border-bottom: 1px solid #bdc3c7; margin-top: 25px;">Firmas de Constancia</h3>
+        <p><strong>Funcionario que elabora:</strong> {{ p.ficha2_madre_padre.firma_funcionario_elabora|default:"N/A" }}</p>
+        <p><strong>Rector/a:</strong> {{ p.ficha2_madre_padre.firma_rector|default:"N/A" }}</p>
+    </div>
+    {% endif %}
+    <!-- --- FIN BLOQUE P11 --- -->
+
+
     {% endwith %}
 
 
+    {# --- ANEXOS P9: IMÁGENES ESTÁTICAS DE ARMAS --- #}
     {% if protocolo.tipo.nombre == "Armas blancas y de fuego" %}
         <div class="section">
             <h2 style="page-break-before: always;">Anexo: Procedimiento de Actuación</h2>
@@ -273,6 +321,7 @@
 
     {% endif %}
 
+    {# --- ANEXOS P10: IMÁGENES ESTÁTICAS DE AUTOLESIÓN --- #}
     {% if protocolo.tipo.nombre == "Autolesión" %}
         <div class="section">
             <h2 style="page-break-before: always;">Anexo: Procedimiento de Actuación (Autolesión)</h2>
@@ -290,3 +339,4 @@
 
 </body>
 </html>
+

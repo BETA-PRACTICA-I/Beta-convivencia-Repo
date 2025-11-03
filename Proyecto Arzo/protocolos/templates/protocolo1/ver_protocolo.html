@@ -20,6 +20,16 @@
             border-radius: 4px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
+        
+        /* Pequeño ajuste para las nuevas tarjetas de datos */
+        .card-body h6 {
+            font-weight: bold;
+            color: #0d6efd; /* Un azul primario para destacar */
+            margin-bottom: 1rem;
+        }
+        .card-body p {
+            margin-bottom: 0.5rem;
+        }
 
     </style>
 </head>
@@ -35,6 +45,8 @@
         </div>
         <div class="card-body">
             {% with p=protocolo %}
+            
+            {# --- PROTOCOLOS 1-7 --- #}
             {% if protocolo.tipo.nombre in protocolos_tipo_1 %}
 
                 {% if p.ficha_denuncia %}
@@ -146,7 +158,7 @@
             {% endif %} 
 
 
-            {# --- NUEVO: Mostrar datos de Anexo 1 Riesgo Suicida --- #}
+            {# --- PROTOCOLO 7: RIESGO SUICIDA --- #}
             {% if p.riesgo_suicida_anexo1 %}
             <fieldset class="mb-4 p-3 border rounded">
                 <legend class="w-auto px-2 h5">Riesgo Suicida - Paso 1: Anexo 1: Detección</legend>
@@ -161,11 +173,10 @@
                 <h6>Relato de los Hechos:</h6>
                 <pre>{{ p.riesgo_suicida_anexo1.relato_hechos|default:"Sin relato." }}</pre>
             </fieldset>
-            {% elif p.tipo.nombre == "Riesgo suicida" %} {# Mostrar solo si es este protocolo y no está completo #}
+            {% elif p.tipo.nombre == "Riesgo suicida" %} 
              <div class="alert alert-light"><em>Riesgo Suicida - Paso 1 no completado.</em></div>
             {% endif %}
 
-            {# --- NUEVO: Mostrar datos de Anexo 2 Riesgo Suicida --- #}
             {% if p.riesgo_suicida_anexo2 %}
             <fieldset class="mb-4 p-3 border rounded">
                 <legend class="w-auto px-2 h5">Riesgo Suicida - Paso 2: Anexo 2: Derivación</legend>
@@ -189,7 +200,7 @@
                  <h6>4. Acciones Efectuadas</h6>
                 <pre>{{ p.riesgo_suicida_anexo2.acciones_efectuadas|default:"Sin acciones especificadas." }}</pre>
             </fieldset>
-            {% elif p.tipo.nombre == "Riesgo suicida" %} {# Mostrar solo si es este protocolo y no está completo #}
+            {% elif p.tipo.nombre == "Riesgo suicida" %} 
              <div class="alert alert-light"><em>Riesgo Suicida - Paso 2 no completado.</em></div>
             {% endif %}
 
@@ -249,8 +260,7 @@
              <div class="alert alert-light"><em>Riesgo Suicida - Paso 5 no completado.</em></div>
             {% endif %}
 
-            <!-- Ficha de Accidente Escolar para Casos de Salud -->
-             
+            {# --- PROTOCOLO 8: CASOS DE SALUD --- #}
             {% if p.ficha_accidente_escolar %}
             <fieldset class="mb-4 p-3 border rounded">
                 <legend class="w-auto px-2 h5">Ficha de Accidente Escolar</legend>
@@ -280,35 +290,24 @@
         </div>
     </div>
 
+    {# --- PROTOCOLO 9: DATOS DE ARMAS --- #}
     {% if protocolo.anexo_armas %}
-        <div class="section-header">Datos del Estudiante</div>
-        <p><strong>Nombre:</strong> {{ protocolo.anexo_armas.nombre_estudiante }}</p>
-        <p><strong>Curso:</strong> {{ protocolo.anexo_armas.curso }}</p>
-        <p><strong>RUT:</strong> {{ protocolo.anexo_armas.rut }}</p>
-        
-        <div class="section-header">Descripción de la situación</div>
-        <p>{{ protocolo.anexo_armas.descripcion|linebreaks }}</p>
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0 h5">Datos del Estudiante (Protocolo Armas)</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Nombre:</strong> {{ protocolo.anexo_armas.nombre_estudiante }}</p>
+            <p><strong>Curso:</strong> {{ protocolo.anexo_armas.curso }}</p>
+            <p><strong>RUT:</strong> {{ protocolo.anexo_armas.rut }}</p>
+            <hr>
+            <h6>Descripción de la situación</h6>
+            <pre>{{ protocolo.anexo_armas.descripcion|linebreaks }}</pre>
+        </div>
+    </div>
     {% endif %}
 
-    {% if protocolo.tipo.nombre == "Armas blancas y de fuego" %}
-        <div class="card shadow-sm mt-4">
-            <div class="card-header bg-white">
-                <h2 class="mb-0 h5">Anexo: Procedimiento de Actuación</h2>
-            </div>
-            <div class="card-body">
-                <p>A continuación, se adjunta el protocolo de actuación estándar:</p>
-                
-                {# --- ¡AQUÍ ESTÁ EL ARREGLO DE LAS IMÁGENES! --- #}
-                {# Usamos los nombres de archivo REALES que me mostraste #}
-                <img src="{% static 'img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0001.jpg' %}" class="anexo-imagen-web" alt="Protocolo Armas Portada">
-                <img src="{% static 'img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0002.jpg' %}" class="anexo-imagen-web" alt="Protocolo Armas Página 2">
-                <img src="{% static 'img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0003.jpg' %}" class="anexo-imagen-web" alt="Protocolo Armas Página 3">
-                <img src="{% static 'img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0004.jpg' %}" class="anexo-imagen-web" alt="Protocolo Armas Página 4">
-                <img src="{% static 'img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0005.jpg' %}" class="anexo-imagen-web" alt="Protocolo Armas Flujograma">
-            </div>
-        </div>
-    {% endif %}
-    
+    {# --- PROTOCOLO 10: DATOS DE AUTOLESIÓN --- #}
     {% if protocolo.anexo_autolesion %}
     <div class="card shadow-sm mt-4">
         <div class="card-header bg-white">
@@ -319,13 +318,127 @@
             <p><strong>Curso:</strong> {{ protocolo.anexo_autolesion.curso }}</p>
             <p><strong>RUT:</strong> {{ protocolo.anexo_autolesion.rut }}</p>
             <hr>
-            <h6 class="mb-2">Descripción de la situación</h6>
+            <h6>Descripción de la situación</h6>
             <pre>{{ protocolo.anexo_autolesion.descripcion|linebreaks }}</pre>
         </div>
     </div>
     {% endif %}
+    
+    <!-- --- ¡NUEVO! MOSTRAR DATOS PROTOCOLO 11: ESTUDIANTES MADRES/PADRES --- -->
+    {% if protocolo.ficha0_madre_padre %}
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0 h5">Paso 1: Ficha 0 - Citación y Constancia</h2>
+        </div>
+        <div class="card-body">
+            <h6>Constancia de Citación</h6>
+            <div class="row mb-2">
+                <div class="col-md-6"><p><strong>Nombre Alumna/o:</strong> {{ protocolo.ficha0_madre_padre.nombre_estudiante|default:"N/A" }}</p></div>
+                <div class="col-md-6"><p><strong>Curso:</strong> {{ protocolo.ficha0_madre_padre.curso|default:"N/A" }}</p></div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6"><p><strong>Fecha Citación:</strong> {{ protocolo.ficha0_madre_padre.fecha_citacion|date:"d/m/Y"|default:"N/A" }}</p></div>
+                <div class="col-md-6"><p><strong>Apoderado Citado:</strong> {{ protocolo.ficha0_madre_padre.nombre_apoderado_citado|default:"N/A" }}</p></div>
+            </div>
+            <p><strong>Medio de Citación:</strong> {{ protocolo.ficha0_madre_padre.medio_citacion|default:"N/A" }}</p>
+            <p><strong>Fecha Citado a Concurrir:</strong> {{ protocolo.ficha0_madre_padre.fecha_concurrencia_citada|date:"d/m/Y"|default:"N/A" }}</p>
+            <p><strong>Funcionario que Cita:</strong> {{ protocolo.ficha0_madre_padre.funcionario_que_cita|default:"N/A" }}</p>
+    
+            <hr class="my-4">
+    
+            <h6>Constancia de Haber Concurrido</h6>
+            <div class="row mb-2">
+                <div class="col-md-6"><p><strong>Apoderado que Concurre:</strong> {{ protocolo.ficha0_madre_padre.nombre_apoderado_concurre|default:"N/A" }}</p></div>
+                <div class="col-md-6"><p><strong>RUT Apoderado:</strong> {{ protocolo.ficha0_madre_padre.rut_apoderado_concurre|default:"N/A" }}</p></div>
+            </div>
+        </div>
+    </div>
+    {% elif protocolo.tipo.nombre == "Estudiantes Madres/Padres" %}
+        <div class="alert alert-light mt-4"><em>Paso 1 (Ficha 0) no completado.</em></div>
+    {% endif %}
 
-    <!-- --- MOSTRAR ANEXOS PROTOCOLO 10: AUTOLESIÓN (CON NOMBRES CORREGIDOS) --- -->
+    {% if protocolo.ficha1_madre_padre %}
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0 h5">Paso 2: Ficha 1 - Entrevista con Apoderado</h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col-md-6"><p><strong>Fecha Entrevista:</strong> {{ protocolo.ficha1_madre_padre.fecha_entrevista|date:"d/m/Y"|default:"N/A" }}</p></div>
+                <div class="col-md-6"><p><strong>Individualización Apoderado:</strong> {{ protocolo.ficha1_madre_padre.individualizacion_apoderado|default:"N/A" }}</p></div>
+            </div>
+            
+            <h6 class="mt-3">Motivo de la entrevista</h6>
+            <pre>{{ protocolo.ficha1_madre_padre.motivo_entrevista|linebreaks|default:"Sin descripción." }}</pre>
+
+            <h6 class="mt-3">Aspectos relevantes de la entrevista</h6>
+            <pre>{{ protocolo.ficha1_madre_padre.aspectos_relevantes|linebreaks|default:"Sin descripción." }}</pre>
+            
+            <hr class="my-4">
+            
+            <h6>Firmas de Constancia</h6>
+            <div class="row">
+                <div class="col-md-6"><p><strong>Funcionario:</strong> {{ protocolo.ficha1_madre_padre.nombre_firma_funcionario|default:"N/A" }}</p></div>
+                <div class="col-md-6"><p><strong>Apoderado:</strong> {{ protocolo.ficha1_madre_padre.nombre_firma_apoderado|default:"N/A" }}</p></div>
+            </div>
+        </div>
+    </div>
+    {% elif protocolo.tipo.nombre == "Estudiantes Madres/Padres" %}
+        <div class="alert alert-light mt-4"><em>Paso 2 (Ficha 1) no completado.</em></div>
+    {% endif %}
+
+    {% if protocolo.ficha2_madre_padre %}
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0 h5">Paso 3: Ficha 2 - Cierre de Protocolo</h2>
+        </div>
+        <div class="card-body">
+            <h6>Datos del Cierre</h6>
+            <div class="row mb-2">
+                <div class="col-md-6"><p><strong>Nombre Alumna/o:</strong> {{ protocolo.ficha2_madre_padre.nombre_estudiante|default:"N/A" }}</p></div>
+                <div class="col-md-6"><p><strong>Curso:</strong> {{ protocolo.ficha2_madre_padre.curso|default:"N/A" }}</p></div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6"><p><strong>Fecha Informe Final:</strong> {{ protocolo.ficha2_madre_padre.fecha_informe_final|date:"d/m/Y"|default:"N/A" }}</p></div>
+                <div class="col-md-6"><p><strong>Fecha Cierre Protocolo:</strong> {{ protocolo.ficha2_madre_padre.fecha_cierre_protocolo|date:"d/m/Y"|default:"N/A" }}</p></div>
+            </div>
+            <p><strong>Quién elabora el informe:</strong> {{ protocolo.ficha2_madre_padre.quien_elabora_informe|default:"N/A" }}</p>
+            <p><strong>Funcionario que recibe el informe:</strong> {{ protocolo.ficha2_madre_padre.funcionario_recibe_informe|default:"N/A" }}</p>
+
+            <hr class="my-4">
+            
+            <h6>Firmas de Constancia</h6>
+            <div class="row">
+                <div class="col-md-6"><p><strong>Funcionario que elabora:</strong> {{ protocolo.ficha2_madre_padre.firma_funcionario_elabora|default:"N/A" }}</p></div>
+                <div class="col-md-6"><p><strong>Rector/a:</strong> {{ protocolo.ficha2_madre_padre.firma_rector|default:"N/A" }}</p></div>
+            </div>
+        </div>
+    </div>
+    {% elif protocolo.tipo.nombre == "Estudiantes Madres/Padres" %}
+        <div class="alert alert-light mt-4"><em>Paso 3 (Ficha 2) no completado.</em></div>
+    {% endif %}
+    <!-- --- FIN BLOQUE P11 --- -->
+    
+
+    {# --- ANEXOS P9: IMÁGENES ESTÁTICAS DE ARMAS --- #}
+    {% if protocolo.tipo.nombre == "Armas blancas y de fuego" %}
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white">
+                <h2 class="mb-0 h5">Anexo: Procedimiento de Actuación</h2>
+            </div>
+            <div class="card-body">
+                <p>A continuación, se adjunta el protocolo de actuación estándar:</p>
+                
+                <img src="{% static 'img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0001.jpg' %}" class="anexo-imagen-web" alt="Protocolo Armas Portada">
+                <img src="{% static 'img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0002.jpg' %}" class="anexo-imagen-web" alt="Protocolo Armas Página 2">
+                <img src="{% static 'img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0003.jpg' %}" class="anexo-imagen-web" alt="Protocolo Armas Página 3">
+                <img src="{% static 'img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0004.jpg' %}" class="anexo-imagen-web" alt="Protocolo Armas Página 4">
+                <img src="{% static 'img/protocolo9/9.- PROTOCOLO-ARMAS-BLANCAS-Y-DE-FUEGO-Listo_page-0005.jpg' %}" class="anexo-imagen-web" alt="Protocolo Armas Flujograma">
+            </div>
+        </div>
+    {% endif %}
+    
+    {# --- ANEXOS P10: IMÁGENES ESTÁTICAS DE AUTOLESIÓN --- #}
     {% if protocolo.tipo.nombre == "Autolesión" %}
         <div class="card shadow-sm mt-4">
             <div class="card-header bg-white">
@@ -348,3 +461,4 @@
 </div>
 </body>
 </html>
+
