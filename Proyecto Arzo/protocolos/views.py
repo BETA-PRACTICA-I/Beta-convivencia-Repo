@@ -10,6 +10,7 @@ from weasyprint import HTML
 
 from .models import Protocolo, TipoProtocolo
 
+
 from formularios.forms import (
     FormularioDenunciaForm, FichaEntrevistaForm, DerivacionForm,
     InformeConcluyenteForm, ApelacionForm, ResolucionApelacionForm,

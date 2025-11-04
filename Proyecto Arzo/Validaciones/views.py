@@ -1,3 +1,5 @@
+import json
+from django.db.models import Count, Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -38,7 +40,7 @@ def Login_view(request):
                 # Revisamos los permisos REALES del usuario
                 is_abogado = user.groups.filter(name='Abogados').exists()
                 is_encargado = user.groups.filter(name='Encargados').exists()
-                # is_director = user.groups.filter(name='Directores').exists()
+                is_director = user.groups.filter(name='Director').exists()
 
                 # --- REVISAMOS EL BOTÓN APRETADO PRIMERO ---
 
@@ -62,13 +64,13 @@ def Login_view(request):
                         messages.error(request, "Credenciales correctas, pero no tienes permisos de Abogado.")
                         return redirect("Validaciones:login")
                 
-                # Opción 3: El usuario apretó "Director" (para el futuro)
-                # elif role_clicked == 'director':
-                #    if is_director:
-                #        return redirect("Validaciones:director_homepage")
-                #    else:
-                #        messages.error(request, "Credenciales correctas, pero no tienes permisos de Director.")
-                #        return redirect("Validaciones:login")
+                #Opción 3: El usuario apretó "Director" (para el futuro)
+                elif role_clicked == 'director':
+                    if is_director:
+                        return redirect("Validaciones:director_homepage")
+                    else:
+                        messages.error(request, "Credenciales correctas, pero no tienes permisos de Director.")
+                        return redirect("Validaciones:login")
 
                 # Fallback: Si el rol no se reconoce (o el JS falló)
                 else:
@@ -137,4 +139,68 @@ def abogado_homepage_view(request):
     return render(request, "Validaciones/abogadohomepage.html", {
         "protocolos": protocolos_filtrados,
     })
+
+@login_required(login_url='Validaciones:login')
+def director_homepage_view(request):
+    # --- Vista para Directores (Panel de Gráficos) ---
+    
+    # Seguridad: Si no eres Director (y no eres superadmin), no puedes estar aquí.
+    if not request.user.groups.filter(name='Director').exists() and not request.user.is_superuser:
+        messages.error(request, "Acceso no autorizado.")
+        # Redirecciones de fallback
+        if request.user.groups.filter(name='Encargados').exists():
+            return redirect('Validaciones:homepage')
+        if request.user.groups.filter(name='Abogados').exists():
+            return redirect('Validaciones:abogado_homepage')
+        return redirect('Validaciones:login') # Si no, al login
+
+    # --- INICIA LA NUEVA LÓGICA ---
+
+    # 1. Obtener la lista de protocolos para la TABLA (igual que abogados)
+    #    Filtramos los que están 'En Creacion' porque esos no cuentan.
+    protocolos_filtrados = (Protocolo.objects
+                .exclude(estado='En Creacion')
+                .select_related('tipo', 'creador')
+                .order_by('-fecha_creacion'))
+
+    # 2. Datos para Gráfico 1 (Barras - Protocolos por Tipo)
+    #    Usamos la magia de Django 🪄 para anotar (contar) los protocolos
+    #    (que no estén 'En Creacion') para CADA tipo.
+    conteo_tipos_qs = TipoProtocolo.objects.annotate(
+        total=Count('protocolos', filter=~Q(protocolos__estado='En Creacion'))
+    ).order_by('id') # Usamos 'id' para que el orden sea consistente
+
+    # Creamos las listas que Chart.js necesita
+    labels_tipos = [tipo.nombre for tipo in conteo_tipos_qs]
+    data_tipos = [tipo.total for tipo in conteo_tipos_qs]
+
+    # 3. Datos para Gráfico 2 (Circular - Protocolos por Estado)
+    #    Reutilizamos la consulta de la tabla para contar por estado
+    conteo_estados = protocolos_filtrados.values('estado').annotate(total=Count('estado')).order_by()
+
+    # Convertimos el resultado (que es una lista de diccionarios)
+    # en un diccionario simple para buscar fácil (Ej: {'Pendiente': 12, 'Resuelto': 8})
+    conteo_dict = {item['estado']: item['total'] for item in conteo_estados}
+
+    # Preparamos las listas finales, asegurando el orden
+    # y poniendo 0 si un estado no tiene protocolos.
+    labels_estados = ['Pendiente', 'Resuelto', 'Vencido']
+    data_estados = [
+        conteo_dict.get('Pendiente', 0),
+        conteo_dict.get('Resuelto', 0),
+        conteo_dict.get('Vencido', 0)
+    ]
+
+    # 4. Preparar el contexto final
+    context = {
+        'protocolos': protocolos_filtrados, # Para la tabla
+        
+        # Usamos json.dumps para pasar las listas de forma segura a JavaScript
+        'chart_labels_tipos': json.dumps(labels_tipos),
+        'chart_data_tipos': json.dumps(data_tipos),
+        'chart_labels_estados': json.dumps(labels_estados),
+        'chart_data_estados': json.dumps(data_estados),
+    } 
+    
+    return render(request, "Validaciones/directorhomepage.html", context)
 

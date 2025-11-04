@@ -10,4 +10,7 @@ urlpatterns = [
     path('homepage/', views.Home_view, name='homepage'),
 
     path('abogado/homepage/', views.abogado_homepage_view, name='abogado_homepage'),
+
+    path('director/homepage/', views.director_homepage_view, name='director_homepage'),
+    
 ]
