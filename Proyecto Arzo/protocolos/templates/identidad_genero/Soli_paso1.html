@@ -4,86 +4,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitud de Reconocimiento de Identidad de Género</title>
-    <!-- Reutilizamos el CSS de los otros formularios para consistencia -->
-    <link rel="stylesheet" href="{% static 'protocolos/css/Form1styles.css' %}">
+    <title>Protocolo de Reconocimiento de Identidad de Género</title>
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css' %}">
 </head>
 <body>
     <div class="form-container">
         <div class="form-header">
             <h1>Protocolo de Reconocimiento de Identidad de Género</h1>
-            <p>Este formulario permite solicitar el reconocimiento de tu nombre y pronombres acordes a tu identidad de género en los registros y sistemas de la institución.</p>
         </div>
 
         <form method="post" class="protocol-form">
             {% csrf_token %}
 
-            <!-- SECCIÓN 1: DATOS DE IDENTIFICACIÓN DEL ESTUDIANTE -->
             <fieldset>
-                <legend>1. Datos de Identificación (Legales)</legend>
-                <div class="form-group">
-                    <label for="nombre_legal">Nombre Completo (según documento de identidad)</label>
-                    <!-- Este campo podría ser pre-rellenado por el sistema -->
-                    <input type="text" id="nombre_legal" name="nombre_legal" placeholder="Ej: Juan Andrés Pérez Soto" required>
-                </div>
-                <div class="form-group">
-                    <label for="rut_estudiante">RUT / N° de Identificación</label>
-                    <!-- Este campo también podría ser pre-rellenado -->
-                    <input type="text" id="rut_estudiante" name="rut_estudiante" placeholder="Ej: 12.345.678-9" required>
+                <legend>Datos del Apoderado</legend>
+                <div class="form-grid">
+                    <div class="form-group">{{ form.apoderado_nombres.label_tag }}{{ form.apoderado_nombres }}</div>
+                    <div class="form-group">{{ form.apoderado_celular.label_tag }}{{ form.apoderado_celular }}</div>
+                    <div class="form-group">{{ form.apoderado_apellidos.label_tag }}{{ form.apoderado_apellidos }}</div>
+                    <div class="form-group">{{ form.apoderado_domicilio.label_tag }}{{ form.apoderado_domicilio }}</div>
+                    <div class="form-group">{{ form.apoderado_run.label_tag }}{{ form.apoderado_run }}</div>
+                    <div class="form-group">{{ form.apoderado_email.label_tag }}{{ form.apoderado_email }}</div>
                 </div>
             </fieldset>
 
-            <!-- SECCIÓN 2: INFORMACIÓN PARA EL RECONOCIMIENTO -->
             <fieldset>
-                <legend>2. Información para el Reconocimiento</legend>
-                <div class="form-group">
-                    <label for="nombre_identitario">Nombre Identitario / Social</label>
-                    <p class="form-hint">Este es el nombre que se usará en listas, carné, correos y en el trato diario.</p>
-                    <input type="text" id="nombre_identitario" name="nombre_identitario" placeholder="Escribe el nombre con el que te identificas" required>
-                </div>
-                <div class="form-group">
-                    <label for="pronombres">Pronombres</label>
-                    <p class="form-hint">Selecciona los pronombres con los que te identificas.</p>
-                    <select id="pronombres" name="pronombres" required>
-                        <option value="" disabled selected>Selecciona una opción...</option>
-                        <option value="El/La">Él / La</option>
-                        <option value="Ella/La">Ella / La</option>
-                        <option value="Elle/Le">Elle / Le</option>
-                        <option value="Otro">Otro (especificar)</option>
-                    </select>
-                </div>
-                <div class="form-group" id="otro_pronombre_container" style="display: none;">
-                    <label for="otro_pronombre">Por favor, especifica tus pronombres</label>
-                    <input type="text" id="otro_pronombre" name="otro_pronombre">
+                <legend>Datos del Estudiante</legend>
+                <div class="form-grid">
+                    <div class="form-group">{{ form.estudiante_nombre_legal.label_tag }}{{ form.estudiante_nombre_legal }}</div>
+                    <div class="form-group">{{ form.estudiante_apellidos.label_tag }}{{ form.estudiante_apellidos }}</div>
+                    <div class="form-group full-width">{{ form.estudiante_nombre_social.label_tag }}{{ form.estudiante_nombre_social }}</div>
+                    <div class="form-group">{{ form.estudiante_run.label_tag }}{{ form.estudiante_run }}</div>
+                    <div class="form-group">{{ form.estudiante_fecha_nacimiento.label_tag }}{{ form.estudiante_fecha_nacimiento }}</div>
+                    <div class="form-group">{{ form.estudiante_edad.label_tag }}{{ form.estudiante_edad }}</div>
+                    <div class="form-group">{{ form.estudiante_curso.label_tag }}{{ form.estudiante_curso }}</div>
+                    <div class="form-group full-width">{{ form.estudiante_domicilio.label_tag }}{{ form.estudiante_domicilio }}</div>
                 </div>
             </fieldset>
 
-            <!-- SECCIÓN 3: DECLARACIÓN Y ENVÍO -->
             <fieldset>
-                <legend>3. Declaración y Envío</legend>
-                <div class="form-group declaration">
-                    <input type="checkbox" id="declaracion" name="declaracion" required>
-                    <label for="declaracion">Declaro, bajo mi exclusiva responsabilidad, que la información proporcionada es verídica y corresponde a mi identidad de género auto-percibida. Comprendo que este cambio se aplicará a los registros internos de la institución.</label>
+                <legend>Medidas de Apoyo Solicitadas</legend>
+                <div class="form-group-radio full-width">{{ form.medida_uso_nombre_social.label_tag }}{{ form.medida_uso_nombre_social }}</div>
+                <div class="form-group-radio full-width">{{ form.medida_libro_clases.label_tag }}{{ form.medida_libro_clases }}</div>
+                <div class="form-group-radio full-width">{{ form.medida_uniforme.label_tag }}{{ form.medida_uniforme }}</div>
+                <div class="form-group-radio full-width">{{ form.medida_servicios_higienicos.label_tag }}{{ form.medida_servicios_higienicos }}</div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Firmas</legend>
+                <div class="form-grid">
+                    <div class="form-group">{{ form.firma_apoderado.label_tag }}{{ form.firma_apoderado }}</div>
+                    <div class="form-group">{{ form.firma_estudiante.label_tag }}{{ form.firma_estudiante }}</div>
                 </div>
             </fieldset>
 
             <div class="form-actions">
-                <button type="submit" class="submit-btn">Enviar Solicitud</button>
+                <button type="submit" class="submit-btn">Enviar y Continuar</button>
             </div>
         </form>
     </div>
-
-    <script>
-        // Script simple para mostrar el campo "Otro" de los pronombres
-        document.getElementById('pronombres').addEventListener('change', function() {
-            var otroContainer = document.getElementById('otro_pronombre_container');
-            if (this.value === 'Otro') {
-                otroContainer.style.display = 'block';
-            } else {
-                otroContainer.style.display = 'none';
-            }
-        });
-    </script>
-
 </body>
 </html>

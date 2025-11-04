@@ -17,7 +17,7 @@ from formularios.forms import (
 
     RiesgoSuicidaAnexo1Form, RiesgoSuicidaAnexo2Form, RiesgoSuicidaAnexo3Form,
     RiesgoSuicidaAnexo4Form, RiesgoSuicidaAnexo5Form,
-    SolicitudReconocimientoForm, GestionReconocimientoForm,  # Protocolo 7 (Reconocimiento)
+    SolicitudReconocimientoForm, ActaReunionIdentidadForm,  # Protocolo 12
 
     FichaAccidenteEscolarForm,  # Protocolo 8 (Casos de salud)
 
@@ -27,13 +27,13 @@ from formularios.forms import (
 )
 
 from formularios.models import (
-    FormularioDenuncia, FichaEntrevista, Derivacion,
-    GestionReconocimiento, InformeConcluyente,
+    FormularioDenuncia, FichaEntrevista, Derivacion, InformeConcluyente,
     Apelacion, ResolucionApelacion, EncuestaBullying,   # Protocolos 1-6
 
     RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2, RiesgoSuicidaAnexo3,
     RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5, ReconocimientoIdentidad,
-    
+    ActaReunionIdentidad,  # Protocolo 12
+
     FichaAccidenteEscolar,  # Protocolo 8
 
     ArmasAnexo1,  # Protocolo 9
@@ -89,11 +89,11 @@ def protocolo_step(request, protocolo_id, step):
         }
         form_config = step_map.get(step)
 
-    elif tipo_nombre == "Reconocimiento de Identidad de Género":
+    elif tipo_nombre == "Identidad de género":
         total_steps = 2
         step_map = {
-            1: {'form': SolicitudReconocimientoForm, 'model': ReconocimientoIdentidad, 'template': 'identidad_genero/paso1.html'},
-            2: {'form': GestionReconocimientoForm, 'model': GestionReconocimiento, 'template': 'identidad_genero/paso2.html'},
+            1: {'form': SolicitudReconocimientoForm, 'model': ReconocimientoIdentidad, 'template': 'identidad_genero/Soli_paso1.html'},
+            2: {'form': ActaReunionIdentidadForm, 'model': ActaReunionIdentidad, 'template': 'identidad_genero/Soli_paso2.html'},
         }
         form_config = step_map.get(step)
 
@@ -155,19 +155,6 @@ def protocolo_step(request, protocolo_id, step):
                 obj, created = Derivacion.objects.update_or_create(protocolo=protocolo, defaults=defaults_data)
                 form_valid = True
         
-        elif form_class == SolicitudReconocimientoForm:
-            form = SolicitudReconocimientoForm(request.POST)
-            if form.is_valid():
-                data = form.cleaned_data
-                pronombres_finales = data['otro_pronombre'] if data['pronombres'] == 'Otro' else data['pronombres']
-                obj, created = ReconocimientoIdentidad.objects.update_or_create(
-                    protocolo=protocolo,
-                    defaults={
-                        'nombre_legal': data['nombre_legal'], 'rut_estudiante': data['rut_estudiante'],
-                        'nombre_identitario': data['nombre_identitario'], 'pronombres': pronombres_finales,
-                    }
-                )
-                form_valid = True
         
         else:
             form = form_class(request.POST, request.FILES, instance=instance)
@@ -207,15 +194,6 @@ def protocolo_step(request, protocolo_id, step):
                 }
             form = DerivacionForm(initial=initial_data)
         
-        elif form_class == SolicitudReconocimientoForm:
-            initial_data = {}
-            if instance:
-                initial_data = {
-                    'nombre_legal': instance.nombre_legal, 'rut_estudiante': instance.rut_estudiante,
-                    'nombre_identitario': instance.nombre_identitario, 'pronombres': instance.pronombres,
-                }
-            form = SolicitudReconocimientoForm(initial=initial_data)
-
         else:
             form = form_class(instance=instance)
 
@@ -261,8 +239,8 @@ def descargar_protocolo_pdf(request, protocolo_id):
             'riesgo_suicida_anexo4',
             'riesgo_suicida_anexo5',
 
-            'reconocimiento_identidad', # P7
-            'gestion_reconocimiento',  # P7
+            'reconocimiento_identidad', # P12
+            'acta_reunion_identidad',  # P12
 
             'ficha_accidente_escolar', # P8
 
@@ -310,8 +288,8 @@ def ver_protocolo(request, protocolo_id):
             'riesgo_suicida_anexo4',
             'riesgo_suicida_anexo5',
 
-            'reconocimiento_identidad', # P7
-            'gestion_reconocimiento',  # P7
+            'reconocimiento_identidad', # P12
+            'acta_reunion_identidad',   # P12
 
             'ficha_accidente_escolar', # P8
             

@@ -6,8 +6,8 @@ from .models import (
     
     RiesgoSuicidaAnexo1, RiesgoSuicidaAnexo2, RiesgoSuicidaAnexo3,
     RiesgoSuicidaAnexo4, RiesgoSuicidaAnexo5,   #Protocolo 7
-    GestionReconocimiento, ReconocimientoIdentidad,
-    
+    ReconocimientoIdentidad, #Protocolo 12
+    ActaReunionIdentidad, #Protocolo 12
     FichaAccidenteEscolar,  #Protocolo 8
     )
 
@@ -274,92 +274,57 @@ class FichaAccidenteEscolarForm(forms.ModelForm):
             'aislamiento_motivo': forms.Textarea(attrs={'rows': 3}),
             'traslado_fecha_hora': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
-
-class SolicitudReconocimientoForm(forms.Form):
-    PRONOMBRE_CHOICES = [
-        ('El/La', 'Él / La'),
-        ('Ella/La', 'Ella / La'),
-        ('Elle/Le', 'Elle / Le'),
-        ('Otro', 'Otro (especificar)'),
-    ]
-
-    # Sección 1: Datos Legales
-    nombre_legal = forms.CharField(
-        label="Nombre Completo (según documento de identidad)",
-        max_length=200,
-        widget=forms.TextInput(attrs={'placeholder': 'Ej: Juan Andrés Pérez Soto'})
-    )
-    rut_estudiante = forms.CharField(
-        label="RUT / N° de Identificación",
-        max_length=20,
-        widget=forms.TextInput(attrs={'placeholder': 'Ej: 12.345.678-9'})
-    )
-
-    # Sección 2: Datos Identitarios
-    nombre_identitario = forms.CharField(
-        label="Nombre Identitario / Social",
-        max_length=200,
-        widget=forms.TextInput(attrs={'placeholder': 'Escribe el nombre con el que te identificas'})
-    )
-    pronombres = forms.ChoiceField(
-        label="Pronombres",
-        choices=PRONOMBRE_CHOICES,
-        widget=forms.Select()
-    )
-    otro_pronombre = forms.CharField(
-        label="Por favor, especifica tus pronombres",
-        max_length=50,
-        required=False, # No es requerido a menos que se elija "Otro"
-        widget=forms.TextInput(attrs={'placeholder': 'Ej: Ella/Ello'})
-    )
-
-    # Sección 3: Declaración
-    declaracion = forms.BooleanField(
-        label="Declaro, bajo mi exclusiva responsabilidad, que la información proporcionada es verídica y corresponde a mi identidad de género auto-percibida. Comprendo que este cambio se aplicará a los registros internos de la institución."
-    )
-
-    def clean(self):
-        """
-        Añade validación personalizada: si el usuario elige 'Otro' en pronombres,
-        el campo 'otro_pronombre' se vuelve obligatorio.
-        """
-        cleaned_data = super().clean()
-        pronombres = cleaned_data.get("pronombres")
-        otro_pronombre = cleaned_data.get("otro_pronombre")
-
-        if pronombres == 'Otro' and not otro_pronombre:
-            self.add_error('otro_pronombre', "Debes especificar tus pronombres si seleccionas 'Otro'.")
-        
-        return cleaned_data
     
-class GestionReconocimientoForm(forms.ModelForm):
-    SISTEMAS_CHOICES = [
-        ('listas_clase', 'Listas de Clase'),
-        ('carne_institucional', 'Carné Institucional'),
-        ('correo_electronico', 'Correo Electrónico'),
-        ('plataforma_virtual', 'Plataforma Virtual (Aula Virtual, etc.)'),
-        ('otros_sistemas', 'Otros Sistemas Internos'),
-    ]
+class SolicitudReconocimientoForm(forms.ModelForm):
+    CHOICES_SI_NO = [(True, 'Sí'), (False, 'No')]
 
-    sistemas_actualizados = forms.MultipleChoiceField(
-        choices=SISTEMAS_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        label="Acciones de Actualización en Sistemas",
-        help_text="Marque todos los sistemas que han sido actualizados."
+    medida_uso_nombre_social = forms.TypedChoiceField(
+        label="Uso del nombre social en todos los espacios educativos",
+        choices=CHOICES_SI_NO, widget=forms.RadioSelect, coerce=lambda x: x == 'True'
+    )
+    medida_libro_clases = forms.TypedChoiceField(
+        label="Agregar en el libro de clases el nombre social de la niña, niño o adolescente y utilizar éste en cualquier otra documentación afín, como informes de personalidad, comunicaciones al apoderado, informes de especialistas del colegio, diplomas, listados públicos, etc.",
+        choices=CHOICES_SI_NO, widget=forms.RadioSelect, coerce=lambda x: x == 'True'
+    )
+    medida_uniforme = forms.TypedChoiceField(
+        label="Utilización de uniforme, ropa deportiva y/o accesorios que considere más adecuado a su identidad de género",
+        choices=CHOICES_SI_NO, widget=forms.RadioSelect, coerce=lambda x: x == 'True'
+    )
+    medida_servicios_higienicos = forms.TypedChoiceField(
+        label="Utilización de servicios higiénicos de acuerdo a las necesidades propias del proceso que estén viviendo",
+        choices=CHOICES_SI_NO, widget=forms.RadioSelect, coerce=lambda x: x == 'True'
     )
 
     class Meta:
-        model = GestionReconocimiento
-        exclude = ('protocolo',)
+        model = ReconocimientoIdentidad
+        exclude = ['protocolo']
         widgets = {
-            'fecha_actualizacion': forms.DateInput(attrs={'type': 'date'}),
-            'observaciones': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Añada cualquier observación relevante sobre el proceso...'}),
+            'estudiante_fecha_nacimiento': forms.DateInput(attrs={'type': 'date'}),
         }
-
-    def clean_sistemas_actualizados(self):
-        # Convierte la lista de selecciones en un string separado por comas para guardarlo en la BD
-        return ", ".join(self.cleaned_data.get('sistemas_actualizados', []))
     
+class ActaReunionIdentidadForm(forms.ModelForm):
+    CHOICES_SI_NO = [(True, 'Sí'), (False, 'No')]
+    declaracion_participa_programas = forms.TypedChoiceField(
+        label="Están participando de algunos de los programas del artículo 23 de la Ley 21.120 y reglamentados en el Decreto Supremo N°3, del año 2019, del Ministerio de Desarrollo Social.",
+        choices=CHOICES_SI_NO, widget=forms.RadioSelect, coerce=lambda x: x == 'True'
+    )
+    
+    # --- INDENTACIÓN CORREGIDA: Esta clase está ahora al nivel correcto ---
+    class Meta:
+        model = ActaReunionIdentidad
+        exclude = ['protocolo']
+        widgets = {
+            'fecha_reunion': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_impl_nombre_social': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_impl_libro_clases': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_impl_uniforme': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_impl_servicios_higienicos': forms.DateInput(attrs={'type': 'date'}),
+            'acuerdo_nombre_social': forms.Textarea(attrs={'rows': 3}),
+            'acuerdo_libro_clases': forms.Textarea(attrs={'rows': 3}),
+            'acuerdo_uniforme': forms.Textarea(attrs={'rows': 3}),
+            'acuerdo_servicios_higienicos': forms.Textarea(attrs={'rows': 3}),
+            'declaracion_info_adicional': forms.Textarea(attrs={'rows': 3}),
+        }
 
 # --- NUEVO FORMULARIO PARA PROTOCOLO 9 ---
 class ArmasAnexo1Form(forms.ModelForm):

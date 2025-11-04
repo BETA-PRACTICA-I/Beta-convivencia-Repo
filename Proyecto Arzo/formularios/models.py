@@ -475,59 +475,72 @@ class RiesgoSuicidaAnexo5(models.Model):
 
 
 class ReconocimientoIdentidad(models.Model):
-    """
-    Modelo para almacenar las solicitudes de reconocimiento de identidad de género.
-    """
-    ESTADO_CHOICES = [
-        ('Pendiente', 'Pendiente'),
-        ('Aplicado', 'Aplicado'),
-        ('Rechazado', 'Rechazado'),
-    ]
-
-    # Vinculamos esta solicitud a un protocolo general
     protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, related_name='reconocimiento_identidad')
-
-    # Datos del formulario
-    nombre_legal = models.CharField(max_length=200, help_text="Nombre completo según documento de identidad")
-    rut_estudiante = models.CharField(max_length=20, help_text="RUT o N° de identificación del estudiante")
-    nombre_identitario = models.CharField(max_length=200, help_text="Nombre social con el que se identifica")
-    pronombres = models.CharField(max_length=50, help_text="Pronombres seleccionados o especificados")
     
-    # Datos de gestión
-    fecha_solicitud = models.DateTimeField(auto_now_add=True)
-    estado_solicitud = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Pendiente')
+    # --- AÑADE blank=True A TODOS ESTOS CAMPOS ---
+    # Datos del Apoderado
+    apoderado_nombres = models.CharField("Nombres", max_length=100, blank=True)
+    apoderado_apellidos = models.CharField("Apellidos", max_length=100, blank=True)
+    apoderado_run = models.CharField("RUT", max_length=12, blank=True)
+    apoderado_celular = models.CharField("Celular", max_length=15, blank=True)
+    apoderado_domicilio = models.CharField("Domicilio", max_length=200, blank=True)
+    apoderado_email = models.EmailField("Correo", blank=True)
+
+    # Datos del Estudiante
+    estudiante_nombre_legal = models.CharField("Nombre Legal", max_length=200, blank=True)
+    estudiante_apellidos = models.CharField("Apellidos", max_length=200, blank=True)
+    estudiante_nombre_social = models.CharField("Nombre Social", max_length=200, blank=True)
+    estudiante_run = models.CharField("RUT", max_length=12, blank=True)
+    estudiante_fecha_nacimiento = models.DateField("Fecha nacimiento", null=True, blank=True)
+    estudiante_edad = models.PositiveIntegerField("Edad", null=True, blank=True)
+    estudiante_curso = models.CharField("Curso", max_length=10, blank=True)
+    estudiante_domicilio = models.CharField("Domicilio", max_length=200, blank=True)
+
+    # Medidas de Apoyo (BooleanField puede ser null)
+    medida_uso_nombre_social = models.BooleanField("Uso del nombre social en todos los espacios educativos", null=True)
+    medida_libro_clases = models.BooleanField("Agregar en el libro de clases el nombre social...", null=True)
+    medida_uniforme = models.BooleanField("Utilización de uniforme, ropa deportiva y/o accesorios...", null=True)
+    medida_servicios_higienicos = models.BooleanField("Utilización de servicios higiénicos...", null=True)
+
+    # Firmas
+    firma_apoderado = models.CharField("Firma apoderado", max_length=200, blank=True)
+    firma_estudiante = models.CharField("Firma estudiante", max_length=200, blank=True)
 
     def __str__(self):
-        return f"Solicitud de {self.nombre_identitario} ({self.protocolo.creador.username})"
+        return f"Solicitud de Reconocimiento para Protocolo #{self.protocolo.id}"
 
-    class Meta:
-        verbose_name = "Solicitud de Reconocimiento de Identidad"
-        verbose_name_plural = "Solicitudes de Reconocimiento de Identidad"
-
-class GestionReconocimiento(models.Model):
-    """
-    Modelo para la Ficha 2: Gestión interna de la solicitud de identidad de género.
-    """
-    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, related_name='gestion_reconocimiento')
-
-    # Acciones realizadas
-    sistemas_actualizados = models.CharField(max_length=255, blank=True, help_text="Sistemas actualizados, separados por comas")
-    fecha_actualizacion = models.DateField()
+class ActaReunionIdentidad(models.Model):
+    protocolo = models.OneToOneField(Protocolo, on_delete=models.CASCADE, related_name='acta_reunion_identidad')
     
-    # Comunicación y cierre
-    comunicacion_estudiante = models.CharField(max_length=2, choices=[('Si', 'Sí'), ('No', 'No')])
-    observaciones = models.TextField(blank=True)
-    respaldo_gestion = models.FileField(upload_to='reconocimiento_gestion/', blank=True, null=True)
+    fecha_reunion = models.DateField("Fecha", null=True, blank=True)
 
-    # Responsable
-    funcionario_responsable = models.CharField(max_length=255)
+    # Medida 1: Uso de nombre social
+    acuerdo_nombre_social = models.TextField("Acuerdos alcanzados", blank=True)
+    fecha_impl_nombre_social = models.DateField("Fecha de implementación (si corresponde)", null=True, blank=True)
+
+    # Medida 2: Libro de clases
+    acuerdo_libro_clases = models.TextField("Acuerdos alcanzados", blank=True)
+    fecha_impl_libro_clases = models.DateField("Fecha de implementación (si corresponde)", null=True, blank=True)
+
+    # Medida 3: Uniforme
+    acuerdo_uniforme = models.TextField("Acuerdos alcanzados", blank=True)
+    fecha_impl_uniforme = models.DateField("Fecha de implementación (si corresponde)", null=True, blank=True)
+
+    # Medida 4: Servicios higiénicos
+    acuerdo_servicios_higienicos = models.TextField("Acuerdos alcanzados", blank=True)
+    fecha_impl_servicios_higienicos = models.DateField("Fecha de implementación (si corresponde)", null=True, blank=True)
+
+    # Declaración
+    declaracion_participa_programas = models.BooleanField("¿Están participando de algunos de los programas del artículo 23...?", null=True)
+    declaracion_info_adicional = models.TextField("Si la respuesta es Sí, proporcione número, correo y nombre/institución a cargo", blank=True)
+
+    # Firmas
+    firma_apoderado = models.CharField("Firma padre, madre, tutor y/o apoderado", max_length=200, blank=True)
+    firma_estudiante = models.CharField("Estudiante", max_length=200, blank=True)
+    firma_rector = models.CharField("Rector(a)", max_length=200, blank=True)
 
     def __str__(self):
-        return f"Gestión de Solicitud para Protocolo {self.protocolo.id}"
-
-    class Meta:
-        verbose_name = "Gestión de Reconocimiento de Identidad"
-        verbose_name_plural = "Gestiones de Reconocimiento de Identidad"
+        return f"Acta de Reunión para Protocolo #{self.protocolo.id}"
 
 
 """

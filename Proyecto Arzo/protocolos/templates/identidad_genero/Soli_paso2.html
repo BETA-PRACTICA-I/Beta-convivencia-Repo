@@ -4,70 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ficha 2: Gestión de Solicitud de Identidad de Género</title>
-    <link rel="stylesheet" href="{% static 'protocolos/css/Form1styles.css' %}">
+    <title>Paso 2: Acta de Reunión</title>
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css' %}">
 </head>
 <body>
     <div class="form-container">
         <div class="form-header">
-            <h1>Ficha 2: Gestión de Solicitud de Identidad de Género</h1>
-            <p>Este formulario es de uso interno para registrar las acciones tomadas en respuesta a una solicitud de reconocimiento de identidad de género.</p>
+            <h1>Acta de Reunión</h1>
+            <p>Reconocimiento de Identidad de Género, Medidas de Apoyo y Adecuaciones Estudiantes Trans</p>
         </div>
 
-        <form method="post" class="protocol-form" enctype="multipart/form-data">
+        <form method="post" class="protocol-form">
             {% csrf_token %}
+            <div class="form-group full-width">{{ form.fecha_reunion.label_tag }}{{ form.fecha_reunion }}</div>
 
-            <!-- SECCIÓN 1: ACCIONES REALIZADAS -->
             <fieldset>
-                <legend>1. Verificación y Acciones Realizadas</legend>
-                <div class="form-group">
-                    <label>Acciones de Actualización en Sistemas</label>
-                    <p class="form-hint">Marque todos los sistemas que han sido actualizados con el nombre identitario del estudiante.</p>
-                    <div class="checkbox-group">
-                        <!-- Estos campos vendrán del form.py -->
-                        {{ form.sistemas_actualizados }}
-                    </div>
+                <legend>Medidas de Apoyo y Acuerdos</legend>
+                
+                <div class="sub-fieldset">
+                    <p class="sub-legend">Uso del nombre social en todos los espacios educativos</p>
+                    <div class="form-group full-width">{{ form.acuerdo_nombre_social.label_tag }}{{ form.acuerdo_nombre_social }}</div>
+                    <div class="form-group full-width">{{ form.fecha_impl_nombre_social.label_tag }}{{ form.fecha_impl_nombre_social }}</div>
                 </div>
-                <div class="form-group">
-                    <label for="fecha_actualizacion">Fecha de la Actualización</label>
-                    <input type="date" id="fecha_actualizacion" name="fecha_actualizacion" required>
+
+                <div class="sub-fieldset">
+                    <p class="sub-legend">Agregar en el libro de clases el nombre social y utilizar éste en otra documentación</p>
+                    <div class="form-group full-width">{{ form.acuerdo_libro_clases.label_tag }}{{ form.acuerdo_libro_clases }}</div>
+                    <div class="form-group full-width">{{ form.fecha_impl_libro_clases.label_tag }}{{ form.fecha_impl_libro_clases }}</div>
+                </div>
+
+                <div class="sub-fieldset">
+                    <p class="sub-legend">Utilización de uniforme, ropa deportiva y/o accesorios</p>
+                    <div class="form-group full-width">{{ form.acuerdo_uniforme.label_tag }}{{ form.acuerdo_uniforme }}</div>
+                    <div class="form-group full-width">{{ form.fecha_impl_uniforme.label_tag }}{{ form.fecha_impl_uniforme }}</div>
+                </div>
+
+                <div class="sub-fieldset">
+                    <p class="sub-legend">Utilización de servicios higiénicos</p>
+                    <div class="form-group full-width">{{ form.acuerdo_servicios_higienicos.label_tag }}{{ form.acuerdo_servicios_higienicos }}</div>
+                    <div class="form-group full-width">{{ form.fecha_impl_servicios_higienicos.label_tag }}{{ form.fecha_impl_servicios_higienicos }}</div>
                 </div>
             </fieldset>
 
-            <!-- SECCIÓN 2: COMUNICACIÓN Y CIERRE -->
             <fieldset>
-                <legend>2. Comunicación y Cierre del Proceso</legend>
-                <div class="form-group">
-                    <label for="comunicacion_estudiante">¿Se ha notificado al estudiante la finalización del proceso?</label>
-                    <select id="comunicacion_estudiante" name="comunicacion_estudiante" required>
-                        <option value="" disabled selected>Seleccione...</option>
-                        <option value="Si">Sí</option>
-                        <option value="No">No</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="observaciones">Observaciones Adicionales</label>
-                    <textarea id="observaciones" name="observaciones" rows="4" placeholder="Añada cualquier observación relevante sobre el proceso..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="respaldo_gestion">Adjuntar Respaldo (Opcional)</label>
-                    <p class="form-hint">Puede adjuntar una copia del correo de notificación o cualquier otro documento de respaldo.</p>
-                    <input type="file" id="respaldo_gestion" name="respaldo_gestion">
-                </div>
+                <legend>Declaración</legend>
+                <div class="form-group-radio full-width">{{ form.declaracion_participa_programas.label_tag }}{{ form.declaracion_participa_programas }}</div>
+                <div class="form-group full-width">{{ form.declaracion_info_adicional.label_tag }}{{ form.declaracion_info_adicional }}</div>
             </fieldset>
 
-            <!-- SECCIÓN 3: RESPONSABLE -->
             <fieldset>
-                <legend>3. Funcionario Responsable</legend>
-                <div class="form-group">
-                    <label for="funcionario_responsable">Nombre del Funcionario que completa esta ficha</label>
-                    <!-- Este campo podría pre-rellenarse con el usuario logueado -->
-                    <input type="text" id="funcionario_responsable" name="funcionario_responsable" required>
+                <legend>Firmas</legend>
+                <div class="form-grid">
+                    <div class="form-group">{{ form.firma_apoderado.label_tag }}{{ form.firma_apoderado }}</div>
+                    <div class="form-group">{{ form.firma_estudiante.label_tag }}{{ form.firma_estudiante }}</div>
+                    <div class="form-group">{{ form.firma_rector.label_tag }}{{ form.firma_rector }}</div>
                 </div>
             </fieldset>
 
             <div class="form-actions">
-                <button type="submit" class="submit-btn">Finalizar y Guardar Gestión</button>
+                <button type="submit" class="submit-btn">Finalizar Protocolo</button>
             </div>
         </form>
     </div>
