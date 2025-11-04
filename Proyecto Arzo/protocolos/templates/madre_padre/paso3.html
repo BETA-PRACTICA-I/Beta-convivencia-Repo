@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso {{ step }}: {{ tipo_nombre }}</title>
+    
+    <!-- Reutilizamos los mismos estilos de siempre -->
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css' %}">
+</head>
+<body>
+
+    <div class="form-container">
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="Form-Tittle">
+                <h1>{{ tipo_nombre }}</h1>
+                <h2>Paso {{ step }}: Ficha 2 - Cierre de Protocolo</h2>
+            </div>
+
+            <div class="section-header">Datos del Estudiante</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.nombre_estudiante.label_tag }}
+                    {{ form.nombre_estudiante }}
+                </div>
+                <div class="form-group">
+                    {{ form.curso.label_tag }}
+                    {{ form.curso }}
+                </div>
+            </div>
+
+            <div class="section-header">Detalles del Cierre</div>
+
+             <div class="form-row">
+                <div class="form-group">
+                    {{ form.fecha_informe_final.label_tag }}
+                    {{ form.fecha_informe_final }}
+                </div>
+                <div class="form-group">
+                    {{ form.fecha_cierre_protocolo.label_tag }}
+                    {{ form.fecha_cierre_protocolo }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.quien_elabora_informe.label_tag }}
+                    {{ form.quien_elabora_informe }}
+                </div>
+                <div class="form-group">
+                    {{ form.funcionario_recibe_informe.label_tag }}
+                    {{ form.funcionario_recibe_informe }}
+                </div>
+            </div>
+
+
+            <div class="section-header">Firmas de Constancia</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.firma_funcionario_elabora.label_tag }}
+                    {{ form.firma_funcionario_elabora }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.firma_rector.label_tag }}
+                    {{ form.firma_rector }}
+                </div>
+            </div>
+
+            <!-- Como este es el último paso, el botón finaliza el proceso -->
+            <button type="submit">Finalizar Protocolo</button>
+
+        </form>
+    </div>
+
+</body>
+</html>

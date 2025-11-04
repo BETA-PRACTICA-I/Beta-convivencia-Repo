@@ -1,6 +1,6 @@
 from django import forms
 from .models import (
-    ArmasAnexo1, AutolesionAnexo1, FormularioDenuncia, FichaEntrevista, Derivacion,
+    ArmasAnexo1, AutolesionAnexo1, EstudianteMadrePadreFicha0, EstudianteMadrePadreFicha1, EstudianteMadrePadreFicha2, FormularioDenuncia, FichaEntrevista, Derivacion,
     InformeConcluyente, Apelacion, ResolucionApelacion,
     EncuestaBullying,   #Protocolos 1-6
     
@@ -354,4 +354,91 @@ class AutolesionAnexo1Form(forms.ModelForm):
             'nombre_estudiante': 'Nombre del Estudiante',
             'rut': 'RUT del Estudiante',
             'descripcion': 'Descripción de la situación',
+        }
+
+class EstudianteMadrePadreFicha0Form(forms.ModelForm):
+    """
+    Formulario para el Protocolo 11 (Paso 1: Ficha 0).
+    Combina la Citación y la Constancia de concurrencia en un solo formulario.
+    """
+    class Meta:
+        model = EstudianteMadrePadreFicha0
+        
+        # Excluimos 'protocolo' porque se asignará en la vista
+        exclude = ('protocolo',)
+        
+        # Widgets para que los campos de fecha usen el calendario HTML
+        widgets = {
+            'fecha_citacion': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_concurrencia_citada': forms.DateInput(attrs={'type': 'date'}),
+        }
+        
+        # Etiquetas personalizadas para que coincidan EXACTAMENTE con las imágenes
+        labels = {
+            'nombre_estudiante': 'Nombre Alumna/o',
+            'curso': 'Curso',
+            'fecha_citacion': 'Con fecha...',
+            'nombre_apoderado_citado': 'Se cita al apoderado...',
+            'medio_citacion': 'A través de... (teléfono, indicar número/agenda escolar)',
+            'fecha_concurrencia_citada': 'A fin de que concurra al Establecimiento el día...de...del...',
+            'funcionario_que_cita': 'Nombre y firma del funcionario que cita',
+            'nombre_apoderado_concurre': 'Yo... (Nombre Apoderado)',
+            'rut_apoderado_concurre': '...cédula nacional de identidad número...',
+        }
+
+class EstudianteMadrePadreFicha1Form(forms.ModelForm):
+    """
+    Formulario para la Ficha 1: REGISTRO DE ENTREVISTA CON APODERADO
+    """
+    class Meta:
+        model = EstudianteMadrePadreFicha1
+        exclude = ('protocolo',) # Excluimos el protocolo, se asignará en la vista
+        
+        widgets = {
+            'fecha_entrevista': forms.DateInput(
+                attrs={'type': 'date'},
+                format='%Y-%m-%d' # Asegura que el widget HTML5 funcione
+            ),
+            'individualizacion_apoderado': forms.TextInput(
+                attrs={'placeholder': 'Nombre completo, RUT, parentesco...'}
+            ),
+            'motivo_entrevista': forms.Textarea(
+                attrs={'rows': 4, 'placeholder': 'Motivo por el cual se cita al apoderado'}
+            ),
+            'aspectos_relevantes': forms.Textarea(
+                attrs={'rows': 10, 'placeholder': 'Resumen de la conversación, acuerdos, observaciones...'}
+            ),
+            'nombre_firma_funcionario': forms.TextInput(
+                attrs={'placeholder': 'Nombre completo del funcionario'}
+            ),
+            'nombre_firma_apoderado': forms.TextInput(
+                attrs={'placeholder': 'Nombre completo del apoderado'}
+            ),
+        }
+
+class EstudianteMadrePadreFicha2Form(forms.ModelForm):
+    """
+    Formulario para la Ficha 2: Cierre de Protocolo
+    """
+    class Meta:
+        model = EstudianteMadrePadreFicha2
+        exclude = ('protocolo',) # Excluimos la FK al protocolo
+        
+        # Widgets para que los campos de fecha usen el selector de calendario
+        widgets = {
+            'fecha_informe_final': forms.DateInput(
+                attrs={'type': 'date'},
+                format='%Y-%m-%d'
+            ),
+            'fecha_cierre_protocolo': forms.DateInput(
+                attrs={'type': 'date'},
+                format='%Y-%m-%d'
+            ),
+            # Aseguramos que los campos de texto no sean gigantes
+            'nombre_estudiante': forms.TextInput(attrs={'placeholder': 'Nombre completo del estudiante'}),
+            'curso': forms.TextInput(attrs={'placeholder': 'Ej: 3° Medio B'}),
+            'quien_elabora_informe': forms.TextInput(attrs={'placeholder': 'Nombre y cargo'}),
+            'funcionario_recibe_informe': forms.TextInput(attrs={'placeholder': 'Nombre y cargo'}),
+            'firma_funcionario_elabora': forms.TextInput(attrs={'placeholder': 'Nombre completo del funcionario'}),
+            'firma_rector': forms.TextInput(attrs={'placeholder': 'Nombre completo del Rector/a'}),
         }

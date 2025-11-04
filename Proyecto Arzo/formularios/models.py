@@ -639,3 +639,130 @@ class AutolesionAnexo1(models.Model):
         return f"Anexo Autolesión para Protocolo #{self.protocolo_id}"
     
 
+"""
+██████╗░██████╗░░█████╗░████████╗░█████╗░░█████╗░░█████╗░██╗░░░░░░█████╗░  ░░███╗░░░░███╗░░
+██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██║░░░░░██╔══██╗  ░████║░░░████║░░
+██████╔╝██████╔╝██║░░██║░░░██║░░░██║░░██║██║░░╚═╝██║░░██║██║░░░░░██║░░██║  ██╔██║░░██╔██║░░
+██╔═══╝░██╔══██╗██║░░██║░░░██║░░░██║░░██║██║░░██╗██║░░██║██║░░░░░██║░░██║  ╚═╝██║░░╚═╝██║░░
+██║░░░░░██║░░██║╚█████╔╝░░░██║░░░╚█████╔╝╚█████╔╝╚█████╔╝███████╗╚█████╔╝  ███████╗███████╗
+╚═╝░░░░░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░░╚════╝░░╚════╝░░╚════╝░╚══════╝░╚════╝░  ╚══════╝╚══════╝
+"""
+
+class EstudianteMadrePadreFicha0(models.Model):
+    protocolo = models.OneToOneField(
+        Protocolo, 
+        on_delete=models.CASCADE, 
+        related_name="ficha0_madre_padre" # ¡Nuevo related_name!
+    )
+    
+    # --- Parte 1: Constancia de Citación ---
+    nombre_estudiante = models.CharField(max_length=255, verbose_name="Nombre Alumna/o")
+    curso = models.CharField(max_length=100, verbose_name="Curso")
+    fecha_citacion = models.DateField(verbose_name="Fecha en que se cita (Con fecha...)", default=timezone.now)
+    nombre_apoderado_citado = models.CharField(max_length=255, verbose_name="Se cita al apoderado...")
+    medio_citacion = models.CharField(max_length=150, verbose_name="A través de... (teléfono, agenda, etc.)")
+    fecha_concurrencia_citada = models.DateField(verbose_name="A fin de que concurra... (el día... de... del...)")
+    funcionario_que_cita = models.CharField(max_length=255, verbose_name="Nombre y firma del funcionario que cita")
+
+    # --- Parte 2: Constancia de Haber Concurrido ---
+    nombre_apoderado_concurre = models.CharField(max_length=255, verbose_name="Nombre Apoderado (Yo...)")
+    rut_apoderado_concurre = models.CharField(max_length=12, verbose_name="Cédula nacional de identidad número...")
+    # (Dejamos la "fecha_concurrencia_real" fuera por ahora, ya que la segunda imagen no la pide,
+    # solo pide el nombre y RUT del que firma. Podemos añadirla si es necesario)
+
+    def __str__(self):
+        return f"Ficha 0 (Citación y Constancia) para Protocolo {self.protocolo_id}"
+
+class EstudianteMadrePadreFicha1(models.Model):
+    """
+    Ficha 1: REGISTRO DE ENTREVISTA CON APODERADO
+    Este será el Paso 2 del protocolo 11.
+    """
+    protocolo = models.OneToOneField(
+        'protocolos.Protocolo', 
+        on_delete=models.CASCADE, 
+        related_name='ficha1_madre_padre' # ¡Clave para la "súper-vista"!
+    )
+    
+    # Campos de la Ficha 1
+    fecha_entrevista = models.DateField(
+        verbose_name="Fecha de la entrevista",
+        default=timezone.now
+    )
+    
+    individualizacion_apoderado = models.CharField(
+        max_length=255,
+        verbose_name="Individualización del apoderado"
+    )
+    
+    motivo_entrevista = models.TextField(
+        verbose_name="Motivo de la entrevista"
+    )
+    
+    # Para todas las líneas de "Aspectos Relevantes"
+    aspectos_relevantes = models.TextField(
+        verbose_name="Aspectos relevantes de la entrevista"
+    )
+    
+    nombre_firma_funcionario = models.CharField(
+        max_length=255,
+        verbose_name="Nombre y firma del funcionario que practica la entrevista"
+    )
+    
+    nombre_firma_apoderado = models.CharField(
+        max_length=255,
+        verbose_name="Nombre y firma del apoderado"
+    )
+
+    def __str__(self):
+        return f"Ficha 1 (Entrevista) para Protocolo #{self.protocolo_id}"
+    
+class EstudianteMadrePadreFicha2(models.Model):
+    """
+    Ficha 2: CONSTANCIA DE ELABORACIÓN Y ENTREGA DE INFORME FINAL
+    Este será el Paso 3 (y final) del protocolo 11.
+    """
+    protocolo = models.OneToOneField(
+        'protocolos.Protocolo', 
+        on_delete=models.CASCADE, 
+        related_name='ficha2_madre_padre' # ¡Clave para la "súper-vista"!
+    )
+    
+    # Campos de la Ficha 2
+    nombre_estudiante = models.CharField(
+        max_length=255, 
+        verbose_name="Nombre Alumna/o"
+    )
+    curso = models.CharField(
+        max_length=100, 
+        verbose_name="Curso"
+    )
+    fecha_informe_final = models.DateField(
+        verbose_name="Fecha del informe final",
+        default=timezone.now
+    )
+    quien_elabora_informe = models.CharField(
+        max_length=255,
+        verbose_name="Quién elabora el informe"
+    )
+    funcionario_recibe_informe = models.CharField(
+        max_length=255,
+        verbose_name="Funcionario a quien se le entrega el informe"
+    )
+    fecha_cierre_protocolo = models.DateField(
+        verbose_name="Fecha cierre de protocolo",
+        default=timezone.now
+    )
+    
+    # Firmas
+    firma_funcionario_elabora = models.CharField(
+        max_length=255,
+        verbose_name="Nombre y firma del funcionario que elabora el informe"
+    )
+    firma_rector = models.CharField(
+        max_length=255,
+        verbose_name="Nombre y firma del Rector del Establecimiento"
+    )
+
+    def __str__(self):
+        return f"Ficha 2 (Cierre) para Protocolo #{self.protocolo_id}"

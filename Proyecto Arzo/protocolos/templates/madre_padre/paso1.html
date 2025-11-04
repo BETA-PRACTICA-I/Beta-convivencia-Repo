@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso {{ step }}: {{ tipo_nombre }}</title>
+    <!-- Cargamos los mismos estilos que usan tus otros formularios -->
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css' %}">
+</head>
+<body>
+
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="Form-Tittle">
+                <h1>{{ tipo_nombre }}</h1>
+                <h2>Paso 1: Ficha 0 - Citación y Constancia</h2>
+            </div>
+
+            <!-- ============================================= -->
+            <!-- PARTE 1: Constancia de Citación (Imagen 1)    -->
+            <!-- ============================================= -->
+            <div class="section-header">Constancia de Citación del Apoderado/a</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.nombre_estudiante.label_tag }}
+                    {{ form.nombre_estudiante }}
+                </div>
+                <div class="form-group">
+                    {{ form.curso.label_tag }}
+                    {{ form.curso }}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.fecha_citacion.label_tag }}
+                    {{ form.fecha_citacion }}
+                </div>
+                <div class="form-group">
+                    {{ form.nombre_apoderado_citado.label_tag }}
+                    {{ form.nombre_apoderado_citado }}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.medio_citacion.label_tag }}
+                    {{ form.medio_citacion }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.fecha_concurrencia_citada.label_tag }}
+                    {{ form.fecha_concurrencia_citada }}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.funcionario_que_cita.label_tag }}
+                    {{ form.funcionario_que_cita }}
+                </div>
+            </div>
+
+            <!-- ============================================= -->
+            <!-- PARTE 2: Constancia de Concurrir (Imagen 2)   -->
+            <!-- ============================================= -->
+            <div class="section-header">Constancia de Haber Concurrido</div>
+            
+            <!-- Texto estático de la imagen 2 -->
+            <p style="padding: 10px 15px; background-color: #f4f4f4; border-radius: 5px; margin: 10px 0 20px; font-style: italic; line-height: 1.6;">
+                "Yo... [Nombre Apoderado], cédula nacional de identidad número... [RUT], dejo constancia que he concurrido a la citación individualizada en la Ficha 0; para ello firmo el presente documento de forma voluntaria."
+            </p>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.nombre_apoderado_concurre.label_tag }}
+                    {{ form.nombre_apoderado_concurre }}
+                </div>
+                <div class="form-group">
+                    {{ form.rut_apoderado_concurre.label_tag }}
+                    {{ form.rut_apoderado_concurre }}
+                </div>
+            </div>
+
+            <button type="submit">Siguiente Paso</button>
+        </form>
+    </div>
+
+</body>
+</html>
+
