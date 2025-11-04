@@ -107,7 +107,40 @@
         </tbody>
     </table>
 
-
+    <style>
+    /* CSS para el dropdown de estado */
+    .estado-dropdown {
+        position: relative;
+    }
+    .estado-opciones {
+        display: none; /* Oculto por defecto */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        z-index: 10;
+        min-width: 150px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    /* La clase 'active' que pone el JS hace que se muestre */
+    .estado-dropdown.active .estado-opciones {
+        display: block;
+    }
+    .estado-opciones a {
+        display: block;
+        padding: 8px 12px;
+        text-decoration: none;
+        color: #333;
+        font-size: 0.9rem;
+        cursor: pointer;
+    }
+    .estado-opciones a:hover {
+        background: #f4f4f4;
+    }
+</style>
 
 
 </body>

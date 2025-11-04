@@ -8,6 +8,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from weasyprint import HTML
 
+from django.http import JsonResponse
+import json
+from django.views.decorators.http import require_POST
+
 from .models import Protocolo, TipoProtocolo
 
 
@@ -515,3 +519,49 @@ def editar_paso7(request, protocolo_id):
         
     return render(request, 'protocolo1/formulario_paso7.html', {'form': form, 'protocolo': protocolo})
 
+#Esto es una wea aparte-
+
+@login_required
+@require_POST  # Esta vista solo aceptará peticiones POST
+def actualizar_estado_protocolo(request):
+    
+    # 1. Asegurarnos de que el usuario es un Encargado (o superadmin)
+    #    (¡No queremos que un Abogado o Director cambie estados!)
+    if not request.user.groups.filter(name='Encargados').exists() and not request.user.is_superuser:
+        return JsonResponse({'status': 'error', 'message': 'No tienes permisos'}, status=403)
+
+    # 2. Leer los datos que envió el JavaScript (vienen en formato JSON)
+    try:
+        data = json.loads(request.body)
+        protocolo_id = data.get('protocolo_id')
+        nuevo_estado = data.get('nuevo_estado')
+    except json.JSONDecodeError:
+        return JsonResponse({'status': 'error', 'message': 'Datos mal formados'}, status=400)
+
+    # 3. Validar los datos
+    if not protocolo_id or not nuevo_estado:
+        return JsonResponse({'status': 'error', 'message': 'Faltan datos'}, status=400)
+
+    # Validamos que el estado sea uno de los permitidos
+    estados_validos = ['Pendiente', 'Resuelto', 'Vencido']
+    if nuevo_estado not in estados_validos:
+        return JsonResponse({'status': 'error', 'message': 'Estado no válido'}, status=400)
+
+    # 4. Actualizar la Base de Datos
+    try:
+        protocolo = Protocolo.objects.get(id=protocolo_id)
+        
+        # Opcional: Podríamos verificar si el usuario es el creador,
+        # pero por ahora confiaremos en el chequeo de rol "Encargados".
+        
+        protocolo.estado = nuevo_estado
+        protocolo.save(update_fields=['estado']) # Solo actualiza este campo
+        
+        # ¡Éxito!
+        return JsonResponse({'status': 'success', 'message': 'Estado actualizado'})
+
+    except Protocolo.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Protocolo no encontrado'}, status=404)
+    except Exception as e:
+        # Capturamos cualquier otro error inesperado
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
