@@ -193,6 +193,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (existing) existing.remove();
         }
 
+
+        //hola
         // Lógica original para cerrar el panel actual si ya estaba abierto
         const existingForThis = protocolTable.querySelector(`tr.protocol-expanded[data-for="${protocoloId}"]`);
         if (existingForThis) {
