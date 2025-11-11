@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Almacén de Protocolos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'Validaciones/css/homepagestyles.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="top-bar">
+        <div class="logo-and-nav">
+            <div class="logo">
+                <img src="{% static 'Validaciones/img/virgenbkn.png' %}" class="logo-image" alt="Logo">
+            </div>
+            <nav class="nav-menu">
+                <a href="{% url 'Validaciones:homepage' %}" class="nav-item">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+            </nav>
+        </div>
+        <!-- El menú hamburguesa puede ir aquí si lo necesitas en esta página también -->
+    </header>
+
+    <main id="main-content" class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 class="greeting">Almacén</h1>
+            <a href="{% url 'Validaciones:homepage' %}" class="boton-volver" id="volver-btn">&larr; Volver</a>
+        </div>
+
+        <!-- INICIO: Formulario ÚNICO para búsqueda y filtro -->
+        <form method="get" action="{% url 'Validaciones:Almacen' %}" class="search-filter-container">
+            <!-- Barra de búsqueda -->
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" name="q" placeholder="Buscar por denunciante, curso, ID..." value="{{ request.GET.q }}">
+                <button type="submit">Buscar</button>
+            </div>
+
+            <!-- Contenedor del botón y panel de filtro -->
+            <div class="filter-container">
+                <button class="filter-btn" id="filter-btn" type="button">
+                    <i class="fa-solid fa-filter"></i>
+                </button>
+                <div class="filter-panel" id="filter-panel">
+                    <h4>Filtros Avanzados</h4>
+                    <div class="filter-group">
+                        <label for="tipo_protocolo">Tipo de Protocolo:</label>
+                        <select name="tipo" id="tipo_protocolo">
+                            <option value="">Todos</option>
+                            {% for tipo in tipos %}
+                                <option value="{{ tipo.id }}" {% if request.GET.tipo == tipo.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ tipo.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="fecha_desde">Desde:</label>
+                        <input type="date" name="fecha_desde" id="fecha_desde" value="{{ request.GET.fecha_desde }}">
+                    </div>
+                    <div class="filter-group">
+                        <label for="fecha_hasta">Hasta:</label>
+                        <input type="date" name="fecha_hasta" id="fecha_hasta" value="{{ request.GET.fecha_hasta }}">
+                    </div>
+                    <button type="submit" class="apply-filters-btn">Aplicar Filtros</button>
+                </div>
+            </div>
+        </form>
+        <!-- FIN: Formulario ÚNICO -->
+
+    </main>
+
+    <table class="protocol-table" id="protocol-table">
+        <thead>
+            <tr>
+                <th>Nombres denunciantes</th>
+                <th>Curso(s)</th>
+                <th>Protocolo activado</th>
+                <th>Estado</th>
+                <th>Persona a cargo</th>
+                <th>Fecha de apertura</th>
+                <th>Fecha Límite</th>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in protocolos %}
+            <tr class="protocol-row" data-protocolo-id="{{ p.id }}">
+                <td>{{ p.ficha_denuncia.nombre_denunciante|default:"N/A" }}</td>
+                <td>{{ p.ficha_denuncia.curso_denunciado|default:"N/A" }}</td>
+                <td>{{ p.tipo.nombre|default:"N/A" }}</td>
+                <td>{{ p.get_estado_display }}</td>
+                <td>{{ p.creador.get_full_name|default:p.creador.username }}</td>
+                <td>{{ p.fecha_creacion|date:"d/m/Y" }}</td>
+                <td>{{ p.fecha_limite|date:"d/m/Y"|default:"N/A" }}</td>
+                <td>{{ p.id }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 20px;">No se encontraron protocolos que coincidan con su búsqueda.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // --- Lógica para el botón de filtro ---
+    const filterBtn = document.getElementById('filter-btn');
+    const filterPanel = document.getElementById('filter-panel');
+
+    if (filterBtn && filterPanel) {
+        filterBtn.addEventListener('click', function(event) {
+            event.stopPropagation();
+            filterPanel.classList.toggle('show');
+        });
+
+        // Cierra el panel de filtro si se hace clic fuera
+        window.addEventListener('click', function(event) {
+            if (!filterPanel.contains(event.target) && !filterBtn.contains(event.target)) {
+                filterPanel.classList.remove('show');
+            }
+        });
+    }
+});
+</script>
+
+</body>
+</html>

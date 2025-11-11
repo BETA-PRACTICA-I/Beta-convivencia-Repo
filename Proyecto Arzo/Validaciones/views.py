@@ -108,6 +108,7 @@ def Home_view(request):
 
     protocolos_filtrados = (Protocolo.objects
                 .exclude(estado='En Creacion')
+                .filter(estado='Pendiente')
                 .select_related('tipo', 'creador')
                 .order_by('-fecha_creacion'))
     
@@ -118,6 +119,47 @@ def Home_view(request):
         "protocolos": protocolos_filtrados,
     })
 
+
+@login_required
+def Almacen_view(request):
+    # Empezamos con los protocolos resueltos y traemos datos relacionados para optimizar
+    protocolos_query = Protocolo.objects.filter(estado='Resuelto').select_related('tipo', 'ficha_denuncia', 'creador')
+
+    # 1. Búsqueda por texto (parámetro 'q')
+    query = request.GET.get('q')
+    if query:
+        # Busca en varios campos a la vez, incluyendo el ID del protocolo
+        protocolos_query = protocolos_query.filter(
+            Q(ficha_denuncia__nombre_denunciante__icontains=query) |
+            Q(ficha_denuncia__curso_denunciado__icontains=query) |
+            Q(tipo__nombre__icontains=query) |
+            Q(id__icontains=query)
+        )
+
+    # 2. Filtro por tipo de protocolo
+    tipo_id = request.GET.get('tipo')
+    if tipo_id:
+        protocolos_query = protocolos_query.filter(tipo__id=tipo_id)
+
+    # 3. Filtro por rango de fechas
+    fecha_desde = request.GET.get('fecha_desde')
+    if fecha_desde:
+        protocolos_query = protocolos_query.filter(fecha_creacion__date__gte=fecha_desde)
+    
+    fecha_hasta = request.GET.get('fecha_hasta')
+    if fecha_hasta:
+        protocolos_query = protocolos_query.filter(fecha_creacion__date__lte=fecha_hasta)
+
+    # Obtenemos todos los tipos de protocolo para el dropdown del filtro
+    tipos = TipoProtocolo.objects.all()
+
+    context = {
+        'protocolos': protocolos_query.order_by('-fecha_creacion'),
+        'tipos': tipos,
+        'user': request.user
+    }
+    
+    return render(request, 'Validaciones/Almacen.html', context)        
 
 @login_required(login_url='Validaciones:login')
 def abogado_homepage_view(request):

@@ -24,10 +24,14 @@
             </nav>
         </div>
 
-        <div class="action-hamburger">
-            <button class="hamburger-menu">
+        <div class="hamburger-dropdown">
+            <button class="hamburger-btn" type="button">
                 <i class="fa-solid fa-bars"></i>
             </button>
+            <div class="hamburger-opciones">
+                <a href="{% url 'Validaciones:Almacen' %}">Almacen</a>
+                <a href="{% url 'Validaciones:login' %}">Cerrar sesión</a>
+            </div>
         </div>
     </header>
 
@@ -140,7 +144,68 @@
     .estado-opciones a:hover {
         background: #f4f4f4;
     }
+        .hamburger-dropdown {
+        position: relative;
+    }
+    .hamburger-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px; /* Ajusta el tamaño si es necesario */
+        cursor: pointer;
+    }
+    .hamburger-opciones {
+        display: none; /* Oculto por defecto */
+        position: absolute;
+        top: 120%; /* Posición debajo del botón */
+        right: 0; /* Alineado a la derecha */
+        background: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        z-index: 100;
+        min-width: 160px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    /* La clase 'active' que pone el JS hace que se muestre */
+    .hamburger-dropdown.active .hamburger-opciones {
+        display: block;
+    }
+    .hamburger-opciones a {
+        display: block;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #333;
+        font-size: 1rem;
+    }
+    .hamburger-opciones a:hover {
+        background: #f4f4f4;
+    }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburgerDropdown = document.querySelector('.hamburger-dropdown');
+
+    if (hamburgerDropdown) {
+        const hamburgerBtn = hamburgerDropdown.querySelector('.hamburger-btn');
+        
+        hamburgerBtn.addEventListener('click', function(event) {
+            event.stopPropagation(); // Evita que el clic se propague al window
+            hamburgerDropdown.classList.toggle('active');
+        });
+    }
+
+    // Cierra el menú si se hace clic fuera de él
+    window.addEventListener('click', function(event) {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(event.target)) {
+            hamburgerDropdown.classList.remove('active');
+        }
+    });
+
+    // Aquí puedes mantener el resto de tu código de Script.js si lo mueves aquí,
+    // o simplemente añadir este bloque nuevo.
+});
+</script>
 
 
 </body>
