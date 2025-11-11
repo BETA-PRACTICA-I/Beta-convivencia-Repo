@@ -9,6 +9,29 @@ from django.utils.http import url_has_allowed_host_and_scheme
 
 # Importar modelos para las vistas de homepage
 from protocolos.models import TipoProtocolo, Protocolo
+# Relaciones que necesitamos tener a mano para los resúmenes mostrados en la home.
+SUMMARY_RELATIONS = (
+    'tipo', 'creador',
+    'ficha_denuncia',
+    'fichaentrevista',
+    'informeconcluyente',
+    'apelacion',
+    'resolucionapelacion',
+    'encuestabullying',
+    'riesgo_suicida_anexo1',
+    'riesgo_suicida_anexo2',
+    'riesgo_suicida_anexo3',
+    'riesgo_suicida_anexo4',
+    'riesgo_suicida_anexo5',
+    'reconocimiento_identidad',
+    'acta_reunion_identidad',
+    'ficha_accidente_escolar',
+    'anexo_armas',
+    'anexo_autolesion',
+    'ficha0_madre_padre',
+    'ficha1_madre_padre',
+    'ficha2_madre_padre',
+)
 # Importante para chequear grupos
 from django.contrib.auth.models import Group 
 
@@ -106,11 +129,13 @@ def Home_view(request):
             return redirect('Validaciones:abogado_homepage')
         return redirect('Validaciones:login') # Si no, al login
 
-    protocolos_filtrados = (Protocolo.objects
-                .exclude(estado='En Creacion')
-                .filter(estado='Pendiente')
-                .select_related('tipo', 'creador')
-                .order_by('-fecha_creacion'))
+    protocolos_filtrados = (
+        Protocolo.objects
+        .exclude(estado='En Creacion')
+        .filter(estado='Pendiente')
+        .select_related(*SUMMARY_RELATIONS)
+        .order_by('-fecha_creacion')
+    )
     
     tipos = TipoProtocolo.objects.all()
 
@@ -173,10 +198,12 @@ def abogado_homepage_view(request):
             return redirect('Validaciones:homepage')
         return redirect('Validaciones:login') # Si no, al login
 
-    protocolos_filtrados = (Protocolo.objects
-                .exclude(estado='En Creacion')
-                .select_related('tipo', 'creador')
-                .order_by('-fecha_creacion'))
+    protocolos_filtrados = (
+        Protocolo.objects
+        .exclude(estado='En Creacion')
+        .select_related(*SUMMARY_RELATIONS)
+        .order_by('-fecha_creacion')
+    )
 
     return render(request, "Validaciones/abogadohomepage.html", {
         "protocolos": protocolos_filtrados,
@@ -200,10 +227,12 @@ def director_homepage_view(request):
 
     # 1. Obtener la lista de protocolos para la TABLA (igual que abogados)
     #    Filtramos los que están 'En Creacion' porque esos no cuentan.
-    protocolos_filtrados = (Protocolo.objects
-                .exclude(estado='En Creacion')
-                .select_related('tipo', 'creador')
-                .order_by('-fecha_creacion'))
+    protocolos_filtrados = (
+        Protocolo.objects
+        .exclude(estado='En Creacion')
+        .select_related(*SUMMARY_RELATIONS)
+        .order_by('-fecha_creacion')
+    )
 
     # 2. Datos para Gráfico 1 (Barras - Protocolos por Tipo)
     #    Usamos la magia de Django 🪄 para anotar (contar) los protocolos
