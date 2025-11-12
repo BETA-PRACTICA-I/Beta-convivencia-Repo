@@ -31,6 +31,11 @@ SUMMARY_RELATIONS = (
     'ficha0_madre_padre',
     'ficha1_madre_padre',
     'ficha2_madre_padre',
+    'salida_pedagogica_anexo1',
+    'desregulacion_emocional',
+    'mediacion_solicitud',
+    'mediacion_informacion',
+    'mediacion_acta_final',
 )
 # Importante para chequear grupos
 from django.contrib.auth.models import Group 

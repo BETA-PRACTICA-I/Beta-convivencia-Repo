@@ -81,6 +81,11 @@ class Protocolo(models.Model):
             'ficha0_madre_padre': ['nombre_estudiante', 'nombre_apoderado_citado', 'nombre_apoderado_concurre'],
             'ficha1_madre_padre': ['individualizacion_apoderado'],
             'ficha2_madre_padre': ['nombre_estudiante'],
+            'salida_pedagogica_anexo1': ['docente_nombre', 'rector_nombre'],
+            'desregulacion_emocional': ['nombre_estudiante', 'profesor_jefe', 'profesora_diferencial', 'nombre_firma_funcionario', 'nombre_firma_2'],
+            'mediacion_solicitud': ['solicitante_nombre', 'estudiante_nombre', 'solicitado_nombre'],
+            'mediacion_informacion': ['solicitado_nombre'],
+            'mediacion_acta_final': ['firma_conciliador', 'firma_parte_1', 'firma_parte_2'],
         }
 
         names = []
@@ -116,6 +121,9 @@ class Protocolo(models.Model):
             'anexo_autolesion': ['curso'],
             'ficha0_madre_padre': ['curso'],
             'ficha2_madre_padre': ['curso'],
+            'salida_pedagogica_anexo1': ['actividad_niveles_cursos_participantes'],
+            'desregulacion_emocional': ['curso'],
+            'mediacion_solicitud': ['estudiante_curso', 'solicitado_curso_cargo'],
         }
 
         cursos = []
