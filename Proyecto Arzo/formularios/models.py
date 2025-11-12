@@ -766,3 +766,223 @@ class EstudianteMadrePadreFicha2(models.Model):
 
     def __str__(self):
         return f"Ficha 2 (Cierre) para Protocolo #{self.protocolo_id}"
+
+class SalidaPedagogicaAnexo1(models.Model):
+    protocolo = models.OneToOneField(
+        Protocolo, 
+        on_delete=models.CASCADE, 
+        related_name='salida_pedagogica_anexo1'
+    )
+    
+    # Datos del Establecimiento
+    establecimiento_nombre = models.CharField(max_length=255, verbose_name="Nombre Establecimiento", blank=True)
+    establecimiento_rbd = models.CharField(max_length=100, verbose_name="RBD", blank=True)
+    establecimiento_direccion = models.CharField(max_length=255, verbose_name="Dirección", blank=True)
+    establecimiento_fono = models.CharField(max_length=100, verbose_name="Fono", blank=True)
+    
+    # Datos Rector
+    rector_nombre = models.CharField(max_length=255, verbose_name="Nombre Rector", blank=True)
+    rector_run = models.CharField(max_length=20, verbose_name="RUN Rector", blank=True)
+    rector_correo = models.EmailField(verbose_name="Correo Electrónico Rector", blank=True)
+    rector_fono = models.CharField(max_length=100, verbose_name="Fono Rector", blank=True)
+    
+    # Datos Docente Responsable
+    docente_nombre = models.CharField(max_length=255, verbose_name="Nombre Docente Responsable")
+    docente_run = models.CharField(max_length=20, verbose_name="RUN Docente")
+    docente_correo = models.EmailField(verbose_name="Correo Electrónico Docente")
+    docente_fono = models.CharField(max_length=100, verbose_name="Fono Docente")
+    
+    # Datos de la Actividad
+    actividad_nombre = models.CharField(max_length=255, verbose_name="Nombre Actividad")
+    actividad_fecha_hora = models.DateTimeField(verbose_name="Fecha y Hora de la Actividad", null=True, blank=True)
+    actividad_niveles_cursos_participantes = models.CharField(max_length=500, verbose_name="Niveles y/o Cursos Participantes")
+    
+    # Listados
+    listado_estudiantes = models.TextField(verbose_name="Listado Estudiantes (Nombre, Curso, Fono Apoderado)", blank=True)
+    listado_docentes = models.TextField(verbose_name="Listado Docentes (Nombre, Asignatura, Fono)", blank=True)
+    listado_apoderados = models.TextField(verbose_name="Listado Apoderados (Nombre, Curso, Fono)", blank=True)
+    cursos_sin_profesor = models.TextField(verbose_name="Cursos sin profesor (Curso, Día, Hora, Reemplaza)", blank=True)
+    profesores_con_clases = models.TextField(verbose_name="Profesores que tienen clases con cursos que asisten", blank=True)
+    observaciones = models.TextField(verbose_name="Observaciones", blank=True)
+
+    class Meta:
+        verbose_name = "Anexo 1: Ficha Salida Pedagógica"
+
+    def __str__(self):
+        return f"Anexo 1 (Salida Pedagógica) para Protocolo {self.protocolo.id}"
+    
+class DesregulacionEmocional(models.Model):
+    protocolo = models.OneToOneField(
+        Protocolo,
+        on_delete=models.CASCADE,
+        related_name='desregulacion_emocional'
+    )
+    
+    nombre_estudiante = models.CharField(max_length=200, verbose_name="Nombre del estudiante")
+    curso = models.CharField(max_length=100, verbose_name="Curso")
+    profesor_jefe = models.CharField(max_length=200, verbose_name="Profesor (a) jefe")
+    profesora_diferencial = models.CharField(max_length=200, verbose_name="Profesora diferencial", blank=True, null=True)
+    lugar_desregulacion = models.CharField(max_length=255, verbose_name="Lugar donde se produce la desregulación")
+    fecha_hora = models.DateTimeField(verbose_name="Fecha y Hora")
+    descripcion_situacion = models.TextField(verbose_name="Descripción de la situación")
+    nombre_firma_funcionario = models.CharField(max_length=200, verbose_name="Nombre y firma de funcionario/a")
+    nombre_firma_2 = models.CharField(max_length=200, verbose_name="Nombre y firma", help_text="Segunda firma")
+
+    etapa1_actividad_realizada = models.BooleanField(default=False)
+    etapa1_tematica_realizada = models.BooleanField(default=False)
+    etapa1_contencion_sala_realizada = models.BooleanField(default=False)
+    etapa1_saca_sala_realizada = models.BooleanField(default=False)
+    etapa1_silencio_realizada = models.BooleanField(default=False)
+    etapa1_otros_realizada = models.BooleanField(default=False)
+    etapa1_otros_descripcion = models.CharField(max_length=255, blank=True, verbose_name="Otros (especificar)")
+    etapa1_responsables_generales = models.TextField(verbose_name="Responsable(s) de Etapa 1", blank=True)
+
+    etapa2_retiran_elementos_realizada = models.BooleanField(default=False)
+    etapa2_reducen_estimulos_realizada = models.BooleanField(default=False)
+    etapa2_evitan_aglomeraciones_realizada = models.BooleanField(default=False)
+    etapa2_permite_lugar_agrado_realizada = models.BooleanField(default=False)
+    etapa2_fomenta_dialogo_realizada = models.BooleanField(default=False)
+    etapa2_concede_descanso_realizada = models.BooleanField(default=False)
+    etapa2_otros_realizada = models.BooleanField(default=False)
+    etapa2_otros_descripcion = models.CharField(max_length=255, blank=True, verbose_name="Otros (especificar) Etapa 2")
+    etapa2_responsables_generales = models.TextField(verbose_name="Responsable(s) de Etapa 2", blank=True)
+
+    etapa3_traslada_curso_realizada = models.BooleanField(default=False)
+    etapa3_restriccion_movimiento_realizada = models.BooleanField(default=False)
+    etapa3_llama_apoderado_realizada = models.BooleanField(default=False)
+    etapa3_otros_realizada = models.BooleanField(default=False)
+    etapa3_otros_descripcion = models.CharField(max_length=255, blank=True, verbose_name="Otros (especificar) Etapa 3")
+    etapa3_responsables_generales = models.TextField(verbose_name="Responsable(s) de Etapa 3", blank=True)
+
+    class Meta:
+        verbose_name = "Bitácora Desregulación Emocional (DEC)"
+        verbose_name_plural = "Bitácoras Desregulación Emocional (DEC)"
+
+    def __str__(self):
+        return f"Bitácora DEC: {self.nombre_estudiante} - {self.fecha_hora.strftime('%Y-%m-%d %H:%M')}"
+    
+class MediacionSolicitud(models.Model):
+    protocolo = models.OneToOneField(
+        Protocolo, 
+        on_delete=models.CASCADE, 
+        related_name="mediacion_solicitud"
+    )
+    
+    # --- Datos del Solicitante ---
+    solicitante_nombre = models.CharField(max_length=255, verbose_name="Nombre Completo Solicitante", blank=True)
+    solicitante_run = models.CharField(max_length=12, verbose_name="RUN Solicitante", blank=True)
+    solicitante_telefono = models.CharField(max_length=20, verbose_name="Teléfono Solicitante", blank=True)
+    solicitante_domicilio = models.CharField(max_length=255, verbose_name="Domicilio Solicitante", blank=True)
+    solicitante_correo = models.EmailField(verbose_name="Correo Electrónico Solicitante", blank=True)
+
+    # --- Datos del Estudiante (del solicitante) ---
+    estudiante_nombre = models.CharField(max_length=255, verbose_name="Nombre Completo Estudiante", blank=True)
+    estudiante_curso = models.CharField(max_length=100, verbose_name="Curso Estudiante", blank=True)
+    estudiante_run = models.CharField(max_length=12, verbose_name="RUN Estudiante", blank=True)
+    estudiante_domicilio = models.CharField(max_length=255, verbose_name="Domicilio Estudiante", blank=True)
+
+    # --- Datos del Solicitado ---
+    solicitado_nombre = models.CharField(max_length=255, verbose_name="Nombre Solicitado", blank=True)
+    ROL_CHOICES = [
+        ('Estudiante', 'Estudiante'), ('Apoderado', 'Apoderado'),
+        ('Docente', 'Docente'), ('Profesor Jefe', 'Profesor Jefe'),
+        ('Profesor de Asignatura', 'Profesor de Asignatura'),
+        ('Asistente', 'Asistente'), ('Otro', 'Otro')
+    ]
+    solicitado_rol = models.CharField(max_length=100, choices=ROL_CHOICES, verbose_name="Rol del Solicitado", blank=True)
+    solicitado_curso_cargo = models.CharField(max_length=255, verbose_name="Curso / Cargo", blank=True, help_text="Curso (si es estudiante/apoderado/prof. jefe) o Cargo (si es asistente/otro)")
+
+    # --- Motivo ---
+    motivo_solicitud = models.TextField(verbose_name="Motivo de la Solicitud", blank=True)
+    antecedentes = models.TextField(verbose_name="Antecedentes que estime necesarios", blank=True)
+
+    def __str__(self):
+        return f"Solicitud de Mediación (Protocolo {self.protocolo_id})"
+
+class MediacionInformacion(models.Model):
+    protocolo = models.OneToOneField(
+        Protocolo, 
+        on_delete=models.CASCADE, 
+        related_name="mediacion_informacion"
+    )
+    
+    # --- Datos del Solicitado (p. 11) ---
+    solicitado_nombre = models.CharField(max_length=255, verbose_name="Nombre Completo Solicitado", blank=True)
+    solicitado_run = models.CharField(max_length=12, verbose_name="RUN Solicitado", blank=True)
+    solicitado_telefono = models.CharField(max_length=20, verbose_name="Teléfono Solicitado", blank=True)
+    solicitado_domicilio = models.CharField(max_length=255, verbose_name="Domicilio Solicitado", blank=True)
+    solicitado_correo = models.EmailField(verbose_name="Correo Electrónico Solicitado", blank=True)
+    
+    # --- Información Entregada (p. 11) ---
+    info_nombre_solicitante = models.BooleanField(verbose_name="Se informó Nombre Solicitante", null=True)
+    info_motivo = models.BooleanField(verbose_name="Se informó Motivo de Mediación", null=True)
+    info_fecha_hora = models.BooleanField(verbose_name="Se informó Fecha y Hora", null=True)
+    info_fecha_hora_detalle = models.CharField(max_length=100, verbose_name="Fecha y Hora informada", blank=True)
+    info_voluntario = models.BooleanField(verbose_name="Se señaló que el proceso es voluntario", null=True)
+    
+    # --- Respuesta (p. 11) ---
+    RESPUESTA_CHOICES = [
+        ('Acepta', 'Acepta participar'),
+        ('Rechaza', 'No desea participar'),
+        ('No Responde', 'No da respuesta en el plazo')
+    ]
+    respuesta_solicitado = models.CharField(max_length=50, choices=RESPUESTA_CHOICES, verbose_name="Respuesta del Solicitado", blank=True)
+    
+    # --- Medio de Verificación (p. 12) ---
+    MEDIO_CHOICES = [
+        ('Telefono', 'Teléfono'),
+        ('Correo', 'Correo Electrónico'),
+        ('Carta', 'Carta Certificada'),
+        ('Agenda', 'Agenda Escolar'),
+        ('Otro', 'Otro')
+    ]
+    medio_informado = models.CharField(max_length=50, choices=MEDIO_CHOICES, verbose_name="Medio por el cual se le informó", blank=True)
+    verificacion_detalle = models.TextField(verbose_name="Detalle de la verificación (Ej: Teléfono, fecha, hora, funcionario)", blank=True)
+
+    def __str__(self):
+        return f"Información al Solicitado (Protocolo {self.protocolo_id})"
+
+class MediacionActaFinal(models.Model):
+    protocolo = models.OneToOneField(
+        Protocolo, 
+        on_delete=models.CASCADE, 
+        related_name="mediacion_acta_final"
+    )
+    
+    fecha_acta = models.DateField(verbose_name="Fecha del Acta", null=True, blank=True)
+    
+    # --- Partes Involucradas ---
+    partes_individualizadas = models.TextField(verbose_name="Individualización de las partes", blank=True, help_text="Ej: Solicitante (Nombre, RUT) y Solicitado (Nombre, RUT)")
+
+    # --- Resultado (Define si fue Ficha 3 o 4) ---
+    acuerdo_logrado = models.BooleanField(verbose_name="¿Se logró un acuerdo (Conciliación/Mediación)?", null=True)
+    
+    # --- SI HAY ACUERDO (Ficha 3, p. 13) ---
+    acuerdo_1_objetivo = models.CharField(max_length=255, verbose_name="Acuerdo 1: Objetivo", blank=True)
+    acuerdo_1_actividades = models.TextField(verbose_name="Acuerdo 1: Actividades", blank=True)
+    acuerdo_1_responsable = models.CharField(max_length=255, verbose_name="Acuerdo 1: Responsable", blank=True)
+    acuerdo_1_verificacion = models.CharField(max_length=255, verbose_name="Acuerdo 1: Medio de Verificación", blank=True)
+    acuerdo_1_plazos = models.CharField(max_length=255, verbose_name="Acuerdo 1: Plazos", blank=True)
+    
+    acuerdo_2_objetivo = models.CharField(max_length=255, verbose_name="Acuerdo 2: Objetivo", blank=True)
+    acuerdo_2_actividades = models.TextField(verbose_name="Acuerdo 2: Actividades", blank=True)
+    acuerdo_2_responsable = models.CharField(max_length=255, verbose_name="Acuerdo 2: Responsable", blank=True)
+    acuerdo_2_verificacion = models.CharField(max_length=255, verbose_name="Acuerdo 2: Medio de Verificación", blank=True)
+    acuerdo_2_plazos = models.CharField(max_length=255, verbose_name="Acuerdo 2: Plazos", blank=True)
+
+    acuerdo_3_objetivo = models.CharField(max_length=255, verbose_name="Acuerdo 3: Objetivo", blank=True)
+    acuerdo_3_actividades = models.TextField(verbose_name="Acuerdo 3: Actividades", blank=True)
+    acuerdo_3_responsable = models.CharField(max_length=255, verbose_name="Acuerdo 3: Responsable", blank=True)
+    acuerdo_3_verificacion = models.CharField(max_length=255, verbose_name="Acuerdo 3: Medio de Verificación", blank=True)
+    acuerdo_3_plazos = models.CharField(max_length=255, verbose_name="Acuerdo 3: Plazos", blank=True)
+    
+    # --- SI NO HAY ACUERDO (Ficha 4, p. 14) ---
+    motivo_frustrado = models.TextField(verbose_name="Motivo del Acta Frustrada", blank=True, help_text="Detalle por qué no se alcanzaron acuerdos [cite: 4195]")
+    
+    # --- Firmas (Común a ambas) ---
+    firma_conciliador = models.CharField(max_length=255, verbose_name="Nombre y Firma Conciliador/Mediador", blank=True)
+    firma_parte_1 = models.CharField(max_length=255, verbose_name="Nombre y Firma Parte 1 (Solicitante)", blank=True)
+    firma_parte_2 = models.CharField(max_length=255, verbose_name="Nombre y Firma Parte 2 (Solicitado)", blank=True)
+
+    def __str__(self):
+        return f"Acta Final de Mediación (Protocolo {self.protocolo_id})"

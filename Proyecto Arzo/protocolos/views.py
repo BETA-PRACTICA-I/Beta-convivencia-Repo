@@ -33,6 +33,9 @@ from formularios.forms import (
     EstudianteMadrePadreFicha0Form, # Protocolo 11
     EstudianteMadrePadreFicha1Form, # Protocolo 11
     EstudianteMadrePadreFicha2Form, # Protocolo 11
+    SalidaPedagogicaAnexo1Form, #Protocolo 13
+    DesregulacionEmocionalForm, #Protocolo 14
+    MediacionSolicitudForm, MediacionActaFinalForm, MediacionInformacionForm, # Protocolo 15
 )
 # -----------------------------------
 
@@ -53,6 +56,9 @@ from formularios.models import (
     EstudianteMadrePadreFicha0, # Protocolo 11
     EstudianteMadrePadreFicha1, # Protocolo 11
     EstudianteMadrePadreFicha2, # Protocolo 11
+    SalidaPedagogicaAnexo1, #Protocolo 13
+    DesregulacionEmocional, #Protocolo 14
+    MediacionInformacion, MediacionSolicitud, MediacionActaFinal, # Protocolo 15
 )
 # -----------------------------------
 
@@ -138,6 +144,29 @@ def protocolo_step(request, protocolo_id, step):
             1: {'form': EstudianteMadrePadreFicha0Form, 'model': EstudianteMadrePadreFicha0, 'template': 'madre_padre/paso1.html'},
             2: {'form': EstudianteMadrePadreFicha1Form, 'model': EstudianteMadrePadreFicha1, 'template': 'madre_padre/paso2.html'},
             3: {'form': EstudianteMadrePadreFicha2Form, 'model': EstudianteMadrePadreFicha2, 'template': 'madre_padre/paso3.html'},
+        }
+        form_config = step_map.get(step)
+
+    elif tipo_nombre == "Salidas pedagógicas":
+        total_steps = 1
+        step_map = {
+            1: {'form': SalidaPedagogicaAnexo1Form, 'model': SalidaPedagogicaAnexo1, 'template': 'salidas_pedagogicas/paso1.html'},
+        }
+        form_config = step_map.get(step)
+
+    elif tipo_nombre == "Desregulación emocional":
+        total_steps = 1
+        step_map = {
+            1: {'form': DesregulacionEmocionalForm, 'model': DesregulacionEmocional, 'template': 'desregulacion_emocional/paso1.html'},
+        }
+        form_config = step_map.get(step)
+
+    elif tipo_nombre == "Gestión de conflictos":
+        total_steps = 3
+        step_map = {
+            1: {'form': MediacionSolicitudForm, 'model': MediacionSolicitud, 'template': 'mediacion/paso1.html'},
+            2: {'form': MediacionInformacionForm, 'model': MediacionInformacion, 'template': 'mediacion/paso2.html'},
+            3: {'form': MediacionActaFinalForm, 'model': MediacionActaFinal, 'template': 'mediacion/paso3.html'},
         }
     form_config = step_map.get(step)
 
