@@ -418,6 +418,116 @@
         <div class="alert alert-light mt-4"><em>Paso 3 (Ficha 2) no completado.</em></div>
     {% endif %}
     <!-- --- FIN BLOQUE P11 --- -->
+
+    {% if protocolo.tipo.nombre == "Salidas pedagógicas" %}
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0 h5">Paso 1: Anexo 1 - Salidas Pedagógicas</h2>
+        </div>
+        <div class="card-body">
+            {% if especifico %}
+                <p><strong>Nombre Actividad:</strong> {{ especifico.actividad_nombre|default:"--" }}</p>
+                <p><strong>Fecha y Hora:</strong> {{ especifico.actividad_fecha_hora|date:"d/m/Y H:i"|default:"--" }}</p>
+                <p><strong>Cursos Participantes:</strong> {{ especifico.actividad_niveles_cursos_participantes|default:"--" }}</p>
+                <p><strong>Docente Responsable:</strong> {{ especifico.docente_nombre|default:"--" }}</p>
+                <p><strong>Establecimiento/Lugar:</strong> {{ especifico.establecimiento_nombre|default:"--" }}</p>
+                <h6>Observaciones:</h6>
+                <pre>{{ especifico.observaciones|default:"Sin observaciones." }}</pre>
+            {% else %}
+                <p class="text-muted">No se ha llenado el formulario específico aún.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {# --- P14: DESREGULACIÓN EMOCIONAL --- #}
+    {% if protocolo.tipo.nombre == "Desregulación emocional" %}
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0 h5">Paso 1: Bitácora - Desregulación Emocional</h2>
+        </div>
+        <div class="card-body">
+            {% if especifico %}
+                <p><strong>Estudiante:</strong> {{ especifico.nombre_estudiante|default:"--" }} ({{ especifico.curso|default:"--" }})</p>
+                <p><strong>Profesor Jefe:</strong> {{ especifico.profesor_jefe|default:"--" }}</p>
+                <p><strong>Fecha y Hora:</strong> {{ especifico.fecha_hora|date:"d/m/Y H:i"|default:"--" }}</p>
+                <p><strong>Lugar:</strong> {{ especifico.lugar_desregulacion|default:"--" }}</p>
+                <h6>Descripción de la Situación:</h6>
+                <pre>{{ especifico.descripcion_situacion|default:"--" }}</pre>
+                <hr>
+                <h6>Intervención (Resumen):</h6>
+                <ul>
+                    <li><strong>Etapa 1 (Contención):</strong> {% if especifico.etapa1_actividad_realizada %}Sí{% else %}No{% endif %}</li>
+                    <li><strong>Etapa 2 (Calma):</strong> {% if especifico.etapa2_retiran_elementos_realizada %}Sí{% else %}No{% endif %}</li>
+                    <li><strong>Etapa 3 (Restitución):</strong> {% if especifico.etapa3_traslada_curso_realizada %}Sí{% else %}No{% endif %}</li>
+                </ul>
+            {% else %}
+                <p class="text-muted">Información específica pendiente.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {# --- P15: GESTIÓN DE CONFLICTOS (MEDIACIÓN) --- #}
+    {% if protocolo.tipo.nombre == "Gestión de conflictos" %}
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0 h5">Paso 1: Solicitud de Mediación</h2>
+        </div>
+        <div class="card-body">
+            {% if especifico %}
+                <p><strong>Solicitante:</strong> {{ especifico.solicitante_nombre|default:"--" }} (RUN: {{ especifico.solicitante_run|default:"--" }})</p>
+                <p><strong>Estudiante Relacionado:</strong> {{ especifico.estudiante_nombre|default:"N/A" }}</p>
+                <p><strong>Solicitado (Contraparte):</strong> {{ especifico.solicitado_nombre|default:"--" }} ({{ especifico.solicitado_rol|default:"--" }})</p>
+                <h6>Motivo del Conflicto:</h6>
+                <pre>{{ especifico.motivo_solicitud|default:"--" }}</pre>
+            {% else %}
+                <p class="text-muted">Paso 1 (Solicitud) no completado.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0 h5">Paso 2: Información al Solicitado</h2>
+        </div>
+        <div class="card-body">
+            {% if informacion %}
+                <p><strong>Respuesta del Solicitado:</strong> {{ informacion.respuesta_solicitado|default:"Pendiente" }}</p>
+                <p><strong>Medio Informado:</strong> {{ informacion.medio_informado|default:"--" }}</p>
+                <p><strong>Detalle Verificación:</strong> {{ informacion.verificacion_detalle|default:"--" }}</p>
+            {% else %}
+                <p class="text-muted">Paso 2 (Información) no completado.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0 h5">Paso 3: Acta Final de Mediación</h2>
+        </div>
+        <div class="card-body">
+            {% if acta_final %}
+                <p><strong>Fecha del Acta:</strong> {{ acta_final.fecha_acta|date:"d/m/Y"|default:"--" }}</p>
+                <p><strong>¿Acuerdo Logrado?:</strong> {% if acta_final.acuerdo_logrado %}SÍ{% else %}NO{% endif %}</p>
+                
+                {% if acta_final.acuerdo_logrado %}
+                    <h6>Acuerdos:</h6>
+                    <ul>
+                        {% if acta_final.acuerdo_1_objetivo %}<li>{{ acta_final.acuerdo_1_objetivo }}</li>{% endif %}
+                        {% if acta_final.acuerdo_2_objetivo %}<li>{{ acta_final.acuerdo_2_objetivo }}</li>{% endif %}
+                        {% if acta_final.acuerdo_3_objetivo %}<li>{{ acta_final.acuerdo_3_objetivo }}</li>{% endif %}
+                    </ul>
+                {% else %}
+                    <h6>Motivo (Mediación Frustrada):</h6>
+                    <pre>{{ acta_final.motivo_frustrado|default:"No especificado." }}</pre>
+                {% endif %}
+            {% else %}
+                <p class="text-muted">Paso 3 (Acta Final) no completado.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
     
 
     {# --- ANEXOS P9: IMÁGENES ESTÁTICAS DE ARMAS --- #}

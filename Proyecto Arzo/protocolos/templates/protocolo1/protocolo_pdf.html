@@ -302,6 +302,69 @@
     {% endif %}
     <!-- --- FIN BLOQUE P11 --- -->
 
+    {% if protocolo.tipo.nombre == "Salidas pedagógicas" %}
+    <div class="section">
+        <h2>Paso 1: Anexo 1 - Salidas Pedagógicas</h2>
+        {% if especifico %}
+            <p><strong>Nombre Actividad:</strong> {{ especifico.actividad_nombre|default:"--" }}</p>
+            <p><strong>Fecha y Hora:</strong> {{ especifico.actividad_fecha_hora|date:"d/m/Y H:i"|default:"--" }}</p>
+            <p><strong>Cursos:</strong> {{ especifico.actividad_niveles_cursos_participantes|default:"--" }}</p>
+            <p><strong>Docente:</strong> {{ especifico.docente_nombre|default:"--" }}</p>
+            <h3>Observaciones:</h3>
+            <pre>{{ especifico.observaciones|default:"Sin observaciones." }}</pre>
+        {% else %}
+            <p><em>Formulario no completado.</em></p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if protocolo.tipo.nombre == "Desregulación emocional" %}
+    <div class="section">
+        <h2>Paso 1: Bitácora - Desregulación Emocional</h2>
+        {% if especifico %}
+            <p><strong>Estudiante:</strong> {{ especifico.nombre_estudiante|default:"--" }}</p>
+            <p><strong>Curso:</strong> {{ especifico.curso|default:"--" }}</p>
+            <p><strong>Fecha y Hora:</strong> {{ especifico.fecha_hora|date:"d/m/Y H:i"|default:"--" }}</p>
+            <h3>Descripción de la Situación:</h3>
+            <pre>{{ especifico.descripcion_situacion|default:"--" }}</pre>
+        {% else %}
+            <p><em>Formulario no completado.</em></p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if protocolo.tipo.nombre == "Gestión de conflictos" %}
+    <div class="section">
+        <h2>Paso 1: Solicitud de Mediación</h2>
+        {% if especifico %}
+            <p><strong>Solicitante:</strong> {{ especifico.solicitante_nombre|default:"--" }}</p>
+            <p><strong>Solicitado:</strong> {{ especifico.solicitado_nombre|default:"--" }} ({{ especifico.solicitado_rol|default:"--" }})</p>
+            <h3>Motivo:</h3>
+            <pre>{{ especifico.motivo_solicitud|default:"--" }}</pre>
+        {% else %}
+            <p><em>Paso 1 (Solicitud) no completado.</em></p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>Paso 3: Acta Final de Mediación</h2>
+        {% if acta_final %}
+            <p><strong>Fecha:</strong> {{ acta_final.fecha_acta|date:"d/m/Y"|default:"--" }}</p>
+            <p><strong>Resultado:</strong> {% if acta_final.acuerdo_logrado %}Acuerdo Logrado{% else %}Sin Acuerdo{% endif %}</p>
+            
+            {% if acta_final.acuerdo_logrado %}
+                <h3>Acuerdos:</h3>
+                <p>1. {{ acta_final.acuerdo_1_objetivo }}</p>
+                <p>2. {{ acta_final.acuerdo_2_objetivo }}</p>
+            {% else %}
+                <h3>Motivo Frustrado:</h3>
+                <pre>{{ acta_final.motivo_frustrado|default:"No especificado." }}</pre>
+            {% endif %}
+        {% else %}
+            <p><em>Acta final no completada.</em></p>
+        {% endif %}
+    </div>
+    {% endif %}
 
     {% endwith %}
 

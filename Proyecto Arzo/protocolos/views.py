@@ -304,6 +304,12 @@ def descargar_protocolo_pdf(request, protocolo_id):
             'ficha0_madre_padre',   # P11  
             'ficha1_madre_padre',
             'ficha2_madre_padre',
+
+            'salida_pedagogica_anexo1', # P13
+            'desregulacion_emocional',  # P14
+            'mediacion_solicitud',      # P15
+            'mediacion_informacion',    # P15
+            'mediacion_acta_final',     # P15
             ),
             
         id=protocolo_id,
@@ -316,9 +322,27 @@ def descargar_protocolo_pdf(request, protocolo_id):
         'protocolos_tipo_1': PROTOCOLOS_TIPO_1
     }
     
+    # --- Lógica para inyectar datos (Método robusto) ---
+    try:
+        if protocolo.tipo.nombre == "Salidas pedagógicas":
+            context['especifico'] = protocolo.salida_pedagogica_anexo1
+        elif protocolo.tipo.nombre == "Desregulación emocional":
+            context['especifico'] = protocolo.desregulacion_emocional
+        elif protocolo.tipo.nombre == "Gestión de conflictos":
+            context['especifico'] = protocolo.mediacion_solicitud
+            context['acta_final'] = protocolo.mediacion_acta_final
+            context['informacion'] = protocolo.mediacion_informacion
+            
+    except ObjectDoesNotExist:
+        # Si el objeto hijo no existe, asigna None para que el template no falle
+        context['especifico'] = None
+        context['acta_final'] = None
+        context['informacion'] = None
+    # --- FIN Lógica ---
+
+
     html_string = render_to_string('protocolo1/protocolo_pdf.html', context)
     
-    # ¡Clave para tus imágenes estáticas en WeasyPrint!
     base_url = request.build_absolute_uri('/')
     
     pdf_file = HTML(string=html_string, base_url=base_url).write_pdf()
@@ -357,6 +381,13 @@ def ver_protocolo(request, protocolo_id):
             'ficha0_madre_padre',  # P11
             'ficha1_madre_padre', 
             'ficha2_madre_padre',
+
+            'salida_pedagogica_anexo1', # P13
+            'desregulacion_emocional',  # P14
+
+            'mediacion_solicitud', 
+            'mediacion_informacion', 
+            'mediacion_acta_final',    # P15
             ), 
         id=protocolo_id
     )
@@ -365,6 +396,30 @@ def ver_protocolo(request, protocolo_id):
         'protocolo': protocolo,
         'protocolos_tipo_1': PROTOCOLOS_TIPO_1
     }
+
+    # --- Lógica para inyectar datos (Método robusto) ---
+    try:
+        if protocolo.tipo.nombre == "Salidas pedagógicas":
+            context['especifico'] = protocolo.salida_pedagogica_anexo1
+        elif protocolo.tipo.nombre == "Desregulación emocional":
+            context['especifico'] = protocolo.desregulacion_emocional
+        elif protocolo.tipo.nombre == "Gestión de conflictos":
+            context['especifico'] = protocolo.mediacion_solicitud
+            context['acta_final'] = protocolo.mediacion_acta_final
+            context['informacion'] = protocolo.mediacion_informacion
+            
+    except ObjectDoesNotExist:
+        # Esto pasa si el 'select_related' falla o el objeto hijo no existe
+        context['especifico'] = None
+        context['acta_final'] = None
+        context['informacion'] = None
+    # --- FIN Lógica ---
+    
+    # --- INICIO DEBUG (NUEVO) ---
+    print(f"---- DEBUG PROTOCOLO #{protocolo.id} ----")
+    print(f"Tipo: '{protocolo.tipo.nombre}'")
+    print(f"Contexto['especifico'] = {context.get('especifico', 'NO ASIGNADO')}")
+    # --- FIN DEBUG ---
     
     return render(request, 'protocolo1/ver_protocolo.html', context)
 
