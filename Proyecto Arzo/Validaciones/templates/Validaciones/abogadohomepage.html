@@ -58,7 +58,7 @@
     <table class="protocol-table" id="protocol-table">
         <thead>
             <tr>
-                <th>Nombres denunciantes</th>
+                <th>Involucrados</th>
                 <th>Curso(s)</th>
                 <th>Protocolo activado</th>
                 <th>Estado</th>
@@ -77,8 +77,12 @@
                     manejar clics de edición que ya no existen.
                 -->
                 <tr class="protocol-row">
-                    <td>{{ p.ficha_denuncia.nombre_denunciante|default:"N/A" }}</td>
-                    <td>{{ p.ficha_denuncia.curso_denunciado|default:"N/A" }}</td>
+                    <td title="{{ p.resumen_involucrados|default:'N/A' }}">
+                        {{ p.primer_involucrado|default:"N/A" }}
+                    </td>
+                    <td title="{{ p.resumen_cursos|default:'N/A' }}">
+                        {{ p.primer_curso|default:"N/A" }}
+                    </td>
                     <td>
                         {% if p.tipo.nombre %}
                             {{ p.tipo.nombre }}

@@ -1,0 +1,192 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora DEC</title>
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css' %}">
+    
+    <style>
+        .estrategia-grid {
+            display: grid;
+            grid-template-columns: 4fr 1fr; /* Columna de Estrategia | Columna de Checkbox */
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 25px;
+            margin-top: 15px;
+        }
+        .estrategia-header {
+            font-weight: bold;
+            font-size: 0.9em;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #ccc;
+        }
+        .estrategia-label {
+            font-size: 0.9em;
+        }
+        .estrategia-field {
+            width: 100%;
+        }
+        /* Centrar el checkbox */
+        .estrategia-field input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin: 0 auto;
+            display: block;
+        }
+        /* Contenedor para la fila "Otros" */
+        .otros-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .otros-container label {
+            font-size: 1em;
+            font-weight: normal !important;
+            flex-shrink: 0;
+        }
+        .otros-container input[type="text"] {
+            flex-grow: 1; /* Ocupa el espacio restante */
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        /* Estilo para los Textarea de responsables */
+        .responsables-textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        /* Separador */
+        hr {
+            margin: 30px 0;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>BITÁCORA DESREGULACIÓN EMOCIONAL Y CONDUCTUAL (DEC)</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <h3>Datos de la Bitácora</h3>
+            <div class="form-grid">
+                <div class="form-field"><label for="{{ form.nombre_estudiante.id_for_label }}">Nombre del estudiante:</label>{{ form.nombre_estudiante }}</div>
+                <div class="form-field"><label for="{{ form.curso.id_for_label }}">Curso:</label>{{ form.curso }}</div>
+                <div class="form-field"><label for="{{ form.profesor_jefe.id_for_label }}">Profesor (a) jefe:</label>{{ form.profesor_jefe }}</div>
+                <div class="form-field"><label for="{{ form.profesora_diferencial.id_for_label }}">Profesora diferencial:</label>{{ form.profesora_diferencial }}</div>
+                <div class="form-field"><label for="{{ form.lugar_desregulacion.id_for_label }}">Lugar donde se produce la desregulación:</label>{{ form.lugar_desregulacion }}</div>
+                <div class="form-field"><label for="{{ form.fecha_hora.id_for_label }}">Fecha y Hora:</label>{{ form.fecha_hora }}</div>
+                <div class="form-field" style="grid-column: 1 / -1;"><label for="{{ form.descripcion_situacion.id_for_label }}">Descripción de la situación:</label>{{ form.descripcion_situacion }}</div>
+                <div class="form-field"><label for="{{ form.nombre_firma_funcionario.id_for_label }}">Nombre y firma de funcionario/a:</label>{{ form.nombre_firma_funcionario }}</div>
+                <div class="form-field"><label for="{{ form.nombre_firma_2.id_for_label }}">Nombre y firma:</label>{{ form.nombre_firma_2 }}</div>
+            </div>
+
+            <hr>
+
+            <h3>ESTRATEGIA DE CONTENCIÓN UTILIZADAS</h3>
+            
+            <h4>Etapa 1: Contención emocional</h4>
+            <div class="estrategia-grid">
+                <div class="estrategia-header">Estrategia</div>
+                <div class="estrategia-header" style="text-align: center;">Realizada</div>
+                
+                <div class="estrategia-label">Se realiza cambio de actividad, de forma o de materiales que se están utilizando.</div>
+                <div class="estrategia-field">{{ form.etapa1_actividad_realizada }}</div>
+                
+                <div class="estrategia-label">Se cambia por un momento la temática sobre algo de su interés o pasatiempo favorito.</div>
+                <div class="estrategia-field">{{ form.etapa1_tematica_realizada }}</div>
+                
+                <div class="estrategia-label">Se realiza contención dentro de la sala de clases y de manera individualizada.</div>
+                <div class="estrategia-field">{{ form.etapa1_contencion_sala_realizada }}</div>
+                
+                <div class="estrategia-label">Se saca por un determinado momento de la sala de clases con la intención de cambiar el foco, tranquilizarlo y lograr transmitirle tranquilidad para que se autorregule.</div>
+                <div class="estrategia-field">{{ form.etapa1_saca_sala_realizada }}</div>
+                
+                <div class="estrategia-label">Se le acompaña en silencio hasta que se tranquilice.</div>
+                <div class="estrategia-field">{{ form.etapa1_silencio_realizada }}</div>
+                
+                <div class="otros-container">
+                <label for="{{ form.etapa1_otros_descripcion.id_for_label }}">Otros:</label>
+                {{ form.etapa1_otros_descripcion }}
+                </div>
+                <div class="estrategia-field">{{ form.etapa1_otros_realizada }}</div>
+            </div>
+            <div class-="form-field" style="margin-top: 15px;">
+                <label for="{{ form.etapa1_responsables_generales.id_for_label }}" style="font-weight: bold;">{{ form.etapa1_responsables_generales.label }}:</label>
+                {{ form.etapa1_responsables_generales }}
+            </div>
+            <hr style="margin-top: 40px;">
+
+            <h4>Etapa 2: Contención emocional y ambiental</h4>
+            <div class="estrategia-grid">
+                <div class="estrategia-header">Estrategia</div>
+                <div class="estrategia-header" style="text-align: center;">Realizada</div>
+
+                <div class="estrategia-label">Se retiran elementos peligrosos que estén al alcance del estudiante.</div>
+                <div class="estrategia-field">{{ form.etapa2_retiran_elementos_realizada }}</div>
+
+                <div class="estrategia-label">Se reducen dentro de lo posible estímulos que provoquen inquietud, por ejemplo: ruidos, luz, música, etc.</div>
+                <div class="estrategia-field">{{ form.etapa2_reducen_estimulos_realizada }}</div>
+
+                <div class="estrategia-label">Se evitan aglomeraciones de personas que estén observando.</div>
+                <div class="estrategia-field">{{ form.etapa2_evitan_aglomeraciones_realizada }}</div>
+                
+                <div class="estrategia-label">Se le permite ir a un lugar que sea de su agrado y que le ofrezca calma o regulación sensorio motriz.</div>
+                <div class="estrategia-field">{{ form.etapa2_permite_lugar_agrado_realizada }}</div>
+
+                <div class="estrategia-label">Se fomenta el dialogo positivo y contención con una persona simbólica una vez que su desregulación haya disminuido.</div>
+                <div class="estrategia-field">{{ form.etapa2_fomenta_dialogo_realizada }}</div>
+                
+                <div class="estrategia-label">Se concede tiempo de descanso cuando la desregulación ha cedido en intensidad.</div>
+                <div class="estrategia-field">{{ form.etapa2_concede_descanso_realizada }}</div>
+
+                <div class="otros-container">
+                <label for="{{ form.etapa2_otros_descripcion.id_for_label }}">Otros:</label>
+                {{ form.etapa2_otros_descripcion }}
+                </div>
+                <div class="estrategia-field">{{ form.etapa2_otros_realizada }}</div>
+            </div>
+            <div class-="form-field" style="margin-top: 15px;">
+                <label for="{{ form.etapa2_responsables_generales.id_for_label }}" style="font-weight: bold;">{{ form.etapa2_responsables_generales.label }}:</label>
+                {{ form.etapa2_responsables_generales }}
+            </div>
+            <hr style="margin-top: 40px;">
+
+            <h4>Etapa 3: Contención emocional, ambiental y Física</h4>
+            <div class="estrategia-grid">
+                <div class="estrategia-header">Estrategia</div>
+                <div class="estrategia-header" style="text-align: center;">Realizada</div>
+
+                <div class="estrategia-label">Se traslada momentáneamente al resto de los integrantes del curso a otro espacio del colegio para facilitar el proceso de regulación del estudiante.</div>
+                <div class="estrategia-field">{{ form.etapa3_traslada_curso_realizada }}</div>
+
+                <div class="estrategia-label">Se realiza restricción de movimiento tutelada para evitar el riesgo o daños a la integridad física.</div>
+                <div class="estrategia-field">{{ form.etapa3_restriccion_movimiento_realizada }}</div>
+
+                <div class="estrategia-label">Si el DEC no cede se llama al apoderado (a) para que asista al colegio en apoyo a la contención del estudiante.</div>
+                <div class="estrategia-field">{{ form.etapa3_llama_apoderado_realizada }}</div>
+
+                <div class="otros-container">
+                <label for="{{ form.etapa3_otros_descripcion.id_for_label }}">Otros:</label>
+                {{ form.etapa3_otros_descripcion }}
+                </div>
+                <div class="estrategia-field">{{ form.etapa3_otros_realizada }}</div>
+            </div>
+            <div class-="form-field" style="margin-top: 15px;">
+                <label for="{{ form.etapa3_responsables_generales.id_for_label }}" style="font-weight: bold;">{{ form.etapa3_responsables_generales.label }}:</label>
+                {{ form.etapa3_responsables_generales }}
+            </div>
+            <button type="submit" class="submit-button" style="margin-top: 30px;">Guardar Bitácora</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso 1: {{ tipo_nombre }}</title>
+    <link rel="stylesheet" href="{% static 'css/Form1styles.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="Form-Tittle">
+                <h1>{{ tipo_nombre }}</h1>
+                <h2>Paso 1 de 1: Anexo 1 - Ficha de Salida</h2>
+            </div>
+
+            <div class="section-header">Datos del Establecimiento</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.establecimiento_nombre.label_tag }} {{ form.establecimiento_nombre }}</div>
+                <div class="form-group">{{ form.establecimiento_rbd.label_tag }} {{ form.establecimiento_rbd }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.establecimiento_direccion.label_tag }} {{ form.establecimiento_direccion }}</div>
+                <div class="form-group">{{ form.establecimiento_fono.label_tag }} {{ form.establecimiento_fono }}</div>
+            </div>
+
+            <div class="section-header">Datos del Rector</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.rector_nombre.label_tag }} {{ form.rector_nombre }}</div>
+                <div class="form-group">{{ form.rector_run.label_tag }} {{ form.rector_run }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.rector_correo.label_tag }} {{ form.rector_correo }}</div>
+                <div class="form-group">{{ form.rector_fono.label_tag }} {{ form.rector_fono }}</div>
+            </div>
+            
+            <div class="section-header">Datos del Docente Responsable</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.docente_nombre.label_tag }} {{ form.docente_nombre }}</div>
+                <div class="form-group">{{ form.docente_run.label_tag }} {{ form.docente_run }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.docente_correo.label_tag }} {{ form.docente_correo }}</div>
+                <div class="form-group">{{ form.docente_fono.label_tag }} {{ form.docente_fono }}</div>
+            </div>
+
+            <div class="section-header">Datos de la Actividad</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.actividad_nombre.label_tag }} {{ form.actividad_nombre }}</div>
+                <div class="form-group">{{ form.actividad_fecha_hora.label_tag }} {{ form.actividad_fecha_hora }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.actividad_niveles_cursos_participantes.label_tag }} {{ form.actividad_niveles_cursos_participantes }}</div>
+            </div>
+
+            <div class="section-header">Listados y Registros</div>
+            <div class="form-row">
+                <div class="form-group">{{ form.listado_estudiantes.label_tag }} {{ form.listado_estudiantes }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.listado_docentes.label_tag }} {{ form.listado_docentes }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.listado_apoderados.label_tag }} {{ form.listado_apoderados }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.cursos_sin_profesor.label_tag }} {{ form.cursos_sin_profesor }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.profesores_con_clases.label_tag }} {{ form.profesores_con_clases }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">{{ form.observaciones.label_tag }} {{ form.observaciones }}</div>
+            </div>
+
+            <button type="submit">Finalizar Protocolo</button>
+        </form>
+    </div>
+</body>
+</html>

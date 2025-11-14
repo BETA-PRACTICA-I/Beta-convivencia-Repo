@@ -9,6 +9,7 @@ from formularios.models import (
     Derivacion,
     InformeConcluyente,
     Apelacion,
+    MediacionSolicitud,
     ResolucionApelacion,
     EncuestaBullying,   # Protocolos 1-6
 
@@ -19,6 +20,8 @@ from formularios.models import (
     RiesgoSuicidaAnexo5,    # Protocolo Riesgo Suicida
 
     FichaAccidenteEscolar,  # Protocolo Casos de Salud
+    SalidaPedagogicaAnexo1, #Protocolo 13
+    DesregulacionEmocional, #Protocolo 14
 )
 
 # --- Define las clases Inline para CADA formulario ---
@@ -93,6 +96,30 @@ class FichaAccidenteEscolarInline(admin.StackedInline):
     can_delete = False
     extra = 0
 
+class SalidaPedagogicaAnexo1Inline(admin.StackedInline):
+    model = SalidaPedagogicaAnexo1
+    can_delete = False
+    extra = 0
+
+class Desregulaciónemocionalinline(admin.StackedInline):
+    model = DesregulacionEmocional
+    can_delete = False
+    extra = 0
+
+class MediacionSolicitudInline(admin.StackedInline):
+    model = MediacionSolicitud
+    can_delete = False
+    extra = 0
+
+class MediacionInformacionInline(admin.StackedInline):
+    model = MediacionSolicitud
+    can_delete = False
+    extra = 0
+
+class MediacionActaFinalInline(admin.StackedInline):
+    model = MediacionSolicitud
+    can_delete = False
+    extra = 0
 # --- Configuración del Admin para el modelo Protocolo ---
 
 @admin.register(Protocolo)
@@ -129,7 +156,7 @@ class ProtocoloAdmin(admin.ModelAdmin):
             
             elif obj.tipo.nombre in protocolos_tipo_1:
                 # Mostrar los inlines del flujo original
-                 return [
+                return [
                     FormularioDenunciaInline,
                     FichaEntrevistaInline,
                     DerivacionInline,
@@ -143,6 +170,17 @@ class ProtocoloAdmin(admin.ModelAdmin):
                 # Mostrar el inline de Casos de Salud
                 return [FichaAccidenteEscolarInline]
             
+            elif obj.tipo.nombre == "Salidas pedagógicas":
+                # Mostrar el inline de Salidas Pedagogicas
+                return [SalidaPedagogicaAnexo1Inline]
+            
+            elif obj.tipo.nombre == "Desregulación emocional":
+                # Mostrar el inline de Salidas Pedagogicas
+                return [Desregulaciónemocionalinline]
+
+            elif obj.tipo.nombre == "Gestión de conflictos":
+                # Mostrar el inline de Gestión de conflictos
+                return [MediacionSolicitudInline, MediacionInformacionInline, MediacionActaFinalInline]
             # Puedes añadir más elif obj.tipo.nombre == "Otro Tipo": return [OtrosInlines] aquí
 
         # Si es un protocolo nuevo (obj=None) o el tipo no coincide con ninguno,

@@ -9,6 +9,9 @@ from .models import (
     ReconocimientoIdentidad, #Protocolo 12
     ActaReunionIdentidad, #Protocolo 12
     FichaAccidenteEscolar,  #Protocolo 8
+    SalidaPedagogicaAnexo1, #Protocolo 13
+    DesregulacionEmocional, #Protocolo 14
+    MediacionInformacion, MediacionActaFinal, MediacionSolicitud, # Protocolo 15
     )
 
 
@@ -441,4 +444,145 @@ class EstudianteMadrePadreFicha2Form(forms.ModelForm):
             'funcionario_recibe_informe': forms.TextInput(attrs={'placeholder': 'Nombre y cargo'}),
             'firma_funcionario_elabora': forms.TextInput(attrs={'placeholder': 'Nombre completo del funcionario'}),
             'firma_rector': forms.TextInput(attrs={'placeholder': 'Nombre completo del Rector/a'}),
+        }
+
+class SalidaPedagogicaAnexo1Form(forms.ModelForm):
+    class Meta:
+        model = SalidaPedagogicaAnexo1
+        exclude = ['protocolo']
+        widgets = {
+            'actividad_fecha_hora': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'actividad_niveles_cursos_participantes': forms.TextInput(attrs={'placeholder': 'Ej: 8vo Básico A, 30 estudiantes'}),
+            'listado_estudiantes': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Un estudiante por línea: Nombre, Curso, Fono Apoderado'}),
+            'listado_docentes': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Un docente por línea: Nombre, Asignatura, Fono'}),
+            'listado_apoderados': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Un apoderado por línea: Nombre, Curso, Fono'}),
+            'cursos_sin_profesor': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Un curso por línea: Curso, Día, Hora, Reemplaza'}),
+            'profesores_con_clases': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Listar profesores afectados'}),
+            'observaciones': forms.Textarea(attrs={'rows': 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if 'class' not in field.widget.attrs:
+                field.widget.attrs['class'] = 'form-control'
+
+class DesregulacionEmocionalForm(forms.ModelForm):
+    class Meta:
+        model = DesregulacionEmocional
+        exclude = ['protocolo']
+        widgets = {
+            'fecha_hora': forms.DateTimeInput(
+                attrs={'type': 'datetime-local'},
+                format='%Y-%m-%dT%H:%M'
+            ),
+            'descripcion_situacion': forms.Textarea(attrs={'rows': 10}),
+            
+            # --- Widgets Etapa 1 ---
+            'etapa1_otros_descripcion': forms.TextInput(
+                attrs={'placeholder': 'Especifique qué "Otros"...'}
+            ),
+            'etapa1_responsables_generales': forms.Textarea(
+                attrs={
+                    'rows': 4, 
+                    'placeholder': 'Anote aquí a todos los responsables de las estrategias marcadas en Etapa 1...'
+                }
+            ),
+            
+            # --- Widgets Etapa 2 ---
+            'etapa2_otros_descripcion': forms.TextInput(
+                attrs={'placeholder': 'Especifique qué "Otros"...'}
+            ),
+            'etapa2_responsables_generales': forms.Textarea(
+                attrs={
+                    'rows': 4, 
+                    'placeholder': 'Anote aquí a todos los responsables de las estrategias marcadas en Etapa 2...'
+                }
+            ),
+
+            # --- Widgets Etapa 3 ---
+            'etapa3_otros_descripcion': forms.TextInput(
+                attrs={'placeholder': 'Especifique qué "Otros"...'}
+            ),
+            'etapa3_responsables_generales': forms.Textarea(
+                attrs={
+                    'rows': 4, 
+                    'placeholder': 'Anote aquí a todos los responsables de las estrategias marcadas en Etapa 3...'
+                }
+            ),
+        }
+        help_texts = {
+            'nombre_firma_2': '',
+        }
+        labels = {
+            # Ocultamos todas las etiquetas "Otros"
+            'etapa1_otros_descripcion': '', 
+            'etapa2_otros_descripcion': '',
+            'etapa3_otros_descripcion': '',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Aceptamos el formato que genera el input "datetime-local" del navegador
+        self.fields['fecha_hora'].input_formats = ['%Y-%m-%dT%H:%M', '%Y-%m-%d %H:%M:%S']
+
+class MediacionSolicitudForm(forms.ModelForm):
+    class Meta:
+        model = MediacionSolicitud
+        exclude = ('protocolo',)
+        widgets = {
+            'motivo_solicitud': forms.Textarea(attrs={'rows': 4}),
+            'antecedentes': forms.Textarea(attrs={'rows': 4}),
+        }
+
+class MediacionInformacionForm(forms.ModelForm):
+    # Opciones para los BooleanFields
+    CHOICES_SI_NO_NS = [(True, 'Sí'), (False, 'No'), (None, 'No Aplica/No Informado')]
+
+    info_nombre_solicitante = forms.TypedChoiceField(
+        choices=CHOICES_SI_NO_NS, widget=forms.RadioSelect, coerce=lambda x: x == 'True' if x != 'None' else None,
+        label="Se informó Nombre Solicitante"
+    )
+    info_motivo = forms.TypedChoiceField(
+        choices=CHOICES_SI_NO_NS, widget=forms.RadioSelect, coerce=lambda x: x == 'True' if x != 'None' else None,
+        label="Se informó Motivo de Mediación"
+    )
+    info_fecha_hora = forms.TypedChoiceField(
+        choices=CHOICES_SI_NO_NS, widget=forms.RadioSelect, coerce=lambda x: x == 'True' if x != 'None' else None,
+        label="Se informó Fecha y Hora"
+    )
+    info_voluntario = forms.TypedChoiceField(
+        choices=CHOICES_SI_NO_NS, widget=forms.RadioSelect, coerce=lambda x: x == 'True' if x != 'None' else None,
+        label="Se señaló que el proceso es voluntario"
+    )
+
+    class Meta:
+        model = MediacionInformacion
+        exclude = ('protocolo',)
+        widgets = {
+            'verificacion_detalle': forms.Textarea(attrs={'rows': 3}),
+            'respuesta_solicitado': forms.RadioSelect,
+            'medio_informado': forms.RadioSelect,
+        }
+
+class MediacionActaFinalForm(forms.ModelForm):
+    acuerdo_logrado = forms.TypedChoiceField(
+        choices=[(True, 'Sí, se logró un acuerdo (Acta de Conciliación)'), (False, 'No, no se logró acuerdo (Acta Frustrada)')],
+        widget=forms.RadioSelect,
+        coerce=lambda x: x == 'True',
+        label="Resultado del Proceso"
+    )
+    
+    class Meta:
+        model = MediacionActaFinal
+        exclude = ('protocolo',)
+        widgets = {
+            'fecha_acta': forms.DateInput(attrs={'type': 'date'}),
+            'partes_individualizadas': forms.Textarea(attrs={'rows': 3}),
+            
+            'acuerdo_1_actividades': forms.Textarea(attrs={'rows': 3}),
+            'acuerdo_2_actividades': forms.Textarea(attrs={'rows': 3}),
+            'acuerdo_3_actividades': forms.Textarea(attrs={'rows': 3}),
+            
+            'motivo_frustrado': forms.Textarea(attrs={'rows': 4}),
         }
