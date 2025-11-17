@@ -1,18 +1,22 @@
 from django.urls import path
 from . import views
 
-# El app_name es crucial para que {% url 'Validaciones:login' %} funcione
-app_name = 'Validaciones'
+app_name = 'Validaciones'  # No cambies esto, es para que funcionen los redirects
 
 urlpatterns = [
-    path('', views.Login_view, name='login'),
+    # 1. Corregido: views.Login_view -> views.login_view
+    path('', views.login_view, name='login'), 
     
-    path('homepage/', views.Home_view, name='homepage'),
-
-    path('homepage/Almacen', views.Almacen_view, name='Almacen'),
-
-    path('abogado/homepage/', views.abogado_homepage_view, name='abogado_homepage'),
-
-    path('director/homepage/', views.director_homepage_view, name='director_homepage'),
+    path('logout/', views.logout_view, name='logout'),
     
+    # 2. Corregido: views.Home_view -> views.homepage
+    path('homepage/', views.homepage, name='homepage'), # Esta es la homepage del Encargado
+    
+    # 3. Corregido: views.Abogado_view -> views.abogadohomepage
+    path('abogadohomepage/', views.abogadohomepage, name='abogadohomepage'),
+    
+    # 4. Corregido: views.Director_view -> views.directorhomepage
+    path('directorhomepage/', views.directorhomepage, name='directorhomepage'),
+    
+    path('almacen/', views.Almacen, name='Almacen'),
 ]

@@ -1,51 +1,137 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Login Page</title>
-        <link rel="stylesheet" href="{% static 'Validaciones/css/Login.css' %}">
-        <!-- ¡Asegúrate de que el nombre del JS sea el correcto! -->
-        <script src="{% static 'Validaciones/js/Logica_Login.js' %}" defer></script>
-    </head>
-    <body>
-        <div class="container">
-            <img src="{% static 'Validaciones/img/logocolegioarzobispado2.png' %}" class="logo">
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Título de la pestaña del navegador -->
+    <title>Convivencia Escolar - Iniciar Sesión</title>
+    
+    <link rel="stylesheet" href="{% static 'Validaciones/css/nuevo_login.css' %}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
 
-            <div class="botones">
+    <main class="login-container" id="login-container">
+
+        <div class="panel panel-izquierdo">
+
+            <div class="panel-contenido">
+                
+                <img src="{% static 'Validaciones/new_imgs/logo_renovación.png' %}" alt="Logo Arzobispado" class="logo-login">
+                
+                <!-- El saludo cambiará con JavaScript -->
+                <h2 id="saludo-rol">¡Bienvenido!</h2>
+                <p>Por favor ingrese sus credenciales.</p>
+
                 <!-- 
-                    ¡CAMBIO! Añadimos un 'data-role' a cada botón 
-                    para que el JavaScript sepa cuál se apretó.
+                Este es tu formulario de Django.
+                Viene de tu views.py (la variable 'form')
                 -->
-                <button class="btn" id="btn-convivencia" data-role="encargado">Encargado de convivencia escolar</button>
-                <button class="btn" id="btn-abogados" data-role="abogado">Abogados</button>
-                <button class="btn" id="btn-director" data-role="director">Director</button>
-            </div>
-            
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li class="msg {{ message.tags }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            <div id="formularioContainer" class="FormInicioSesion oculto">
-                <h2 id="form-title">Inicio de Sesión</h2> <!-- Título dinámico -->
-
-                <form id="loginForm" class="form-vertical" method="POST" action="{% url 'Validaciones:login' %}">
+                <form method="POST" class="login-form">
                     {% csrf_token %}
+
+                    <!-- Campo de Usuario (RUT) -->
+                    <div class="input-grupo">
+                        <i class="fas fa-user"></i>
+                        <!-- 
+                        Django pondrá el campo <input> aquí.
+                        Nuestro CSS le dará el estilo bonito.
+                        -->
+                        {{ form.username }}
+                    </div>
                     
+                    <!-- Campo de Contraseña -->
+                    <div class="input-grupo">
+                        <i class="fas fa-lock"></i>
+                        {{ form.password }}
+                    </div>
+
                     <!-- 
-                        ¡CAMBIO CLAVE! 
-                        Este campo oculto le dirá al backend qué botón apretó el usuario.
+                    CAMPO CLAVE: Este input oculto guardará qué rol
+                    seleccionó el usuario (ej: "director").
+                    Lo usaremos luego en views.py.
                     -->
-                    <input type="hidden" name="role_type" id="role_type" value="">
+                    <input type="hidden" name="role" id="role-input" value="">
+
+                    <!-- 
+                    MENSAJES DE ERROR:
+                    Aquí mostramos si el usuario se equivoca de contraseña,
+                    usando el mismo código que tenías en tu homepage.
+                    -->
+                    {% if messages %}
+                        <div class="mensajes-error">
+                            {% for message in messages %}
+                                <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     
-                    <input type="Text" id="Rut" name="username" required placeholder="RUT (Ej: 157262887)" inputmode="numeric">
-                    <input type="password" id="password" name="password" required placeholder="Contraseña">
-                    <button type="submit">Iniciar Sesión</button>
+                    <!-- Botón para iniciar sesión -->
+                    <button type="submit" class="btn btn-login">Iniciar Sesión</button>
+                
                 </form>
+
+                <!-- 
+                Botón para "Volver" a la selección de rol 
+                ¡ERROR CORREGIDO! -> class="btn btn-volver"
+                -->
+                <button class="btn btn-volver" id="btn-volver">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+            </div>
+
+            <!-- 
+            Esta es la imagen de fondo azul con patrones
+            que diseñaste en Canva.
+            -->
+            <div class="fondo-panel-izquierdo" style="background-image: url('{% static 'Validaciones/new_imgs/PANTALLA COMPLETA_-03.png' %}')"></div>
+        </div>
+
+
+        <!-- 
+        PANEL DERECHO (Catedral, cielo y selección de rol)
+        Este panel estará visible al principio.
+        -->
+        <div class="panel panel-derecho">
+
+            <!-- Capa del cielo (para la animación lenta) -->
+            <div class="cielo-fondo" style="background-image: url('{% static 'Validaciones/new_imgs/Cielo.jpg' %}')"></div>
+            <!-- Capa de la catedral (por encima del cielo) -->
+            <div class="catedral-fondo" style="background-image: url('{% static 'Validaciones/new_imgs/catedral.png' %}')"></div>
+
+            <!-- Contenido del panel: Título y botones -->
+            <div class="panel-contenido">
+                <h1>Sistema de Convivencia Escolar</h1>
+                <p>Seleccione su rol para continuar</p>
+                
+                <div class="botones-rol-container">
+                    <!-- 
+                    Estos son los 3 botones.
+                    Usamos "data-role" y "data-saludo" para decirle
+                    a JavaScript qué hacer cuando se haga clic.
+                    -->
+                    <button class="btn btn-rol" data-role="encargado" data-saludo="¡Hola, Encargado!">
+                        Encargado de Convivencia
+                    </button>
+                    <button class="btn btn-rol" data-role="abogado" data-saludo="¡Hola, Abogado!">
+                        Abogados o Psicólogos
+                    </button>
+                    <button class="btn btn-rol" data-role="director" data-saludo="¡Hola, señor Director!">
+                        Director
+                    </button>
+                </div>
             </div>
         </div>
-    </body>
+
+    </main>
+
+    <!-- 
+    Cargaremos un NUEVO archivo JavaScript.
+    Lo crearemos después. Controlará la animación de clic.
+    -->
+    <script src="{% static 'Validaciones/js/nuevo_login.js' %}"></script>
+</body>
 </html>
