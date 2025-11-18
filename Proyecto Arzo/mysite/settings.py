@@ -128,6 +128,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Static assets that live outside the conventional app/static directories.
+STATICFILES_DIRS = [
+    ('derivaciones', BASE_DIR / 'derivaciones'),
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

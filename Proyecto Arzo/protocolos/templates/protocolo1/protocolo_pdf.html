@@ -5,41 +5,94 @@
     <meta charset="UTF-8">
     <title>Protocolo #{{ protocolo.id }}</title>
     <style>
-        @page { size: A4; margin: 1.5cm; }
-        body { font-family: "Helvetica", "Arial", sans-serif; line-height: 1.6; font-size: 11pt; }
-        h1, h2, h3 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 6px; margin-top: 25px; }
+        @page {
+            size: A4;
+            margin: 5.7cm 2.5cm 2.8cm 2.5cm;
+            background: url("{% static 'derivaciones/template2pdf.png' %}") no-repeat center center;
+            background-size: 100% 100%;
+        }
+        @page cover {
+            size: A4;
+            margin: 6.5cm 2.5cm 3cm 2.5cm;
+            background: url("{% static 'derivaciones/template2pdf.png' %}") no-repeat center center;
+            background-size: 100% 100%;
+        }
+        body {
+            font-family: "Helvetica", "Arial", sans-serif;
+            line-height: 1.6;
+            font-size: 11pt;
+            background: transparent;
+            margin: 0;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 6px;
+            margin-top: 25px;
+        }
         h1 { font-size: 22pt; text-align: center; border: none; }
         h2 { font-size: 16pt; }
         h3 { font-size: 13pt; border-bottom: 1px solid #bdc3c7; }
         p { margin: 8px 0; }
         strong { color: #34495e; }
-        pre { background-color: #ecf0f1; padding: 15px; white-space: pre-wrap; word-wrap: break-word; border-left: 3px solid #3498db; font-family: "Courier New", monospace; }
-        .header { text-align: center; margin-bottom: 40px; }
+        pre {
+            background-color: #ecf0f1;
+            padding: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border-left: 3px solid #3498db;
+            font-family: "Courier New", monospace;
+        }
+        .summary {
+            text-align: center;
+            margin-bottom: 1.5cm;
+            page: cover;
+        }
+        .summary h1 { font-size: 24pt; margin-bottom: 0.5cm; }
+        .summary p { font-size: 13pt; }
+        .content { margin-top: 0; }
         .section { margin-bottom: 20px; page-break-inside: avoid; }
-        .footer { position: fixed; bottom: -1cm; left: 0; right: 0; height: 1cm; text-align: center; font-size: 9pt; color: #7f8c8d; }
-        
-        /* Estilos para las imágenes del anexo */
-        .anexo-imagen { 
-            width: 100%; 
-            max-height: 22cm; /* Evita que la imagen sea más grande que la página */
+        .footer {
+            position: fixed;
+            bottom: 1.2cm;
+            left: 2.5cm;
+            right: 2.5cm;
+            text-align: center;
+            font-size: 9pt;
+            color: #7f8c8d;
+        }
+        .anexo-imagen {
+            width: 100%;
+            max-height: 22cm;
             object-fit: contain;
-            margin-top: 1rem; 
-            page-break-before: always; /* Pone cada imagen en una nueva página */
+            margin-top: 1rem;
+            page-break-before: always;
+        }
+        .page-logo {
+            position: fixed;
+            top: -6cm;
+            right: -1cm;
+            width: 110px;
         }
     </style>
 </head>
 <body>
+    <img src="{% static 'Validaciones/img/logocolegioarzobispado2.png' %}" alt="Logo Colegio" class="page-logo">
+
     <div class="footer">
         Documento generado el {{ fecha_actual|date:"d/m/Y H:i" }} por {{ request.user.get_full_name|default:request.user.username }}.
     </div>
 
-    <div class="header">
+    <section class="summary">
         <h1>Informe de Protocolo #{{ protocolo.id }}</h1>
         <p><strong>Tipo de Protocolo:</strong> {{ protocolo.tipo.nombre }}</p>
         <p><strong>Estado Actual:</strong> {{ protocolo.estado }}</p>
         <p><strong>Fecha de Apertura:</strong> {{ protocolo.fecha_creacion|date:"d/m/Y" }}</p>
-    </div>
+    </section>
 
+    <div style="page-break-after: always;"></div>
+
+    <div class="content">
     {% with p=protocolo %}
 
     {# --- PROTOCOLOS 1-7 --- #}
@@ -400,6 +453,7 @@
 
     {% endif %}
 
+    </div>
 </body>
 </html>
 
