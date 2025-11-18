@@ -102,20 +102,29 @@ def login_view(request):
     # Renderizamos la nueva plantilla de Login
     return render(request, 'Validaciones/Login.html', {'form': form})
 
+# -----------------------------------------------------------------
+# VISTAS DE HOME (AQUÍ ESTÁ LA CORRECCIÓN)
+# -----------------------------------------------------------------
 
-# -----------------------------------------------------------------
-# VISTAS DE HOME (SIN CAMBIOS)
-# -----------------------------------------------------------------
 @login_required
 def homepage(request):
-    # Lógica para la homepage del Encargado
-    # 1. Filtros (igual que tu código original)
+    
+    # --- ¡CAMBIO 1! ---
+    # Obtenemos la lista de TODOS los tipos de protocolo para el menú "Crear Nuevo"
+    tipos = TipoProtocolo.objects.all().order_by('nombre')
+    
     query = request.GET.get('q', '')
+    
+    # --- ¡CAMBIO 2! ---
+    # Excluimos los protocolos 'En Creacion' Y 'Resuelto' de la tabla principal
     protocolos_filtrados = Protocolo.objects.select_related(
         'creador', 'tipo'
     ).prefetch_related(
         *SUMMARY_RELATIONS
+    ).exclude(
+        Q(estado='En Creacion') | Q(estado='Resuelto')
     ).order_by('-fecha_creacion')
+    # --- FIN DEL CAMBIO ---
 
     if query:
         protocolos_filtrados = protocolos_filtrados.filter(
@@ -125,19 +134,18 @@ def homepage(request):
             Q(estado__icontains=query)
         ).distinct()
 
-    # 2. Datos para Gráfico 1 (Barras - Protocolos por Tipo)
-    
-    # --- ¡CORRECCIÓN AQUÍ! ---
-    # Cambiamos 'protocolo' por 'protocolos' (en plural)
+    # Los gráficos seguirán mostrando todos los estados (excepto 'En Creacion')
+    # para tener una vista general.
+    conteo_base_graficos = Protocolo.objects.exclude(estado='En Creacion')
+
     conteo_tipos_qs = TipoProtocolo.objects.annotate(
-        total=Count('protocolos', filter=Q(protocolos__in=protocolos_filtrados))
+        total=Count('protocolos', filter=Q(protocolos__in=conteo_base_graficos))
     ).order_by('nombre')
     
     labels_tipos = [tipo.nombre for tipo in conteo_tipos_qs]
     data_tipos = [tipo.total for tipo in conteo_tipos_qs]
 
-    # 3. Datos para Gráfico 2 (Circular - Protocolos por Estado)
-    conteo_estados = protocolos_filtrados.values('estado').annotate(total=Count('estado')).order_by()
+    conteo_estados = conteo_base_graficos.values('estado').annotate(total=Count('estado')).order_by()
     conteo_dict = {item['estado']: item['total'] for item in conteo_estados}
     labels_estados = ['Pendiente', 'Resuelto', 'Vencido']
     data_estados = [
@@ -146,25 +154,35 @@ def homepage(request):
         conteo_dict.get('Vencido', 0)
     ]
 
-    # 4. Preparar el contexto final
     context = {
         'protocolos': protocolos_filtrados,
+        'search_query': query,
+        
+        # --- ¡CAMBIO 3! ---
+        # Añadimos la lista 'tipos' al contexto para que el HTML la pueda usar
+        'tipos': tipos,
+        
         'chart_labels_tipos': json.dumps(labels_tipos),
         'chart_data_tipos': json.dumps(data_tipos),
         'chart_labels_estados': json.dumps(labels_estados),
         'chart_data_estados': json.dumps(data_estados),
-        'search_query': query
     }
     return render(request, 'Validaciones/homepage.html', context)
 
 @login_required
 def abogadohomepage(request):
-    # Lógica para la homepage del Abogado
+    # Aplicamos los mismos cambios para la vista de Abogado
+    
+    tipos = TipoProtocolo.objects.all().order_by('nombre') # <-- CAMBIO 1
     query = request.GET.get('q', '')
+    
+    # <-- CAMBIO 2
     protocolos_filtrados = Protocolo.objects.select_related(
         'creador', 'tipo'
     ).prefetch_related(
         *SUMMARY_RELATIONS
+    ).exclude(
+        Q(estado='En Creacion') | Q(estado='Resuelto')
     ).order_by('-fecha_creacion')
 
     if query:
@@ -175,16 +193,15 @@ def abogadohomepage(request):
             Q(estado__icontains=query)
         ).distinct()
     
-    # --- ¡CORRECCIÓN AQUÍ! ---
-    # Cambiamos 'protocolo' por 'protocolos' (en plural)
+    conteo_base_graficos = Protocolo.objects.exclude(estado='En Creacion')
     conteo_tipos_qs = TipoProtocolo.objects.annotate(
-        total=Count('protocolos', filter=Q(protocolos__in=protocolos_filtrados))
+        total=Count('protocolos', filter=Q(protocolos__in=conteo_base_graficos))
     ).order_by('nombre')
     
     labels_tipos = [tipo.nombre for tipo in conteo_tipos_qs]
     data_tipos = [tipo.total for tipo in conteo_tipos_qs]
     
-    conteo_estados = protocolos_filtrados.values('estado').annotate(total=Count('estado')).order_by()
+    conteo_estados = conteo_base_graficos.values('estado').annotate(total=Count('estado')).order_by()
     conteo_dict = {item['estado']: item['total'] for item in conteo_estados}
     labels_estados = ['Pendiente', 'Resuelto', 'Vencido']
     data_estados = [
@@ -195,23 +212,30 @@ def abogadohomepage(request):
     
     context = {
         'protocolos': protocolos_filtrados,
+        'search_query': query,
+        'tipos': tipos, # <-- CAMBIO 3
         'chart_labels_tipos': json.dumps(labels_tipos),
         'chart_data_tipos': json.dumps(data_tipos),
         'chart_labels_estados': json.dumps(labels_estados),
         'chart_data_estados': json.dumps(data_estados),
-        'search_query': query
     }
     return render(request, 'Validaciones/abogadohomepage.html', context)
 
 
 @login_required
 def directorhomepage(request):
-    # Lógica para la homepage del Director
+    # Aplicamos los mismos cambios para la vista de Director
+    
+    tipos = TipoProtocolo.objects.all().order_by('nombre') # <-- CAMBIO 1
     query = request.GET.get('q', '')
+
+    # <-- CAMBIO 2
     protocolos_filtrados = Protocolo.objects.select_related(
         'creador', 'tipo'
     ).prefetch_related(
         *SUMMARY_RELATIONS
+    ).exclude(
+        Q(estado='En Creacion') | Q(estado='Resuelto')
     ).order_by('-fecha_creacion')
 
     if query:
@@ -222,16 +246,15 @@ def directorhomepage(request):
             Q(estado__icontains=query)
         ).distinct()
 
-    # --- ¡CORRECCIÓN AQUÍ! ---
-    # Cambiamos 'protocolo' por 'protocolos' (en plural)
+    conteo_base_graficos = Protocolo.objects.exclude(estado='En Creacion')
     conteo_tipos_qs = TipoProtocolo.objects.annotate(
-        total=Count('protocolos', filter=Q(protocolos__in=protocolos_filtrados))
+        total=Count('protocolos', filter=Q(protocolos__in=conteo_base_graficos))
     ).order_by('nombre')
     
     labels_tipos = [tipo.nombre for tipo in conteo_tipos_qs]
     data_tipos = [tipo.total for tipo in conteo_tipos_qs]
     
-    conteo_estados = protocolos_filtrados.values('estado').annotate(total=Count('estado')).order_by()
+    conteo_estados = conteo_base_graficos.values('estado').annotate(total=Count('estado')).order_by()
     conteo_dict = {item['estado']: item['total'] for item in conteo_estados}
     labels_estados = ['Pendiente', 'Resuelto', 'Vencido']
     data_estados = [
@@ -242,11 +265,12 @@ def directorhomepage(request):
     
     context = {
         'protocolos': protocolos_filtrados,
+        'search_query': query,
+        'tipos': tipos, # <-- CAMBIO 3
         'chart_labels_tipos': json.dumps(labels_tipos),
         'chart_data_tipos': json.dumps(data_tipos),
         'chart_labels_estados': json.dumps(labels_estados),
         'chart_data_estados': json.dumps(data_estados),
-        'search_query': query
     }
     return render(request, 'Validaciones/directorhomepage.html', context)
 
@@ -261,8 +285,23 @@ def logout_view(request):
 
 
 # -----------------------------------------------------------------
-# VISTA DE ALMACEN (SIN CAMBIOS)
+# VISTA DE ALMACEN (¡AQUÍ ESTÁ LA NUEVA LÓGICA!)
 # -----------------------------------------------------------------
 @login_required
 def Almacen(request):
-    return render(request, 'Validaciones/Almacen.html')
+    
+    # --- ¡CAMBIO AQUÍ! ---
+    # 1. Buscamos solo los protocolos 'Resuelto'
+    protocolos_resueltos = Protocolo.objects.filter(
+        estado='Resuelto'
+    ).select_related(
+        'creador', 'tipo'
+    ).order_by('-fecha_creacion')
+
+    # 2. Los pasamos al contexto
+    context = {
+        'protocolos': protocolos_resueltos
+    }
+    
+    # 3. Renderizamos la plantilla (que ahora modificaremos)
+    return render(request, 'Validaciones/Almacen.html', context)

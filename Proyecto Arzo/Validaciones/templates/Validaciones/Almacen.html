@@ -92,7 +92,7 @@
                 <td>{{ p.ficha_denuncia.nombre_denunciante|default:"N/A" }}</td>
                 <td>{{ p.ficha_denuncia.curso_denunciado|default:"N/A" }}</td>
                 <td>{{ p.tipo.nombre|default:"N/A" }}</td>
-                <td>{{ p.get_estado_display }}</td>
+                <td>{{ p.get_estado_display|default:p.estado|default:"N/A" }}</td>
                 <td>{{ p.creador.get_full_name|default:p.creador.username }}</td>
                 <td>{{ p.fecha_creacion|date:"d/m/Y" }}</td>
                 <td>{{ p.fecha_limite|date:"d/m/Y"|default:"N/A" }}</td>
