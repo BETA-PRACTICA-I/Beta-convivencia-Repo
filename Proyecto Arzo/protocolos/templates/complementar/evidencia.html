@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Evidencia extra - Protocolo {{ protocolo.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f6fa; margin: 0; padding: 0; }
+        .page { max-width: 960px; margin: 0 auto; padding: 32px 24px 48px; }
+        .breadcrumbs { margin-bottom: 8px; font-size: 14px; }
+        .breadcrumbs a { color: #2a7ae4; text-decoration: none; }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        h1 { margin-top: 0; color: #1d3557; }
+        .subtitle { color: #4a4e69; font-size: 15px; margin-bottom: 24px; }
+        form { background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 8px 24px rgba(29, 53, 87, 0.08); margin-bottom: 32px; }
+        label { display: block; font-weight: bold; color: #1d3557; margin-bottom: 6px; }
+        input[type="text"], input[type="date"], textarea, input[type="file"] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 14px; box-sizing: border-box; margin-bottom: 12px; }
+        textarea { resize: vertical; }
+        button { display: inline-block; padding: 10px 18px; border: none; border-radius: 8px; background: #1e5ac8; color: #ffffff; font-weight: bold; cursor: pointer; }
+        button:hover { background: #1849a3; }
+        .evidencias { background: #ffffff; border-radius: 12px; box-shadow: 0 8px 24px rgba(29, 53, 87, 0.05); padding: 24px; }
+        .evidencias h2 { margin-top: 0; color: #1d3557; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: #edf2f7; color: #1d3557; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        tbody tr:hover { background: #f1f5f9; }
+        .empty { margin: 12px 0 0; color: #6c757d; font-size: 14px; }
+        .actions a { color: #2a7ae4; text-decoration: none; font-weight: bold; }
+        .actions a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="breadcrumbs">
+            <a href="{% url 'protocolos:complementar_protocolo' protocolo.id %}">← Volver</a>
+        </div>
+        <h1>Adjuntar evidencia extra</h1>
+        <p class="subtitle">Registra documentos o respaldos que complementen la investigación.</p>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ evidencia_form.as_p }}
+            <button type="submit">Guardar evidencia</button>
+        </form>
+
+        <div class="evidencias">
+            <h2>Evidencias registradas</h2>
+            {% if evidencias %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Fecha</th>
+                            <th>Descripción</th>
+                            <th>Archivo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for evidencia in evidencias %}
+                            <tr>
+                                <td>{{ evidencia.nombre }}</td>
+                                <td>{{ evidencia.fecha|date:"d/m/Y" }}</td>
+                                <td>{{ evidencia.descripcion|default:"—" }}</td>
+                                <td class="actions">
+                                    {% if evidencia.archivo %}
+                                        <a href="{{ evidencia.archivo.url }}" target="_blank" rel="noopener">Descargar</a>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="empty">No se han cargado evidencias adicionales.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

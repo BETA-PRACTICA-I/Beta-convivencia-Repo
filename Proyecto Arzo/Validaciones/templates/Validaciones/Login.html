@@ -14,7 +14,7 @@
 </head>
 <body>
 
-    <main class="login-container" id="login-container">
+    <main class="login-container{% if show_login_panel %} modo-login{% endif %}" id="login-container" data-selected-role="{{ selected_role|default_if_none:'' }}" data-saludo="{{ saludo_actual|default:'¡Bienvenido!' }}">
 
         <div class="panel panel-izquierdo">
 
@@ -23,7 +23,7 @@
                 <img src="{% static 'Validaciones/new_imgs/logo_renovación.png' %}" alt="Logo Arzobispado" class="logo-login">
                 
                 <!-- El saludo cambiará con JavaScript -->
-                <h2 id="saludo-rol">¡Bienvenido!</h2>
+                <h2 id="saludo-rol">{{ saludo_actual|default:'¡Bienvenido!' }}</h2>
                 <p>Por favor ingrese sus credenciales.</p>
 
                 <!-- 
@@ -54,7 +54,7 @@
                     seleccionó el usuario (ej: "director").
                     Lo usaremos luego en views.py.
                     -->
-                    <input type="hidden" name="role" id="role-input" value="">
+                    <input type="hidden" name="role" id="role-input" value="{{ selected_role|default_if_none:'' }}">
 
                     <!-- 
                     MENSAJES DE ERROR:

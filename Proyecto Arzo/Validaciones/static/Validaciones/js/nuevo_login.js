@@ -18,6 +18,16 @@ document.addEventListener("DOMContentLoaded", function() {
     const campoSaludo = document.getElementById('saludo-rol');
 
     
+    // Si el servidor indicó un rol seleccionado (por error previo)
+    const rolPrecargado = loginContainer.dataset.selectedRole;
+    const saludoPrecargado = loginContainer.dataset.saludo;
+    if (rolPrecargado) {
+        campoRolOculto.value = rolPrecargado;
+        if (saludoPrecargado) {
+            campoSaludo.innerText = saludoPrecargado;
+        }
+    }
+
     // --- 2. Lógica para los botones de Rol ---
 
     // Recorremos la lista de botones de rol (Encargado, Abogado, Director)

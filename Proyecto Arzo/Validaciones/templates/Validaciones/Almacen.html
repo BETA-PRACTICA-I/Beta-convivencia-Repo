@@ -7,6 +7,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'Validaciones/css/homepagestyles.css'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .almacen-cntr {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .almacen-cntr h1 {
+            margin: 0;
+        }
+
+        .almacen-search-wrapper {
+            margin-top: 8px;
+        }
+
+        .almacen-search-wrapper .search-filter-container {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
 
@@ -25,51 +45,54 @@
     </header>
 
     <main id="main-content" class="main-content">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1 class="greeting">Almacén</h1>
+        <div class="almacen-cntr">
             <a href="{% url 'Validaciones:homepage' %}" class="boton-volver" id="volver-btn">&larr; Volver</a>
+            <h1 class="greeting">Almacén</h1>
         </div>
 
-        <!-- INICIO: Formulario ÚNICO para búsqueda y filtro -->
-        <form method="get" action="{% url 'Validaciones:Almacen' %}" class="search-filter-container">
-            <!-- Barra de búsqueda -->
-            <div class="search-bar">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" name="q" placeholder="Buscar por denunciante, curso, ID..." value="{{ request.GET.q }}">
-                <button type="submit">Buscar</button>
-            </div>
-
-            <!-- Contenedor del botón y panel de filtro -->
-            <div class="filter-container">
-                <button class="filter-btn" id="filter-btn" type="button">
-                    <i class="fa-solid fa-filter"></i>
-                </button>
-                <div class="filter-panel" id="filter-panel">
-                    <h4>Filtros Avanzados</h4>
-                    <div class="filter-group">
-                        <label for="tipo_protocolo">Tipo de Protocolo:</label>
-                        <select name="tipo" id="tipo_protocolo">
-                            <option value="">Todos</option>
-                            {% for tipo in tipos %}
-                                <option value="{{ tipo.id }}" {% if request.GET.tipo == tipo.id|stringformat:"s" %}selected{% endif %}>
-                                    {{ tipo.nombre }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="fecha_desde">Desde:</label>
-                        <input type="date" name="fecha_desde" id="fecha_desde" value="{{ request.GET.fecha_desde }}">
-                    </div>
-                    <div class="filter-group">
-                        <label for="fecha_hasta">Hasta:</label>
-                        <input type="date" name="fecha_hasta" id="fecha_hasta" value="{{ request.GET.fecha_hasta }}">
-                    </div>
-                    <button type="submit" class="apply-filters-btn">Aplicar Filtros</button>
+        <div class="almacen-search-wrapper">
+            <!-- INICIO: Formulario ÚNICO para búsqueda y filtro -->
+            <form method="get" action="{% url 'Validaciones:Almacen' %}" class="search-filter-container" id="search-filter-form">
+                <!-- Barra de búsqueda -->
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" name="q" placeholder="Buscar por denunciante, curso, ID..." value="{{ request.GET.q }}">
+                    <button type="submit">Buscar</button>
                 </div>
-            </div>
-        </form>
-        <!-- FIN: Formulario ÚNICO -->
+
+                <!-- Contenedor del botón y panel de filtro -->
+                <div class="filter-container">
+                    <button class="filter-btn" id="filter-btn" type="button">
+                        <i class="fa-solid fa-filter"></i>
+                    </button>
+                    <div class="filter-panel" id="filter-panel">
+                        <h4>Filtros Avanzados</h4>
+                        <div class="filter-group">
+                            <label for="tipo_protocolo">Tipo de Protocolo:</label>
+                            <select name="tipo" id="tipo_protocolo">
+                                <option value="">Todos</option>
+                                {% for tipo in tipos %}
+                                    <option value="{{ tipo.id }}" {% if request.GET.tipo == tipo.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ tipo.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="fecha_desde">Desde:</label>
+                            <input type="date" name="fecha_desde" id="fecha_desde" value="{{ request.GET.fecha_desde }}">
+                        </div>
+                        <div class="filter-group">
+                            <label for="fecha_hasta">Hasta:</label>
+                            <input type="date" name="fecha_hasta" id="fecha_hasta" value="{{ request.GET.fecha_hasta }}">
+                        </div>
+                        <button type="button" class="clear-filters-btn" id="clear-filters-btn">Quitar filtros</button>
+                        <button type="submit" class="apply-filters-btn">Aplicar Filtros</button>
+                    </div>
+                </div>
+            </form>
+            <!-- FIN: Formulario ÚNICO -->
+        </div>
 
     </main>
 
@@ -111,6 +134,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Lógica para el botón de filtro ---
     const filterBtn = document.getElementById('filter-btn');
     const filterPanel = document.getElementById('filter-panel');
+    const searchFilterForm = document.getElementById('search-filter-form');
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
 
     if (filterBtn && filterPanel) {
         filterBtn.addEventListener('click', function(event) {
@@ -123,6 +148,29 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!filterPanel.contains(event.target) && !filterBtn.contains(event.target)) {
                 filterPanel.classList.remove('show');
             }
+        });
+    }
+
+    if (clearFiltersBtn && searchFilterForm) {
+        clearFiltersBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const fields = searchFilterForm.querySelectorAll('input, select');
+            fields.forEach(function(field) {
+                if (field.tagName === 'INPUT') {
+                    if (field.type === 'text' || field.type === 'search' || field.type === 'date' || field.type === 'number') {
+                        field.value = '';
+                    }
+                } else if (field.tagName === 'SELECT') {
+                    field.selectedIndex = 0;
+                }
+            });
+
+            if (filterPanel) {
+                filterPanel.classList.remove('show');
+            }
+
+            searchFilterForm.submit();
         });
     }
 });

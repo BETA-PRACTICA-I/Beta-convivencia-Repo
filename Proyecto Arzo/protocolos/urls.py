@@ -10,6 +10,11 @@ urlpatterns = [
         # Manejará todos los pasos de todos los protocolos.
     path('<int:protocolo_id>/paso/<int:step>/', views.protocolo_step, name='protocolo_step'),
 
+    # Complementar opciones
+    path('<int:protocolo_id>/complementar/', views.complementar_protocolo, name='complementar_protocolo'),
+    path('<int:protocolo_id>/complementar/apelacion/', views.complementar_apelacion, name='complementar_apelacion'),
+    path('<int:protocolo_id>/complementar/evidencia/', views.complementar_evidencia, name='complementar_evidencia'),
+
         # Estas vistas ya las teníamos y están perfectas
     path('<int:protocolo_id>/exito/', views.formulario_exito, name='formulario_exito'),
     path('protocolo/descargar/<int:protocolo_id>/', views.descargar_protocolo_pdf, name='descargar_protocolo_pdf'),

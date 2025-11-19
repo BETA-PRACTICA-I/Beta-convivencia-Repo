@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Leemos las URLs desde los data attributes de la fila
         const urlVer = row.dataset.urlVer;
         const urlDescargar = row.dataset.urlDescargar;
+        const urlComplementar = row.dataset.urlComplementar;
 
         const tr = document.createElement('tr');
         tr.className = 'protocol-expanded';
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div style="display:flex;align-items:center;gap:12px;">
                     <div class="expanded-actions">
                         <a href="${urlVer}" class="btn-ver" data-id="${protocoloId}">Ver</a>
-                        <a href="/protocolos/editar/paso1/${protocoloId}/" class="btn-editar" data-id="${protocoloId}">Editar</a>
+                        <a href="${urlComplementar}" class="btn-complementar" data-id="${protocoloId}">Complementar</a>
                         <a href="${urlDescargar}" class="btn-descargar" data-id="${protocoloId}">Descargar</a>
                     </div>
                     <button class="expanded-close" aria-label="Cerrar panel" title="Cerrar">✕</button>
@@ -177,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // --- Lógica 3: Click en la FILA (para expandir) ---
         
-        // Ignoramos si el click fue en un link (ej: los de Ver, Editar, etc. del panel)
+        // Ignoramos si el click fue en un link (ej: los de Ver, Complementar, etc. del panel)
         if (target.closest('a')) {
             return;
         }

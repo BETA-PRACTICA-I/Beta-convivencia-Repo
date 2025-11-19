@@ -23,6 +23,43 @@
         .accion-btn:hover {
             color: rgb(30, 81, 160); /* Azul Primario */
         }
+
+        .hamburger-dropdown {
+            position: relative;
+        }
+        .hamburger-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .hamburger-opciones {
+            display: none;
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+            min-width: 160px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .hamburger-dropdown.active .hamburger-opciones {
+            display: block;
+        }
+        .hamburger-opciones a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            font-size: 1rem;
+        }
+        .hamburger-opciones a:hover {
+            background: #f4f4f4;
+        }
     </style>
 </head>
 <body>
@@ -39,10 +76,14 @@
             </nav>
         </div>
 
-        <div class="action-hamburger">
-            <button class="hamburger-menu">
+        <div class="hamburger-dropdown">
+            <button class="hamburger-btn" type="button">
                 <i class="fa-solid fa-bars"></i>
             </button>
+            <div class="hamburger-opciones">
+                <a href="{% url 'Validaciones:Almacen' %}">Almacén</a>
+                <a href="{% url 'Validaciones:login' %}">Cerrar sesión</a>
+            </div>
         </div>
     </header>
 
@@ -123,6 +164,27 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburgerDropdown = document.querySelector('.hamburger-dropdown');
+            if (!hamburgerDropdown) {
+                return;
+            }
+
+            const hamburgerBtn = hamburgerDropdown.querySelector('.hamburger-btn');
+            hamburgerBtn.addEventListener('click', function (event) {
+                event.stopPropagation();
+                hamburgerDropdown.classList.toggle('active');
+            });
+
+            window.addEventListener('click', function (event) {
+                if (!hamburgerDropdown.contains(event.target)) {
+                    hamburgerDropdown.classList.remove('active');
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

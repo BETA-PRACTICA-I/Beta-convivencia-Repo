@@ -18,7 +18,7 @@ from .models import Protocolo, TipoProtocolo
 from formularios.forms import (
     FormularioDenunciaForm, FichaEntrevistaForm, DerivacionForm,
     InformeConcluyenteForm, ApelacionForm, ResolucionApelacionForm,
-    EncuestaBullyingForm,   # Protocolos 1-6
+    EncuestaBullyingForm, EvidenciaExtraForm,  # Protocolos 1-6 y complementos
 
     RiesgoSuicidaAnexo1Form, RiesgoSuicidaAnexo2Form, RiesgoSuicidaAnexo3Form,
     RiesgoSuicidaAnexo4Form, RiesgoSuicidaAnexo5Form,
@@ -59,6 +59,7 @@ from formularios.models import (
     SalidaPedagogicaAnexo1, #Protocolo 13
     DesregulacionEmocional, #Protocolo 14
     MediacionInformacion, MediacionSolicitud, MediacionActaFinal, # Protocolo 15
+    EvidenciaExtra,
 )
 # -----------------------------------
 
@@ -66,6 +67,8 @@ PROTOCOLOS_TIPO_1 = [
     "Acoso Escolar", "Drogas y Alcohol", "Agresión o Connotación Sexual",
     "Vulneración de derechos", "Discriminación arbitraria", "Violencia física o psicológica"
 ]
+
+PROTOCOLOS_CON_COMPLEMENTO_APELACION = set(PROTOCOLOS_TIPO_1)
 
 @login_required(login_url='Validaciones:login')
 def iniciar_protocolo(request, tipo_id):
@@ -82,6 +85,11 @@ def protocolo_step(request, protocolo_id, step):
         return redirect('Validaciones:homepage')
 
     tipo_nombre = protocolo.tipo.nombre
+
+    if tipo_nombre in PROTOCOLOS_CON_COMPLEMENTO_APELACION and step in (5, 6):
+        messages.info(request, "La apelación se gestiona desde Complementar.")
+        return redirect('protocolos:complementar_protocolo', protocolo_id=protocolo.id)
+
     form_config = None 
     total_steps = 0 
 
@@ -168,7 +176,7 @@ def protocolo_step(request, protocolo_id, step):
             2: {'form': MediacionInformacionForm, 'model': MediacionInformacion, 'template': 'mediacion/paso2.html'},
             3: {'form': MediacionActaFinalForm, 'model': MediacionActaFinal, 'template': 'mediacion/paso3.html'},
         }
-    form_config = step_map.get(step)
+        form_config = step_map.get(step)
 
     # -----------------------------------------
 
@@ -219,6 +227,9 @@ def protocolo_step(request, protocolo_id, step):
 
         if form_valid:
             messages.success(request, f"Paso {step} guardado correctamente. ✔️")
+            if tipo_nombre in PROTOCOLOS_CON_COMPLEMENTO_APELACION and step == 4:
+                return redirect('protocolos:protocolo_step', protocolo_id=protocolo.id, step=7)
+
             if step < total_steps:
                 return redirect('protocolos:protocolo_step', protocolo_id=protocolo.id, step=step + 1)
             else:
@@ -272,6 +283,113 @@ def formulario_exito(request, protocolo_id=None):
             return redirect('Validaciones:homepage')
     
     return render(request, 'protocolo1/exito.html', {'protocolo_id': protocolo_id})
+
+
+@login_required(login_url='Validaciones:login')
+def complementar_protocolo(request, protocolo_id):
+    protocolo = get_object_or_404(Protocolo, id=protocolo_id)
+
+    if protocolo.creador != request.user:
+        messages.error(request, "No tienes permiso para complementar este protocolo.")
+        return redirect('Validaciones:homepage')
+
+    tipo_nombre = protocolo.tipo.nombre
+    mostrar_apelacion = tipo_nombre in PROTOCOLOS_CON_COMPLEMENTO_APELACION
+    evidencias = protocolo.evidencias_extra.all()
+
+    context = {
+        'protocolo': protocolo,
+        'mostrar_apelacion': mostrar_apelacion,
+        'evidencias': evidencias,
+    }
+    return render(request, 'complementar/opciones.html', context)
+
+
+@login_required(login_url='Validaciones:login')
+def complementar_apelacion(request, protocolo_id):
+    protocolo = get_object_or_404(Protocolo, id=protocolo_id)
+
+    if protocolo.creador != request.user:
+        messages.error(request, "No tienes permiso para complementar este protocolo.")
+        return redirect('Validaciones:homepage')
+
+    if protocolo.tipo.nombre not in PROTOCOLOS_CON_COMPLEMENTO_APELACION:
+        messages.error(request, "La apelación solo está disponible para protocolos de Convivencia Escolar.")
+        return redirect('protocolos:complementar_protocolo', protocolo_id=protocolo.id)
+
+    apelacion_instance = getattr(protocolo, 'apelacion', None)
+    resolucion_instance = getattr(protocolo, 'resolucionapelacion', None)
+
+    if request.method == 'POST':
+        form_name = request.POST.get('form_name')
+
+        if form_name == 'apelacion':
+            apelacion_form = ApelacionForm(request.POST, request.FILES, instance=apelacion_instance)
+            resolucion_form = ResolucionApelacionForm(instance=resolucion_instance)
+            if apelacion_form.is_valid():
+                apelacion_obj = apelacion_form.save(commit=False)
+                apelacion_obj.protocolo = protocolo
+                apelacion_obj.save()
+                messages.success(request, "Apelación guardada correctamente.")
+                return redirect('protocolos:complementar_apelacion', protocolo_id=protocolo.id)
+            messages.error(request, "Revisa los datos de la apelación antes de guardar.")
+
+        elif form_name == 'resolucion':
+            apelacion_form = ApelacionForm(instance=apelacion_instance)
+            resolucion_form = ResolucionApelacionForm(request.POST, request.FILES, instance=resolucion_instance)
+            if resolucion_form.is_valid():
+                resolucion_obj = resolucion_form.save(commit=False)
+                resolucion_obj.protocolo = protocolo
+                resolucion_obj.save()
+                messages.success(request, "Resolución de apelación guardada correctamente.")
+                return redirect('protocolos:complementar_apelacion', protocolo_id=protocolo.id)
+            messages.error(request, "Revisa los datos de la resolución antes de guardar.")
+
+        else:
+            messages.error(request, "No se reconoció la acción solicitada.")
+            apelacion_form = ApelacionForm(instance=apelacion_instance)
+            resolucion_form = ResolucionApelacionForm(instance=resolucion_instance)
+
+    else:
+        apelacion_form = ApelacionForm(instance=apelacion_instance)
+        resolucion_form = ResolucionApelacionForm(instance=resolucion_instance)
+
+    context = {
+        'protocolo': protocolo,
+        'apelacion_form': apelacion_form,
+        'resolucion_form': resolucion_form,
+    }
+    return render(request, 'complementar/apelacion.html', context)
+
+
+@login_required(login_url='Validaciones:login')
+def complementar_evidencia(request, protocolo_id):
+    protocolo = get_object_or_404(Protocolo, id=protocolo_id)
+
+    if protocolo.creador != request.user:
+        messages.error(request, "No tienes permiso para complementar este protocolo.")
+        return redirect('Validaciones:homepage')
+
+    if request.method == 'POST':
+        evidencia_form = EvidenciaExtraForm(request.POST, request.FILES)
+        if evidencia_form.is_valid():
+            evidencia = evidencia_form.save(commit=False)
+            evidencia.protocolo = protocolo
+            evidencia.save()
+            messages.success(request, "Evidencia cargada correctamente.")
+            return redirect('protocolos:complementar_evidencia', protocolo_id=protocolo.id)
+        messages.error(request, "Revisa la información antes de guardar.")
+    else:
+        evidencia_form = EvidenciaExtraForm(initial={'fecha': timezone.now().date()})
+
+    evidencias = protocolo.evidencias_extra.all()
+
+    context = {
+        'protocolo': protocolo,
+        'evidencia_form': evidencia_form,
+        'evidencias': evidencias,
+    }
+    return render(request, 'complementar/evidencia.html', context)
 
 @login_required(login_url='Validaciones:login')
 def descargar_protocolo_pdf(request, protocolo_id):

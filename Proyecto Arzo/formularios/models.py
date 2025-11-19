@@ -986,3 +986,23 @@ class MediacionActaFinal(models.Model):
 
     def __str__(self):
         return f"Acta Final de Mediación (Protocolo {self.protocolo_id})"
+
+
+class EvidenciaExtra(models.Model):
+    protocolo = models.ForeignKey(
+        Protocolo,
+        on_delete=models.CASCADE,
+        related_name='evidencias_extra'
+    )
+    nombre = models.CharField(max_length=200)
+    fecha = models.DateField()
+    descripcion = models.TextField(blank=True)
+    archivo = models.FileField(upload_to='evidencias_extra/')
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'protocolo1_evidenciaextra'
+        ordering = ['-creado_en']
+
+    def __str__(self):
+        return f"Evidencia Extra #{self.id} (Protocolo {getattr(self.protocolo, 'id', '—')})"

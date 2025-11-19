@@ -77,7 +77,8 @@
                 <tr class="protocol-row" 
                     data-protocolo-id="{{ p.id }}" 
                     data-url-ver="{% url 'protocolos:ver_protocolo' p.id %}" 
-                    data-url-descargar="{% url 'protocolos:descargar_protocolo_pdf' p.id %}">
+                    data-url-descargar="{% url 'protocolos:descargar_protocolo_pdf' p.id %}"
+                    data-url-complementar="{% url 'protocolos:complementar_protocolo' p.id %}">
                     
                     <td title="{{ p.resumen_involucrados|default:'N/A' }}">
                         {{ p.primer_involucrado|default:"N/A" }}

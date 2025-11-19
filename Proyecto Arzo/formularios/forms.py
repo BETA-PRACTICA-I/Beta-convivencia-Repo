@@ -12,6 +12,7 @@ from .models import (
     SalidaPedagogicaAnexo1, #Protocolo 13
     DesregulacionEmocional, #Protocolo 14
     MediacionInformacion, MediacionActaFinal, MediacionSolicitud, # Protocolo 15
+    EvidenciaExtra,
     )
 
 
@@ -158,6 +159,16 @@ class EncuestaBullyingForm(forms.ModelForm):
         exclude = ('protocolo', 'fecha_encuesta', 'edad_estudiante', 'genero_estudiante')
         widgets = {
             'comentario_adicional': forms.Textarea(attrs={'rows': 4}),
+        }
+
+
+class EvidenciaExtraForm(forms.ModelForm):
+    class Meta:
+        model = EvidenciaExtra
+        exclude = ('protocolo', 'creado_en')
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'}),
+            'descripcion': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Descripción opcional'}),
         }
 
 #===============================Para el protocolo 7============================#

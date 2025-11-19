@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Complementar protocolo {{ protocolo.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f6fa; margin: 0; padding: 0; }
+        .page { max-width: 960px; margin: 0 auto; padding: 32px 24px 48px; }
+        .breadcrumbs { margin-bottom: 8px; font-size: 14px; }
+        .breadcrumbs a { color: #2a7ae4; text-decoration: none; }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        h1 { margin-top: 0; color: #1d3557; }
+        .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin: 32px 0; }
+        .card { background: #ffffff; border-radius: 12px; box-shadow: 0 8px 24px rgba(29, 53, 87, 0.08); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+        .card h2 { margin-top: 0; font-size: 20px; color: #1d3557; }
+        .card p { font-size: 14px; color: #4a4e69; line-height: 1.5; }
+        .card a, .card span.fake-button { margin-top: 16px; display: inline-block; padding: 10px 18px; border-radius: 8px; font-weight: bold; text-decoration: none; text-align: center; transition: transform 0.1s ease-in; }
+        .card a { background: #1e5ac8; color: #ffffff; }
+        .card a:hover { background: #1849a3; transform: translateY(-1px); }
+        .card span.fake-button { background: #b5bcc7; color: #f1f1f1; cursor: not-allowed; }
+        .card ul { padding-left: 18px; }
+        .evidencias { background: #ffffff; border-radius: 12px; box-shadow: 0 8px 24px rgba(29, 53, 87, 0.05); padding: 24px; }
+        .evidencias h2 { margin-top: 0; color: #1d3557; }
+        .evidencia-item { padding: 12px 0; border-bottom: 1px solid #e2e8f0; font-size: 14px; color: #1d3557; }
+        .evidencia-item:last-child { border-bottom: none; }
+        .empty { margin: 12px 0 0; color: #6c757d; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="breadcrumbs">
+            <a href="{% url 'Validaciones:homepage' %}">← Volver</a>
+        </div>
+        <h1>Complementar protocolo #{{ protocolo.id }}</h1>
+        <p>Selecciona una de las acciones disponibles para continuar el seguimiento del caso.</p>
+
+        <div class="options">
+            <div class="card">
+                <div>
+                    <h2>Gestionar apelación</h2>
+                    <p>Registra la apelación presentada por el apoderado y su resolución oficial.</p>
+                </div>
+                {% if mostrar_apelacion %}
+                    <a href="{% url 'protocolos:complementar_apelacion' protocolo.id %}">Abrir formularios</a>
+                {% else %}
+                    <span class="fake-button">No disponible</span>
+                    <p style="margin-top: 12px; font-size: 13px; color: #6c757d;">Esta opción se habilita solo para protocolos de convivencia escolar (tipos 1 al 6).</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2>Adjuntar evidencia extra</h2>
+                    <p>Sube archivos adicionales (documentos, fotografías, actas) relacionados con el caso.</p>
+                </div>
+                <a href="{% url 'protocolos:complementar_evidencia' protocolo.id %}">Subir evidencia</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2>Firmas pendientes</h2>
+                    <p>Espacio reservado para gestionar firmas y autorizaciones digitales. Disponible próximamente.</p>
+                </div>
+                <span class="fake-button">En desarrollo</span>
+            </div>
+        </div>
+
+        <div class="evidencias">
+            <h2>Últimas evidencias cargadas</h2>
+            {% if evidencias %}
+                {% for evidencia in evidencias %}
+                    <div class="evidencia-item">
+                        <strong>{{ evidencia.nombre }}</strong> · {{ evidencia.fecha|date:"d/m/Y" }}
+                        {% if evidencia.descripcion %}<br>{{ evidencia.descripcion|truncatechars:160 }}{% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="empty">Todavía no has agregado evidencias adicionales.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

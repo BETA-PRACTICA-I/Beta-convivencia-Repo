@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from django.db.models import Count, Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -6,6 +7,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
 from django.utils.http import url_has_allowed_host_and_scheme
+
+ROLE_GREETINGS = {
+    'encargado': '¡Hola, Encargado!',
+    'abogado': '¡Hola, Abogado!',
+    'director': '¡Hola, señor Director!'
+}
 
 # Importar modelos para las vistas de homepage
 from protocolos.models import TipoProtocolo, Protocolo
@@ -41,6 +48,9 @@ SUMMARY_RELATIONS = (
 # VISTA DE LOGIN (MODIFICADA)
 # -----------------------------------------------------------------
 def login_view(request):
+    selected_role = None
+    show_login_panel = False
+
     # Si el método es POST, significa que el usuario envió el formulario
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -48,7 +58,8 @@ def login_view(request):
         # --- ¡NUEVA LÍNEA! ---
         # Capturamos el 'role' (ej: 'director') que enviamos desde 
         # el input oculto en el HTML.
-        rol_seleccionado = request.POST.get('role')
+        selected_role = request.POST.get('role') or ''
+        show_login_panel = True
         
         # Comprobamos si el formulario es válido (campos llenos, etc.)
         if form.is_valid():
@@ -66,41 +77,64 @@ def login_view(request):
                 # verificamos que el ROL que seleccionó en la pantalla
                 # coincida con los grupos a los que pertenece.
                 
-                if rol_seleccionado == 'encargado' and user.groups.filter(name='Encargados').exists():
+                if selected_role == 'encargado' and user.groups.filter(name='Encargados').exists():
                     login(request, user)
                     return redirect("Validaciones:homepage")
                 
-                elif rol_seleccionado == 'abogado' and user.groups.filter(name='Abogados').exists():
+                elif selected_role == 'abogado' and user.groups.filter(name='Abogados').exists():
                     login(request, user)
                     return redirect("Validaciones:abogadohomepage")
                 
-                elif rol_seleccionado == 'director' and user.groups.filter(name='Director').exists():
+                elif selected_role == 'director' and user.groups.filter(name='Director').exists():
                     login(request, user)
                     return redirect("Validaciones:directorhomepage")
                 
                 else:
                     # Si el usuario es válido, pero el rol que seleccionó
                     # no es el correcto (ej: es 'encargado' e intentó entrar como 'director')
-                    messages.error(request, f'Usted no tiene permisos para acceder al rol de "{rol_seleccionado}".')
-                    return render(request, 'Validaciones/Login.html', {'form': form})
+                    messages.error(request, f'Usted no tiene permisos para acceder al rol de "{selected_role}".')
+                    context = {
+                        'form': form,
+                        'selected_role': selected_role,
+                        'show_login_panel': show_login_panel,
+                        'saludo_actual': ROLE_GREETINGS.get(selected_role, '¡Bienvenido!')
+                    }
+                    return render(request, 'Validaciones/Login.html', context)
                 
                 # --- FIN DE LA LÓGICA MODIFICADA ---
 
             else:
                 # Si user es None (RUT o contraseña incorrectos)
                 messages.error(request, 'RUT o contraseña incorrectos.')
-                return render(request, 'Validaciones/Login.html', {'form': form})
+                context = {
+                    'form': form,
+                    'selected_role': selected_role,
+                    'show_login_panel': show_login_panel,
+                    'saludo_actual': ROLE_GREETINGS.get(selected_role, '¡Bienvenido!')
+                }
+                return render(request, 'Validaciones/Login.html', context)
         else:
             # Si el formulario no es válido (ej: campos vacíos)
             messages.error(request, 'Formulario inválido.')
-            return render(request, 'Validaciones/Login.html', {'form': form})
+            context = {
+                'form': form,
+                'selected_role': selected_role,
+                'show_login_panel': show_login_panel,
+                'saludo_actual': ROLE_GREETINGS.get(selected_role, '¡Bienvenido!')
+            }
+            return render(request, 'Validaciones/Login.html', context)
     
     # Si el método es GET (primera vez que carga la página)
     else:
         form = LoginForm()
-    
+    context = {
+        'form': form,
+        'selected_role': selected_role,
+        'show_login_panel': show_login_panel,
+        'saludo_actual': ROLE_GREETINGS.get(selected_role, '¡Bienvenido!')
+    }
     # Renderizamos la nueva plantilla de Login
-    return render(request, 'Validaciones/Login.html', {'form': form})
+    return render(request, 'Validaciones/Login.html', context)
 
 # -----------------------------------------------------------------
 # VISTAS DE HOME (AQUÍ ESTÁ LA CORRECCIÓN)
@@ -289,19 +323,54 @@ def logout_view(request):
 # -----------------------------------------------------------------
 @login_required
 def Almacen(request):
-    
-    # --- ¡CAMBIO AQUÍ! ---
-    # 1. Buscamos solo los protocolos 'Resuelto'
-    protocolos_resueltos = Protocolo.objects.filter(
-        estado='Resuelto'
-    ).select_related(
-        'creador', 'tipo'
-    ).order_by('-fecha_creacion')
+    """Listado de protocolos resueltos con búsqueda y filtros avanzados."""
 
-    # 2. Los pasamos al contexto
+    def _parse_date(value: str):
+        """Convierte 'YYYY-MM-DD' a date, devolviendo None si el formato es inválido."""
+        if not value:
+            return None
+        try:
+            return datetime.strptime(value, "%Y-%m-%d").date()
+        except (TypeError, ValueError):
+            return None
+
+    base_queryset = (
+        Protocolo.objects
+        .filter(estado='Resuelto')
+        .select_related('tipo', 'creador', 'ficha_denuncia')
+        .order_by('-fecha_creacion')
+    )
+
+    search_query = (request.GET.get('q') or '').strip()
+    if search_query:
+        base_queryset = base_queryset.filter(
+            Q(ficha_denuncia__nombre_denunciante__icontains=search_query)
+            | Q(ficha_denuncia__curso_denunciado__icontains=search_query)
+            | Q(ficha_denuncia__curso_estudiante__icontains=search_query)
+            | Q(tipo__nombre__icontains=search_query)
+            | Q(creador__first_name__icontains=search_query)
+            | Q(creador__last_name__icontains=search_query)
+            | Q(id__icontains=search_query)
+        )
+
+    tipo_id = request.GET.get('tipo')
+    if tipo_id:
+        try:
+            base_queryset = base_queryset.filter(tipo__id=int(tipo_id))
+        except (TypeError, ValueError):
+            base_queryset = base_queryset.none()
+
+    fecha_desde = _parse_date(request.GET.get('fecha_desde'))
+    if fecha_desde:
+        base_queryset = base_queryset.filter(fecha_creacion__date__gte=fecha_desde)
+
+    fecha_hasta = _parse_date(request.GET.get('fecha_hasta'))
+    if fecha_hasta:
+        base_queryset = base_queryset.filter(fecha_creacion__date__lte=fecha_hasta)
+
     context = {
-        'protocolos': protocolos_resueltos
+        'protocolos': base_queryset,
+        'tipos': TipoProtocolo.objects.all().order_by('nombre'),
     }
-    
-    # 3. Renderizamos la plantilla (que ahora modificaremos)
+
     return render(request, 'Validaciones/Almacen.html', context)
