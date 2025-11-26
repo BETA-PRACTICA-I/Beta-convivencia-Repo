@@ -344,15 +344,59 @@ def Almacen(request):
 
     search_query = (request.GET.get('q') or '').strip()
     if search_query:
-        base_queryset = base_queryset.filter(
-            Q(ficha_denuncia__nombre_denunciante__icontains=search_query)
-            | Q(ficha_denuncia__curso_denunciado__icontains=search_query)
-            | Q(ficha_denuncia__curso_estudiante__icontains=search_query)
-            | Q(tipo__nombre__icontains=search_query)
-            | Q(creador__first_name__icontains=search_query)
-            | Q(creador__last_name__icontains=search_query)
-            | Q(id__icontains=search_query)
-        )
+        # Creamos un filtro "Q" vacío para ir sumando condiciones con "O" (OR)
+        q_filter = Q()
+
+        # 1. Buscar en datos generales del Protocolo
+        q_filter |= Q(tipo__nombre__icontains=search_query)
+        q_filter |= Q(creador__first_name__icontains=search_query)
+        q_filter |= Q(creador__last_name__icontains=search_query)
+        q_filter |= Q(id__icontains=search_query)
+
+        # 2. Buscar en FICHA DENUNCIA
+        q_filter |= Q(ficha_denuncia__nombre_denunciante__icontains=search_query)
+        q_filter |= Q(ficha_denuncia__nombre_estudiante__icontains=search_query)
+        q_filter |= Q(ficha_denuncia__curso_estudiante__icontains=search_query)
+        q_filter |= Q(ficha_denuncia__curso_denunciado__icontains=search_query)
+
+        # 3. Buscar en RIESGO SUICIDA (Anexos 1 al 5)
+        q_filter |= Q(riesgo_suicida_anexo1__nombre_afectado__icontains=search_query)
+        q_filter |= Q(riesgo_suicida_anexo1__curso__icontains=search_query)
+        q_filter |= Q(riesgo_suicida_anexo2__estudiante_nombre__icontains=search_query)
+        q_filter |= Q(riesgo_suicida_anexo2__estudiante_curso__icontains=search_query)
+        q_filter |= Q(riesgo_suicida_anexo3__estudiante_nombre__icontains=search_query)
+        q_filter |= Q(riesgo_suicida_anexo4__estudiante_nombre__icontains=search_query)
+        q_filter |= Q(riesgo_suicida_anexo5__estudiante_nombre__icontains=search_query)
+
+        # 4. Buscar en OTROS PROTOCOLOS (Autolesión, Armas, Accidentes, etc.)
+        q_filter |= Q(anexo_autolesion__nombre_estudiante__icontains=search_query)
+        q_filter |= Q(anexo_autolesion__curso__icontains=search_query)
+        
+        q_filter |= Q(anexo_armas__nombre_estudiante__icontains=search_query)
+        q_filter |= Q(anexo_armas__curso__icontains=search_query)
+
+        q_filter |= Q(ficha_accidente_escolar__estudiante_nombre__icontains=search_query)
+        q_filter |= Q(ficha_accidente_escolar__estudiante_curso__icontains=search_query)
+
+        q_filter |= Q(desregulacion_emocional__nombre_estudiante__icontains=search_query)
+        q_filter |= Q(desregulacion_emocional__curso__icontains=search_query)
+
+        q_filter |= Q(reconocimiento_identidad__estudiante_nombre_social__icontains=search_query)
+        q_filter |= Q(reconocimiento_identidad__estudiante_nombre_legal__icontains=search_query)
+        q_filter |= Q(reconocimiento_identidad__estudiante_curso__icontains=search_query)
+
+        q_filter |= Q(encuestabullying__estudiante_iniciales__icontains=search_query)
+        q_filter |= Q(encuestabullying__curso__icontains=search_query)
+
+        q_filter |= Q(mediacion_solicitud__estudiante_nombre__icontains=search_query)
+        q_filter |= Q(mediacion_solicitud__solicitante_nombre__icontains=search_query)
+        q_filter |= Q(mediacion_solicitud__solicitado_nombre__icontains=search_query)
+        
+        q_filter |= Q(ficha0_madre_padre__nombre_estudiante__icontains=search_query)
+
+        # Aplicamos el filtro masivo y usamos distinct() para evitar duplicados
+        # (Importante porque al buscar en muchas tablas pueden salir repetidos)
+        base_queryset = base_queryset.filter(q_filter).distinct()
 
     tipo_id = request.GET.get('tipo')
     if tipo_id:
