@@ -3,110 +3,40 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Panel del Director - Convivencia Escolar</title>
+    <title>Panel de Dirección - Convivencia Escolar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Cargamos los mismos estilos que las otras homepages -->
+    
+    <!-- 1. Estilos Globales (Tabla base, tipografía) -->
     <link rel="stylesheet" href="{% static 'Validaciones/css/homepagestyles.css'%}">
+    
+    <!-- 2. Estilos Específicos del Director (Gráficos, FAB, Layout limpio) -->
+    <link rel="stylesheet" href="{% static 'Validaciones/css/director.css'%}">
+    
+    <!-- Iconos y Scripts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="{% static 'Validaciones/js/Script.js' %}" defer></script>
-    
-    <!-- ¡IMPORTANTE! Añadimos la librería Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Estilos adicionales para los botones de acción de la tabla (copiados de abogadohomepage.html) -->
-    <style>
-        .acciones-cell {
-            text-align: center;
-        }
-        .accion-btn {
-            color: #333;
-            margin: 0 5px;
-            text-decoration: none;
-            font-size: 1.1rem;
-        }
-        .accion-btn:hover {
-            color: rgb(30, 81, 160); /* Azul Primario */
-        }
-
-        .hamburger-dropdown {
-            position: relative;
-        }
-        .hamburger-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        .hamburger-opciones {
-            display: none;
-            position: absolute;
-            top: 120%;
-            right: 0;
-            background: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            z-index: 100;
-            min-width: 160px;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .hamburger-dropdown.active .hamburger-opciones {
-            display: block;
-        }
-        .hamburger-opciones a {
-            display: block;
-            padding: 10px 15px;
-            text-decoration: none;
-            color: #333;
-            font-size: 1rem;
-        }
-        .hamburger-opciones a:hover {
-            background: #f4f4f4;
-        }
-
-        /* --- ¡NUEVO! Estilos para los Gráficos --- */
-        .dashboard-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-            padding: 1rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto 2rem auto;
-        }
-        .chart-card {
-            background: #fff;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .chart-card h3 {
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            color: #333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-    </style>
 </head>
 <body>
 
-    <!-- Misma barra superior que las otras vistas -->
+    <!-- BARRA SUPERIOR LIMPIA -->
     <header class="top-bar">
         <div class="logo-and-nav">
             <div class="logo">
                 <img src="{% static 'Validaciones/img/virgenbkn.png' %}" class="logo-image" alt="Logo">
             </div>
             <nav class="nav-menu">
-                <a href="#" class="nav-item">
+                <a href="{% url 'Validaciones:directorhomepage' %}" class="nav-item" title="Inicio">
                     <i class="fa-solid fa-house"></i>
+                </a>
+                <a href="{% url 'Validaciones:Almacen' %}" class="nav-item" title="Almacén">
+                    <i class="fa-solid fa-warehouse"></i>
                 </a>
             </nav>
         </div>
+        
         <div class="hamburger-dropdown">
-            <button class="hamburger-btn" type="button">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+            <button class="hamburger-btn"><i class="fa-solid fa-bars"></i></button>
             <div class="hamburger-opciones">
                 <a href="{% url 'Validaciones:Almacen' %}">Almacén</a>
                 <a href="{% url 'Validaciones:login' %}">Cerrar sesión</a>
@@ -114,188 +44,157 @@
         </div>
     </header>
 
-    <!-- Saludo principal -->
-    <main id="main-content" class="main-content">
-        <h1 class="greeting">Panel de Director - ¡Hola, {{ user.get_full_name|default:user.username }}!</h1>
-    </main>
+    <!-- CONTENIDO PRINCIPAL (Flujo vertical ordenado) -->
+    <main class="main-content">
+        <h1 class="greeting">Bienvenido, Sr. Director</h1>
 
-    <!-- --- ¡NUEVO! Sección del Dashboard para Gráficos --- -->
-    <section class="dashboard-container">
-        
-        <!-- Gráfico 1: Protocolos por Tipo -->
-        <div class="chart-card">
-            <h3>Protocolos por Tipo</h3>
-            <canvas id="protocolosPorTipoChart"></canvas>
-        </div>
-        
-        <!-- Gráfico 2: Protocolos por Estado -->
-        <div class="chart-card">
-            <h3>Protocolos por Estado</h3>
-            <!-- Usamos un div contenedor para limitar el tamaño del gráfico circular -->
-            <div style="max-width: 400px; margin: 0 auto;">
-                <canvas id="protocolosPorEstadoChart"></canvas>
+        <!-- SECCIÓN DE GRÁFICOS -->
+        <div class="charts-section">
+            <!-- Tarjeta 1: Tipos -->
+            <div class="chart-card">
+                <h3>Distribución por Tipo</h3>
+                <div class="chart-container-inner">
+                    <canvas id="protocolosPorTipoChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Tarjeta 2: Estados -->
+            <div class="chart-card">
+                <h3>Estado General</h3>
+                <div class="chart-container-inner">
+                    <canvas id="protocolosPorEstadoChart"></canvas>
+                </div>
             </div>
         </div>
 
-    </section>
-    <!-- --- Fin de la sección del Dashboard --- -->
+        <!-- SECCIÓN TABLA -->
+        <div class="section-header">
+            <h2>Protocolos Activos</h2>
+        </div>
 
-
-    <!-- Título para la tabla de abajo -->
-    <div class="main-content" style="padding-top: 0;">
-        <h2 class="greeting" style="font-size: 1.8rem; margin: 0;">Listado de Protocolos</h2>
-    </div>
-
-    <!-- Misma tabla de "solo lectura" que ve el Abogado -->
-    <table class="protocol-table" id="protocol-table" style="margin-top: 1rem;">
-        <thead>
-            <tr>
-                <th>Involucrados</th>
-                <th>Curso(s)</th>
-                <th>Protocolo activado</th>
-                <th>Estado</th>
-                <th>Persona a cargo</th>
-                <th>Fecha de apertura</th>
-                <th>Fecha límite</th>
-                <th>ID</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in protocolos %}
-                <tr class="protocol-row">
-                    <td title="{{ p.resumen_involucrados|default:'N/A' }}">
-                        {{ p.primer_involucrado|default:"N/A" }}
-                    </td>
-                    <td title="{{ p.resumen_cursos|default:'N/A' }}">
-                        {{ p.primer_curso|default:"N/A" }}
-                    </td>
-                    <td>
-                        {% if p.tipo.nombre %}
-                            {{ p.tipo.nombre }}
-                        {% else %}—{% endif %}
-                    </td>
-                    <td>
-                        {{ p.get_estado_display|default:p.estado }}
-                    </td>
-                    <td>
-                        {{ p.creador.get_full_name|default:p.creador.username }}
-                    </td>
-                    <td>{{ p.fecha_creacion|date:"d/m/Y" }}</td>
-                    <td>{{ p.fecha_limite|date:"d/m/Y" }}</td>
-                    <td>{{ p.id }}</td>
-                    <td class="acciones-cell">
-                        <a href="{% url 'protocolos:ver_protocolo' p.id %}" title="Ver Protocolo" class="accion-btn">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                        <a href="{% url 'protocolos:descargar_protocolo_pdf' p.id %}" title="Descargar PDF" class="accion-btn">
-                            <i class="fa-solid fa-file-pdf"></i>
-                        </a>
-                    </td>
+        <table class="protocol-table" id="protocol-table">
+            <thead>
+                <tr>
+                    <th>Involucrados</th>
+                    <th>Curso(s)</th>
+                    <th>Protocolo</th>
+                    <th>Estado</th>
+                    <th>Encargado</th>
+                    <th>Inicio</th>
+                    <th>Límite</th>
+                    <th>ID</th>
                 </tr>
-            {% empty %}
-                <tr><td colspan="9" style="text-align:center;">No hay protocolos registrados.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for p in protocolos %}
+                    <tr class="protocol-row" 
+                        data-protocolo-id="{{ p.id }}" 
+                        data-url-ver="{% url 'protocolos:ver_protocolo' p.id %}" 
+                        data-url-descargar="{% url 'protocolos:descargar_protocolo_pdf' p.id %}"
+                        data-url-complementar="{% url 'protocolos:complementar_protocolo' p.id %}">
+                        
+                        <td><strong>{{ p.primer_involucrado|default:"N/A" }}</strong></td>
+                        <td>{{ p.primer_curso|default:"N/A" }}</td>
+                        <td>{{ p.tipo.nombre|default:"—" }}</td>
+                        <td>
+                            {% if p.estado == 'Resuelto' %}
+                                <span style="color:#28a745; font-weight:bold;">Resuelto</span>
+                            {% elif p.estado == 'Vencido' %}
+                                <span style="color:#dc3545; font-weight:bold;">Vencido</span>
+                            {% else %}
+                                <span style="color:#ffc107; font-weight:bold; text-shadow: 0 0 1px #999;">Pendiente</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ p.creador.get_full_name|default:p.creador.username }}</td>
+                        <td>{{ p.fecha_creacion|date:"d/m/Y" }}</td>
+                        <td>{{ p.fecha_limite|date:"d/m/Y" }}</td>
+                        <td>#{{ p.id }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="8" style="text-align:center; padding:30px; color:#666;">No hay protocolos activos.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Espacio al final para que el botón flotante no tape nada -->
+        <div style="height: 80px;"></div>
+    </main>
 
-    <!-- --- ¡NUEVO! Script para inicializar los Gráficos --- -->
+    <!-- BOTÓN FLOTANTE (FAB) -->
+    <a href="{% url 'Validaciones:Almacen' %}" class="fab-almacen" title="Ir al Almacén">
+        <i class="fa-solid fa-warehouse"></i>
+    </a>
+
+    <!-- LÓGICA DE GRÁFICOS -->
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const hamburgerDropdown = document.querySelector('.hamburger-dropdown');
-            if (hamburgerDropdown) {
-                const hamburgerBtn = hamburgerDropdown.querySelector('.hamburger-btn');
-                hamburgerBtn.addEventListener('click', function (event) {
-                    event.stopPropagation();
-                    hamburgerDropdown.classList.toggle('active');
-                });
+        // Recibimos los datos desde Django
+        const labelsTipos = JSON.parse('{{ chart_labels_tipos|safe }}');
+        const dataTipos = JSON.parse('{{ chart_data_tipos|safe }}');
+        const labelsEstados = JSON.parse('{{ chart_labels_estados|safe }}');
+        const dataEstados = JSON.parse('{{ chart_data_estados|safe }}');
 
-                window.addEventListener('click', function (event) {
-                    if (!hamburgerDropdown.contains(event.target)) {
-                        hamburgerDropdown.classList.remove('active');
-                    }
-                });
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            Chart.defaults.font.family = "'Segoe UI', sans-serif";
+            Chart.defaults.color = '#555';
 
-            
-            // --- ¡DATOS REALES! ---
-            // Cargamos los datos JSON que pasamos desde la vista de Django
-            // ¡AHORA SÍ! Usamos el filtro 'safe' de Django para imprimir el JSON
-            // directamente como un objeto de JavaScript.
-            
-            // Datos para el Gráfico de Barras (Protocolos por Tipo)
-            const dataTipos = {
-                labels: {{ chart_labels_tipos|safe }},
-                datasets: [{
-                    label: 'Cantidad de Protocolos',
-                    data: {{ chart_data_tipos|safe }}, 
-                    backgroundColor: 'rgba(30, 81, 160, 0.7)', // Azul Primario
-                    borderColor: 'rgba(30, 81, 160, 1)',
-                    borderWidth: 1
-                }]
-            };
-
-            // Datos para el Gráfico Circular (Protocolos por Estado)
-            const dataEstados = {
-                labels: {{ chart_labels_estados|safe }},
-                datasets: [{
-                    label: 'Protocolos',
-                    data: {{ chart_data_estados|safe }}, 
-                    backgroundColor: [
-                        'rgba(245, 158, 11, 0.8)', // Amarillo (Pendiente)
-                        'rgba(16, 185, 129, 0.8)', // Verde (Resuelto)
-                        'rgba(239, 68, 68, 0.8)'   // Rojo (Vencido)
-                    ],
-                    borderColor: [
-                        'rgba(245, 158, 11, 1)',
-                        'rgba(16, 185, 129, 1)',
-                        'rgba(239, 68, 68, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            };
-
-            // --- Inicializar Gráfico de Barras ---
+            // 1. Gráfico de Barras
             const ctxTipos = document.getElementById('protocolosPorTipoChart');
             if (ctxTipos) {
                 new Chart(ctxTipos, {
                     type: 'bar',
-                    data: dataTipos,
+                    data: {
+                        labels: labelsTipos,
+                        datasets: [{
+                            label: 'Casos',
+                            data: dataTipos,
+                            backgroundColor: 'rgba(0, 51, 102, 0.8)', // Azul institucional
+                            borderRadius: 4,
+                            barPercentage: 0.7
+                        }]
+                    },
                     options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    // Asegura que los ticks del eje Y sean números enteros
-                                    stepSize: 1 
-                                }
-                            }
-                        },
+                        maintainAspectRatio: false, // ¡Vital para que CSS controle el tamaño!
                         responsive: true,
-                        plugins: {
-                            legend: {
-                                display: false // Ocultamos la leyenda para este gráfico
-                            }
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { borderDash: [5, 5] } },
+                            x: { grid: { display: false } }
                         }
                     }
                 });
             }
 
-            // --- Inicializar Gráfico Circular ---
+            // 2. Gráfico de Donut
             const ctxEstados = document.getElementById('protocolosPorEstadoChart');
             if (ctxEstados) {
                 new Chart(ctxEstados, {
-                    type: 'pie',
-                    data: dataEstados,
+                    type: 'doughnut',
+                    data: {
+                        labels: labelsEstados,
+                        datasets: [{
+                            data: dataEstados,
+                            backgroundColor: ['#FFC107', '#28A745', '#DC3545'], // Amarillo, Verde, Rojo
+                            borderWidth: 0,
+                            hoverOffset: 8
+                        }]
+                    },
                     options: {
+                        maintainAspectRatio: false, // ¡Vital para que CSS controle el tamaño!
                         responsive: true,
+                        cutout: '70%',
                         plugins: {
-                            legend: {
-                                position: 'top', // Ponemos la leyenda arriba
-                            }
+                            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
                         }
                     }
                 });
+            }
+
+            // Lógica Menú Hamburguesa
+            const hb = document.querySelector('.hamburger-btn');
+            const hd = document.querySelector('.hamburger-dropdown');
+            if(hb && hd){
+                hb.addEventListener('click', (e) => { e.stopPropagation(); hd.classList.toggle('active'); });
+                window.addEventListener('click', (e) => { if(!hd.contains(e.target)) hd.classList.remove('active'); });
             }
         });
     </script>

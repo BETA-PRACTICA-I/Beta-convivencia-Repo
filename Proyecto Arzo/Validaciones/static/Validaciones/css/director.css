@@ -1,0 +1,218 @@
+/* --- (1) Reset y Ajustes de Layout Principal --- */
+
+/* Forzamos que el contenido principal fluya hacia abajo y no se centre verticalmente */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start !important; /* CLAVE: Empieza arriba, no en el centro */
+    padding: 40px 20px;
+    min-height: auto; /* Permite que crezca */
+    height: auto !important;
+    gap: 40px; /* Espacio generoso entre secciones */
+}
+
+/* --- (2) Barra Superior (Ajustes Visuales) --- */
+.top-bar .nav-item {
+    border: none !important;
+    background: transparent !important;
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    transition: transform 0.2s;
+}
+
+.top-bar .nav-item:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px;
+}
+
+/* --- (3) Sección de Gráficos (El arreglo principal) --- */
+.charts-section {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap; /* Permite que bajen si no caben */
+    gap: 30px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    
+    /* Dimensiones controladas pero flexibles */
+    flex: 1 1 350px; /* Crece, se encoge, base de 350px */
+    max-width: 550px; /* No más ancho que esto */
+    min-height: 380px; /* Altura mínima para que no se solapen */
+    
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eee;
+}
+
+.chart-card h3 {
+    color: #003366;
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom: 2px solid #f4f7f6;
+    padding-bottom: 10px;
+}
+
+/* Contenedor interno para el canvas: Vital para Chart.js */
+.chart-container-inner {
+    position: relative;
+    width: 100%;
+    height: 300px; /* Altura fija para el dibujo del gráfico */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- (4) Botón Flotante (FAB) --- */
+.fab-almacen {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #003366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+    z-index: 9999; /* Asegura que esté ENCIMA de todo */
+    font-size: 1.5rem;
+}
+
+.fab-almacen:hover {
+    transform: scale(1.1);
+    background-color: #004080;
+}
+
+/* --- (5) Títulos de Sección --- */
+.section-header {
+    width: 95%;
+    max-width: 1200px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #003366;
+    padding-bottom: 5px;
+}
+
+.section-header h2 {
+    margin: 0;
+    color: #003366;
+    font-size: 1.5rem;
+}
+
+.hamburger-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilo del botón (Las tres rayitas) */
+.hamburger-btn {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hamburger-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* El menú desplegable (La tarjeta blanca) */
+.hamburger-opciones {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    top: 130%; /* Un poco separado del botón */
+    right: 0; /* Alineado a la derecha */
+    
+    background-color: white;
+    min-width: 200px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra potente para que destaque */
+    border: 1px solid rgba(0,0,0,0.05);
+    
+    z-index: 99999; /* ¡SUPER IMPORTANTE! Encima de todo, incluso gráficos */
+    overflow: hidden;
+    animation: fadeInMenu 0.2s ease-out;
+}
+
+/* Pequeña flechita arriba del menú (Detalle estético) */
+.hamburger-opciones::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: 15px;
+    width: 12px;
+    height: 12px;
+    background: white;
+    transform: rotate(45deg);
+    border-top: 1px solid rgba(0,0,0,0.05);
+    border-left: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Mostrar el menú cuando tiene la clase 'active' */
+.hamburger-dropdown.active .hamburger-opciones {
+    display: block;
+}
+
+/* Estilos de los enlaces dentro del menú */
+.hamburger-opciones a {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre icono y texto */
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #444;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-bottom: 1px solid #f4f4f4;
+    transition: background 0.2s;
+}
+
+.hamburger-opciones a:last-child {
+    border-bottom: none;
+}
+
+.hamburger-opciones a:hover {
+    background-color: #f8f9fa;
+    color: #003366; /* Azul al pasar el mouse */
+}
+
+.hamburger-opciones a i {
+    color: #003366;
+    width: 20px; /* Ancho fijo para alinear texto */
+    text-align: center;
+}
+
+/* Animación suave de aparición */
+@keyframes fadeInMenu {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
