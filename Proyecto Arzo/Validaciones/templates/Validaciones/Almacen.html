@@ -111,7 +111,11 @@
         </thead>
         <tbody>
             {% for p in protocolos %}
-            <tr class="protocol-row" data-protocolo-id="{{ p.id }}">
+            <tr class="protocol-row" 
+                data-protocolo-id="{{ p.id }}" 
+                data-url-ver="{% url 'protocolos:ver_protocolo' p.id %}" 
+                data-url-descargar="{% url 'protocolos:descargar_protocolo_pdf' p.id %}"
+                data-url-complementar="{% url 'protocolos:complementar_protocolo' p.id %}">
                 <td>{{ p.primer_involucrado|default:"N/A" }}</td>
                 <td>{{ p.primer_curso|default:"N/A" }}</td>
                 <td>{{ p.tipo.nombre|default:"N/A" }}</td>
@@ -175,6 +179,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<script src="{% static 'Validaciones/js/Script.js' %}" defer></script>
 
 </body>
 </html>

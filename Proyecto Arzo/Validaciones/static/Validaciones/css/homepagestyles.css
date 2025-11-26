@@ -101,36 +101,89 @@ body {
 
 /*TABLAAAAS*/
 
+/* Mejoras estéticas para la tabla de protocolos */
 .protocol-table {
     width: 90%;
     margin-left: 5%;
-    border-collapse: collapse; /* Elimina el espacio entre los bordes de las celdas */
+    border-collapse: separate;
+    border-spacing: 0;
     margin-top: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 12px; /* esquinas redondeadas */
+    overflow: hidden; /* para aplicar el radio */
+    box-shadow: 0 8px 20px rgba(30,90,200,0.12); /* sombra más profesional */
+    background: white;
+}
+
+.protocol-table thead th {
+    padding: 14px 18px;
+    text-align: left;
+    background: linear-gradient(180deg, #1e5ac8 0%, #16459c 100%); /* mismo azul, degradado sutil */
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* redondear esquinas superiores del thead */
+.protocol-table thead th:first-child {
+    border-top-left-radius: 12px;
+}
+.protocol-table thead th:last-child {
+    border-top-right-radius: 12px;
 }
 
 .protocol-table th,
 .protocol-table td {
-    padding: 12px 15px; /* Espaciado interno de las celdas */
-    text-align: left; /* Alinea el texto a la izquierda */
-    border: 1px solid #ddd; /* Borde sutil para las celdas */
-    font-size: 0.9rem;
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    vertical-align: middle;
+    border-right: 1px solid rgba(30,90,200,0.06); /* divisores suaves */
+    color: #253248;
 }
 
-.protocol-table thead tr {
-    background: #1e5ac8; /* Fondo degradado como la barra superior */
-    color: white; /* Color del texto del encabezado */
-    font-weight: bold;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* quitar el borde derecho en la última columna */
+.protocol-table th:last-child,
+.protocol-table td:last-child {
+    border-right: none;
 }
 
-/* Opcional: Estilo al pasar el cursor sobre las filas */
+/* filas y striping más sutil */
+.protocol-table tbody tr {
+    background: #ffffff;
+    transition: background-color 0.18s ease, transform 0.12s ease, box-shadow 0.12s ease;
+}
+.protocol-table tbody tr:nth-child(even) {
+    background: #fbfdff; /* tono muy suave para bandas */
+}
+
+/* hover más profesional */
 .protocol-table tbody tr:hover {
-    background-color: #eef3f7;
+    background-color: #eef7ff; /* conservar azul suave */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(30,90,200,0.06);
     cursor: pointer;
 }
 
+/* estilo para las celdas de detalles expandibles */
+.protocol-expanded td {
+    background: #f7fbff;
+    padding: 12px;
+    border-top: 1px solid #e6f0fb;
+}
+
+/* mantener tamaño de texto consistente en encabezado y cuerpo */
+.protocol-table thead,
+.protocol-table tbody {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* pequeño ajuste responsivo */
+@media (max-width: 720px) {
+    .protocol-table, .protocol-table th, .protocol-table td {
+        font-size: 0.85rem;
+    }
+}
 
 .hamburger-menu {
     background: transparent;
