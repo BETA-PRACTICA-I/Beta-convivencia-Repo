@@ -337,7 +337,8 @@ def Almacen(request):
     base_queryset = (
         Protocolo.objects
         .filter(estado='Resuelto')
-        .select_related('tipo', 'creador', 'ficha_denuncia')
+        .select_related('tipo', 'creador')     # Quitamos 'ficha_denuncia' de aquí
+        .prefetch_related(*SUMMARY_RELATIONS)  # <--- AGREGAMOS ESTO (¡La clave!)
         .order_by('-fecha_creacion')
     )
 
