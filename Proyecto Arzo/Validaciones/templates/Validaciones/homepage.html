@@ -5,10 +5,11 @@
     <meta charset="utf-8">
     <title>Convivencia Escolar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Cargamos el nuevo CSS que acabamos de editar -->
     <link rel="stylesheet" href="{% static 'Validaciones/css/homepagestyles.css'%}">
+    <!-- FontAwesome para los íconos modernos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="{% static 'Validaciones/js/Script.js' %}" defer></script>
-
 </head>
 <body>
 
@@ -17,29 +18,40 @@
             <div class="logo">
                 <img src="{% static 'Validaciones/img/virgenbkn.png' %}" class="logo-image" alt="Logo">
             </div>
+            
+            <!-- BARRA DE NAVEGACIÓN RENOVADA -->
             <nav class="nav-menu">
-                <a href="#" class="nav-item">
+                <!-- Icono Inicio (Casita) -->
+                <a href="{% url 'Validaciones:homepage' %}" class="nav-item" title="Ir al Inicio">
                     <i class="fa-solid fa-house"></i>
+                </a>
+                
+                <!-- Icono Almacén (Nuevo) -->
+                <a href="{% url 'Validaciones:Almacen' %}" class="nav-item" title="Ir al Almacén de Protocolos">
+                    <i class="fa-solid fa-warehouse"></i>
                 </a>
             </nav>
         </div>
 
+        <!-- Menú Hamburguesa (Opcional: puedes quitar Almacén de aquí si quieres, o dejarlo como atajo extra) -->
         <div class="hamburger-dropdown">
-            <button class="hamburger-btn" type="button">
+            <button class="hamburger-btn" type="button" title="Más opciones">
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="hamburger-opciones">
+                <!-- Mantenemos Almacén aquí por si acaso el usuario está en móvil y se colapsa el menú -->
                 <a href="{% url 'Validaciones:Almacen' %}">Almacén</a>
                 <a href="{% url 'Validaciones:login' %}">Cerrar sesión</a>
             </div>
         </div>
     </header>
 
-    <main id= "main-content" class = "main-content">
+    <main id="main-content" class="main-content">
         <h1 class="greeting">Hola, {{ user.get_full_name|default:user.username }}!</h1>
         <button id="abrir-protocolo-btn" class="abrir-protocolo">Abrir protocolo</button>
     </main>
-    <!--barra superior y 15 botones-->
+
+    <!-- Sección de selección de protocolos (oculta inicialmente) -->
     <section id="protocolo-section">
         <div class="protocolo-header">
             <h2 class="protocolo-titulo">Selecciona el Protocolo a Iniciar</h2>
@@ -57,9 +69,8 @@
         </div>
     </section>
 
-
-
-<table class="protocol-table" id="protocol-table">
+    <!-- Tabla de Protocolos Activos -->
+    <table class="protocol-table" id="protocol-table">
         <thead>
             <tr>
                 <th>Involucrados</th>
@@ -119,12 +130,12 @@
     </table>
 
     <style>
-    /* CSS para el dropdown de estado */
+    /* CSS Específico para el dropdown de estado (se mantiene aquí por funcionalidad) */
     .estado-dropdown {
         position: relative;
     }
     .estado-opciones {
-        display: none; /* Oculto por defecto */
+        display: none; 
         position: absolute;
         top: 100%;
         left: 0;
@@ -136,7 +147,6 @@
         border-radius: 4px;
         overflow: hidden;
     }
-    /* La clase 'active' que pone el JS hace que se muestre */
     .estado-dropdown.active .estado-opciones {
         display: block;
     }
@@ -151,21 +161,23 @@
     .estado-opciones a:hover {
         background: #f4f4f4;
     }
-        .hamburger-dropdown {
+    
+    /* Hamburger Menu Styles Específicos (se mantienen para asegurar funcionamiento) */
+    .hamburger-dropdown {
         position: relative;
     }
     .hamburger-btn {
         background: none;
         border: none;
         color: white;
-        font-size: 24px; /* Ajusta el tamaño si es necesario */
+        font-size: 24px; 
         cursor: pointer;
     }
     .hamburger-opciones {
-        display: none; /* Oculto por defecto */
+        display: none; 
         position: absolute;
-        top: 120%; /* Posición debajo del botón */
-        right: 0; /* Alineado a la derecha */
+        top: 120%; 
+        right: 0; 
         background: #fff;
         border: 1px solid #ccc;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -174,7 +186,6 @@
         border-radius: 4px;
         overflow: hidden;
     }
-    /* La clase 'active' que pone el JS hace que se muestre */
     .hamburger-dropdown.active .hamburger-opciones {
         display: block;
     }
@@ -188,32 +199,28 @@
     .hamburger-opciones a:hover {
         background: #f4f4f4;
     }
-</style>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const hamburgerDropdown = document.querySelector('.hamburger-dropdown');
+    </style>
 
-    if (hamburgerDropdown) {
-        const hamburgerBtn = hamburgerDropdown.querySelector('.hamburger-btn');
-        
-        hamburgerBtn.addEventListener('click', function(event) {
-            event.stopPropagation(); // Evita que el clic se propague al window
-            hamburgerDropdown.classList.toggle('active');
-        });
-    }
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburgerDropdown = document.querySelector('.hamburger-dropdown');
 
-    // Cierra el menú si se hace clic fuera de él
-    window.addEventListener('click', function(event) {
-        if (hamburgerDropdown && !hamburgerDropdown.contains(event.target)) {
-            hamburgerDropdown.classList.remove('active');
+        if (hamburgerDropdown) {
+            const hamburgerBtn = hamburgerDropdown.querySelector('.hamburger-btn');
+            
+            hamburgerBtn.addEventListener('click', function(event) {
+                event.stopPropagation(); 
+                hamburgerDropdown.classList.toggle('active');
+            });
         }
+
+        window.addEventListener('click', function(event) {
+            if (hamburgerDropdown && !hamburgerDropdown.contains(event.target)) {
+                hamburgerDropdown.classList.remove('active');
+            }
+        });
     });
-
-    // Aquí puedes mantener el resto de tu código de Script.js si lo mueves aquí,
-    // o simplemente añadir este bloque nuevo.
-});
-</script>
-
+    </script>
 
 </body>
 </html>
