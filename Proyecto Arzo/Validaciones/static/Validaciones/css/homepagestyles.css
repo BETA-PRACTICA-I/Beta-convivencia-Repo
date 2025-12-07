@@ -51,14 +51,14 @@ body {
 }
 
 .nav-item {
-    color: rgba(255, 255, 255, 0.8); /* Blanco con un poco de transparencia */
-    font-size: 1.3rem; /* Íconos un poco más grandes */
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.3rem;
     text-decoration: none;
-    padding: 8px;
+    padding: 8px 12px; /* Un poco más de espacio */
     border-radius: 8px;
-    transition: all 0.3s ease; /* Suaviza la animación */
+    transition: all 0.3s ease;
     
-    /* Eliminamos cualquier borde antiguo */
+    /* ESTAS SON LAS LÍNEAS IMPORTANTES NUEVAS: */
     border: none !important; 
     background: transparent !important;
     display: flex;
@@ -66,13 +66,11 @@ body {
     justify-content: center;
 }
 
-
-/* Efecto al pasar el mouse */
 .nav-item:hover {
-    color: #ffffff; /* Blanco puro al pasar el mouse */
-    background-color: rgba(255, 255, 255, 0.1) !important; /* Fondo muy sutil */
-    transform: translateY(-2px); /* Se eleva ligeramente */
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6); /* Brillo */
+    color: #ffffff;
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.1) !important; /* Fondo sutil solo al pasar el mouse */
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
 }
 
 .action-hamburger {
@@ -122,7 +120,6 @@ body {
     margin-top: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-radius: 12px; /* esquinas redondeadas */
-    overflow: hidden; /* para aplicar el radio */
     box-shadow: 0 8px 20px rgba(30,90,200,0.12); /* sombra más profesional */
     background: white;
 }
@@ -172,7 +169,7 @@ body {
 /* hover más profesional */
 .protocol-table tbody tr:hover {
     background-color: #eef7ff; /* conservar azul suave */
-    transform: translateY(-2px);
+    transform: none; /* CAMBIADO: elimina el movimiento hacia arriba */
     box-shadow: 0 6px 18px rgba(30,90,200,0.06);
     cursor: pointer;
 }
@@ -390,97 +387,188 @@ body {
 
 /* Contenedor principal de la celda para posicionar el menú */
 .estado-cell {
-    position: relative; /* Clave para que el menú se posicione correctamente */
+    overflow: visible !important; 
+    position: relative;
 }
 
-/* Botón que se muestra en la tabla */
+.estado-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
 .estado-btn {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 8px 12px;
-    background-color: transparent;
-    border: none;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: inherit; /* Hereda el tamaño de fuente de la tabla */
-    color: inherit;    /* Hereda el color de la tabla */
-    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: #333;
+    z-index: 10;
 }
 
-.icono-desplegable {
-    margin-left: 8px;
-    font-size: 15px;
+.estado-btn:hover {
+    background-color: #f0f0f0;
 }
 
-/* Contenedor de las opciones, oculto por defecto */
+/* EL MENÚ DESPLEGABLE */
 .estado-opciones {
-    display: none; /* Oculto por defecto */
+    display: none;
     position: absolute;
-    background-color: #f9f9f9;
-    min-width: 120px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1; /* Para que aparezca por encima de otros elementos */
-    border-radius: 5px;
-    overflow: hidden; /* Para que los bordes redondeados se apliquen a los items */
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    
+    /* --- AQUÍ ESTÁ LA MAGIA --- */
+    background-color: #ffffff !important; /* Blanco sólido IMPERATIVO */
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35) !important; /* Sombra fuerte */
+    z-index: 99999 !important; /* Encima de todo */
+    
+    min-width: 140px;
 }
 
-/* Estilo para los links dentro del menú */
+/* Mostrar menú al activar */
+.estado-dropdown.active .estado-opciones {
+    display: block;
+}
+
+/* Opciones individuales */
 .estado-opciones a {
-    color: black;
-    padding: 12px 16px;
+    display: block;
+    padding: 10px 15px;
     text-decoration: none;
-    display: block;
-    font-size: 14px;
+    color: #333;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #ffffff; /* Doble seguridad de fondo blanco */
 }
 
-/* Cambio de color al pasar el mouse por encima */
+.estado-opciones a:last-child {
+    border-bottom: none;
+}
+
 .estado-opciones a:hover {
-    background-color: #f1f1f1;
+    background-color: #eef2f7 !important;
+    color: #003366;
 }
 
-/* Clase que se añadirá con JavaScript para mostrar el menú */
-.estado-opciones.mostrar {
-    display: block;
-}
-
-/* --- Estilos para fila expandible de protocolo (panel de acciones) --- */
-.protocol-row { cursor: pointer; }
+/* ==========================================================================
+   6. PANEL DE ACCIONES EXPANDIDO
+   ========================================================================== */
 .protocol-expanded td {
-    background: #f7fbff;
-    padding: 12px;
-    border-top: 1px solid #e2e8f0;
+    background-color: #f0f4f8;
+    padding: 0 !important;
+    border-bottom: 2px solid #003366;
 }
+
 .expanded-panel {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
+    padding: 15px 20px;
+    animation: slideDown 0.3s ease-out;
 }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .expanded-actions {
     display: flex;
     gap: 10px;
-    align-items: center;
 }
+
 .expanded-actions a {
-    padding: 8px 12px;
-    background: #1e5ac8;
-    color: #fff;
     text-decoration: none;
-    border-radius: 6px;
-    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+    color: white; /* Por defecto blanco */
 }
-.expanded-actions a:hover { opacity: 0.95; }
+
+.btn-ver { background-color: #17a2b8; }
+.btn-ver:hover { background-color: #138496; }
+
+.btn-complementar { background-color: #ffc107; color: #333 !important; }
+.btn-complementar:hover { background-color: #e0a800; }
+
+.btn-descargar { background-color: #28a745; }
+.btn-descargar:hover { background-color: #218838; }
+
 .expanded-close {
-    background: transparent;
+    background: none;
     border: none;
-    font-weight: 700;
-    font-size: 18px;
+    font-size: 1.2rem;
+    color: #666;
     cursor: pointer;
-    color: #4a5568;
-    padding: 4px 8px;
-    line-height: 1;
+    padding: 0 10px;
+}
+.expanded-close:hover { color: #d9534f; }
+
+/* ==========================================================================
+   7. SECCIÓN "SELECCIONA PROTOCOLO" (Inicio)
+   ========================================================================== */
+.greeting {
+    color: #003366;
+    margin-bottom: 10px;
+}
+
+#protocolo-section {
+    display: none;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.protocolo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.protocolo-titulo {
+    color: #003366;
+    margin: 0;
+}
+
+.botones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.boton-protocolo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.boton-protocolo:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-color: #003366;
+}
+
+.boton-protocolo i {
+    font-size: 1.5rem;
+    color: #003366;
 }
 
 /* --- INICIO: ESTILOS PARA LA BARRA DE BÚSQUEDA Y FILTRO --- */
