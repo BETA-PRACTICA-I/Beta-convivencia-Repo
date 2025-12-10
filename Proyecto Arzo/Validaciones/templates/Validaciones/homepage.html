@@ -27,7 +27,7 @@
                 </a>
                 
                 <!-- Icono Almacén (Nuevo) -->
-                <a href="{% url 'Validaciones:Almacen' %}" class="nav-item" title="Ir al Almacén de Protocolos">
+                <a href="{% url 'Validaciones:Almacen' %}?back=homepage" class="nav-item" title="Ir al Almacén de Protocolos">
                     <i class="fa-solid fa-warehouse"></i>
                 </a>
             </nav>
@@ -40,7 +40,7 @@
             </button>
             <div class="hamburger-opciones">
                 <!-- Mantenemos Almacén aquí por si acaso el usuario está en móvil y se colapsa el menú -->
-                <a href="{% url 'Validaciones:Almacen' %}">Almacén</a>
+                <a href="{% url 'Validaciones:Almacen' %}?back=homepage">Almacén</a>
                 <a href="{% url 'Validaciones:login' %}">Cerrar sesión</a>
             </div>
         </div>

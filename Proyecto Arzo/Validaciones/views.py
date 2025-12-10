@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.urls import reverse
 
 ROLE_GREETINGS = {
     'encargado': '¡Hola, Encargado!',
@@ -413,9 +414,21 @@ def Almacen(request):
     if fecha_hasta:
         base_queryset = base_queryset.filter(fecha_creacion__date__lte=fecha_hasta)
 
+    back_param = (request.GET.get('back') or '').lower()
+    back_mapping = {
+        'director': 'Validaciones:directorhomepage',
+        'abogado': 'Validaciones:abogadohomepage',
+        'homepage': 'Validaciones:homepage',
+        'encargado': 'Validaciones:homepage',
+    }
+    back_route = back_mapping.get(back_param, 'Validaciones:homepage')
+    back_url = reverse(back_route)
+
     context = {
         'protocolos': base_queryset,
         'tipos': TipoProtocolo.objects.all().order_by('nombre'),
+        'back_param': back_param,
+        'back_url': back_url,
     }
 
     return render(request, 'Validaciones/Almacen.html', context)

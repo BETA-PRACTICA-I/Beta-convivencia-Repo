@@ -29,7 +29,7 @@
                 <a href="{% url 'Validaciones:directorhomepage' %}" class="nav-item" title="Inicio">
                     <i class="fa-solid fa-house"></i>
                 </a>
-                <a href="{% url 'Validaciones:Almacen' %}" class="nav-item" title="Almacén">
+                <a href="{% url 'Validaciones:Almacen' %}?back=director" class="nav-item" title="Almacén">
                     <i class="fa-solid fa-warehouse"></i>
                 </a>
             </nav>
@@ -38,7 +38,7 @@
         <div class="hamburger-dropdown">
             <button class="hamburger-btn"><i class="fa-solid fa-bars"></i></button>
             <div class="hamburger-opciones">
-                <a href="{% url 'Validaciones:Almacen' %}">Almacén</a>
+                <a href="{% url 'Validaciones:Almacen' %}?back=director">Almacén</a>
                 <a href="{% url 'Validaciones:login' %}">Cerrar sesión</a>
             </div>
         </div>
@@ -121,7 +121,7 @@
     </main>
 
     <!-- BOTÓN FLOTANTE (FAB) -->
-    <a href="{% url 'Validaciones:Almacen' %}" class="fab-almacen" title="Ir al Almacén">
+    <a href="{% url 'Validaciones:Almacen' %}?back=director" class="fab-almacen" title="Ir al Almacén">
         <i class="fa-solid fa-warehouse"></i>
     </a>
 

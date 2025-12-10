@@ -46,13 +46,14 @@
 
     <main id="main-content" class="main-content">
         <div class="almacen-cntr">
-            <a href="{% url 'Validaciones:homepage' %}" class="boton-volver" id="volver-btn">&larr; Volver</a>
+            <a href="{{ back_url }}" class="boton-volver" id="volver-btn">&larr; Volver</a>
             <h1 class="greeting">Almacén</h1>
         </div>
 
         <div class="almacen-search-wrapper">
             <!-- INICIO: Formulario ÚNICO para búsqueda y filtro -->
             <form method="get" action="{% url 'Validaciones:Almacen' %}" class="search-filter-container" id="search-filter-form">
+                <input type="hidden" name="back" value="{{ back_param }}">
                 <!-- Barra de búsqueda -->
                 <div class="search-bar">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
