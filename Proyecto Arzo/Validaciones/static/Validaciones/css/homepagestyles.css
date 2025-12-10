@@ -18,36 +18,35 @@ body {
     gap: 1.5rem;
 }
 
-.logo {
-    position: fixed;
-    top: 11px; /* ajusta según tu padding */
-    left: 22px; /* ajusta según tu padding */
-    z-index: 1000;
-    background: none;
-    box-shadow: none;
-    border-radius: 0;
-    width: auto;
-    height: auto;
-    padding: 0;
+/* Mantener el logo dentro del flujo de la top bar (sin posición absoluta/fija) */
+.top-bar .logo {
+    position: static !important;
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: flex-start;          /* lo ancla a la parte baja de la barra */
+    transform: translateY(5px);    /* sobresale un poco hacia abajo */
+    margin: 0px 0px 0 0;
+    flex-shrink: 0;
 }
 
-.logo-image {
-    width: 69px;   /* ajusta el tamaño según prefieras */
-    height: auto;
+.top-bar .logo-image {
+    position: static !important;
+    height: 60px;
+    width: auto;
+    object-fit: contain;
     display: block;
+    margin: 0;
 }
 
 .nav-menu {
-    margin-left: 89px;
+    margin-left: 11px;             /* antes: 89px */
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;                     /* antes: 15px */
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 20px;
-    padding: 0.5rem 1rem;
+    padding: 0.45rem 0.85rem;      /* un poco más compacto */
 }
 
 .nav-item {
