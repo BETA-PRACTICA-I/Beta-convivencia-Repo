@@ -73,6 +73,9 @@
                 <a href="#" class="nav-item">
                     <i class="fa-solid fa-house"></i>
                 </a>
+                <a href="{% url 'Validaciones:Almacen' %}" class="nav-item">
+                    <i class="fa-solid fa-warehouse"></i>
+                </a>
             </nav>
         </div>
 
@@ -81,7 +84,7 @@
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="hamburger-opciones">
-                <a href="{% url 'Validaciones:Almacen' %}?back=abogado">Almacén</a>
+                <a href="{% url 'Validaciones:Almacen' %}">Almacén</a>
                 <a href="{% url 'Validaciones:login' %}">Cerrar sesión</a>
             </div>
         </div>
@@ -146,10 +149,7 @@
                     <td>{{ p.fecha_limite|date:"d/m/Y" }}</td>
                     <td>{{ p.id }}</td>
                     
-                    <!-- 
-                        NUEVA CELDA CON ACCIONES DE "SOLO LECTURA"
-                        (VER Y DESCARGAR)
-                    -->
+                   
                     <td class="acciones-cell">
                         <a href="{% url 'protocolos:ver_protocolo' p.id %}" title="Ver Protocolo" class="accion-btn">
                             <i class="fa-solid fa-eye"></i>
